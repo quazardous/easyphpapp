@@ -20,7 +20,6 @@ require_once 'Ea/Module/Abstract.php';
  * The page is used by the module to render all page elements. It contains layouts.
  * @see Ea_Module_Abstract
  * @see Ea_Layout_Abstract
- * 
  */
 class Ea_Page
 {
