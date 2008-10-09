@@ -16,7 +16,6 @@
  * Interface used by security module.
  * For example, a security module can display login form to authenticate a user.
  * @see Ea_Security
- *
  */
 interface Ea_Module_Security_Interface
 {
