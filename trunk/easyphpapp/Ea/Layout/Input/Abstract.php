@@ -89,6 +89,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->setValue($value);
 	}
 
+	//TODO comment
 	public function setAttribute($name, $value)
 	{
 		$name=strtolower($name);
