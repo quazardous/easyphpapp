@@ -28,7 +28,7 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 	public function render()
 	{
 		if($this->_escape) echo $this->escape($this->_text);
-		echo $this->_text;
+		else echo $this->_text;
 	}
 }
 ?>
