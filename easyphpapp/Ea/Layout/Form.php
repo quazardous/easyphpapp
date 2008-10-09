@@ -87,7 +87,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					//must be an array
 					if(!($arr[$pid] instanceof Ea_Layout_Form_Array))
 					{
-						throw new Ea_Form_Exception('Not an array');
+						throw new Ea_Layout_Form_Exception('Not an array');
 					}
 					$arr=$arr[$pid];
 					array_push($nid, $pid);
@@ -177,6 +177,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return $this->_id;
 	}
 	
+	//FIXME : simplify
 	public function setAttribute($name, $value)
 	{
 		$name=strtolower($name);
@@ -243,7 +244,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 	
-	public function parse()
+	public function tryCatch()
 	{
 		switch($this->getMethod())
 		{
@@ -275,7 +276,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	
 	protected function compute()
 	{
-		throw new Ea_Form_Exception('To use run() please overload compute()');
+		throw new Ea_Layout_Form_Exception('To use run() please overload compute()');
 	}
 	
 	public function run()

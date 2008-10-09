@@ -23,7 +23,7 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 	}
 	
 	protected $_text=null;
-	protected $_escape=false;
+	protected $_escape=true;
 	
 	public function render()
 	{
