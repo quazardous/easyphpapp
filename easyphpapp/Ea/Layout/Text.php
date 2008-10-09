@@ -1,7 +1,36 @@
 <?php
+/**
+ * EasyPhpApp Framework
+ * A simple form application framework
+ * 
+ * @category    EasyPhpApp
+ * @package     Layout
+ * @subpackage  Base
+ * @author      David Berlioz <berlioz@nicematin.fr>
+ * @version     0.0.1
+ * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
+ * @copyright   David Berlioz <berlioz@nicematin.fr>
+ */
+
 require_once 'Ea/Layout/Abstract.php';
+
+/**
+ * Basic text layout class.
+ * This class let you put free text, escaped or not.
+ * 
+ */
 class Ea_Layout_Text extends Ea_Layout_Abstract
 {
+	/**
+	 * Link layout constructor.
+	 * 
+	 * @param array(string=>mixed)|string|numeric $config associative array of parameters or text
+	 * 
+	 * - 'text' : text to add
+	 * 
+	 * - 'escape' : is the text escaped
+	 * 
+	 */
 	public function __construct($config=null)
 	{
 		parent::__construct($config);
@@ -9,11 +38,11 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 		{
 			if(array_key_exists('text', $config))
 			{
-				$this->_text=$config['text'];
+				$this->setText($config['text']);
 			}
 			if(array_key_exists('escape', $config))
 			{
-				$this->_escape=$config['escape'];
+				$this->setEscape($config['escape']);
 			}
 		}
 		else if(is_string($config)||is_numeric($config))
@@ -22,9 +51,44 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 		}
 	}
 	
+	/**
+	 * The text.
+	 * 
+	 * @var string
+	 */
 	protected $_text=null;
-	protected $_escape=true;
+
+	/**
+	 * Set the text.
+	 * 
+	 * @param string $text
+	 */
+	public function setText($text)
+	{
+		$this->_text=$text;
+	}
 	
+	/**
+	 * Is the text escaped.
+	 * 
+	 * @var boolean
+	 */
+	protected $_escape=true;
+
+	/**
+	 * Set if must escape.
+	 * 
+	 * @param boolean $escape
+	 */
+	public function setEscape($escape)
+	{
+		$this->_escape=$escape;
+	}
+	
+	/**
+	 * Render the text.
+	 * 
+	 */
 	public function render()
 	{
 		if($this->_escape) echo $this->escape($this->_text);

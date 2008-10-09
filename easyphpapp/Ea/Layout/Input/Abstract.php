@@ -273,6 +273,15 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		}
 	}
 	
+	/**
+	 * Set the value from $_POST.
+	 * 
+	 */
+	public function setFromPost()
+	{
+		$this->setValue($this->getForm()->getFromPost($this->getId()));
+	}
+	
 	public function render()
 	{
 		/*

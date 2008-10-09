@@ -268,6 +268,7 @@ abstract class Ea_Module_Abstract
 	
 	/**
 	 * Add layout to the page.
+	 * The layouts you add will be render by the page.
 	 * @see Ea_Page::add()
 	 * 
 	 * @param mixed $content
@@ -276,6 +277,20 @@ abstract class Ea_Module_Abstract
 	{
 		$this->getPage()->add($content);
 	}
-			
+
+	/**
+	 * Return the param from URL.
+	 * Params are build to get the patern $_GET['module']['param'].
+	 * @uses Ea_Router::getParam()
+	 * 
+	 * @param string $name
+	 * @return string|numeric|null
+	 */
+	public function getParam($name)
+	{
+		return $this->getRouter()->getParam($name);
+	}
+	
+	
 }
 ?>
