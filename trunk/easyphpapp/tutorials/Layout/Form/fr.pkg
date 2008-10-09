@@ -1,0 +1,17 @@
+  <refentry id="{@id}">
+   <refnamediv>
+    <refname>Form Tutorial</refname>
+    <refpurpose>How to use form</refpurpose>
+   </refnamediv>
+   <refsynopsisdiv>
+    <author>
+     David Berlioz
+     <authorblurb>
+      {@link mailto:berlioz@nicematin.fr berlioz@nicematin.fr}
+     </authorblurb>
+    </author>
+   </refsynopsisdiv>
+   <refsect1 id="{@id intro}">
+    <para>Hello World</para>
+   </refsect1>
+  </refentry>
