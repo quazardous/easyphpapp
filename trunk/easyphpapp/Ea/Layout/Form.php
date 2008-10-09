@@ -1,14 +1,72 @@
 <?php
+/**
+ * EasyPhpApp Framework
+ * A simple form application framework
+ * 
+ * @category    EasyPhpApp
+ * @package     Layout
+ * @subpackage  Form
+ * @author      David Berlioz <berlioz@nicematin.fr>
+ * @version     0.0.1
+ * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
+ * @copyright   David Berlioz <berlioz@nicematin.fr>
+ */
+
 require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Layout/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Array.php';
 require_once 'Ea/Layout/Input/Hidden.php';
 require_once 'Ea/Layout/Form/Exception.php';
 
+/**
+ * Form layout class.
+ * In HTML : a form.
+ * Form class handle the input layouts you put in it or in subcontainers.
+ * <code>
+ * <?php
+ *  $form=new Ea_Layout_Form('form');
+ *  $form->add(new Ea_Layout_Input_Text('login'));
+ * 
+ *  $form['login']='john';
+ *  
+ * 	echo "value: {$form['login']}";
+ * ?>
+ * </code>
+ *  
+ * Using the catchInput() method, you can determine if this form was submitted.
+ * 
+ * <code>
+ * <?php
+ *  $form=new Ea_Layout_Form('form');
+ *  $form->add(new Ea_Layout_Input_Text('login'));
+ *  
+ *  if($form->catchInput())
+ *  {
+ *      // This form was submitted
+ * 		// Do stuff with $form['login']
+ *  }
+ * ?>
+ * </code>
+ * 
+ * @see Ea_Layout_Form::catchInput()
+ */
 class Ea_Layout_Form extends Ea_Layout_Input_Array
 {
 	protected $_tag='form';
 
+	/**
+	 * Form constructor.
+	 * 
+	 * @param string $id a unique id used to identify the form
+	 * @param array() $config
+	 * 
+	 * - 'method' : 'get' or 'post'
+	 * @todo get is not implemented
+	 * 
+	 * - 'action' : route or url
+	 * 
+	 * @uses 
+	 */
 	public function __construct($id, $config=null)
 	{
 		$this->setMethod('post');
@@ -25,9 +83,18 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				$this->setAction($config['action']);
 			}
 		}
+		/*
+		 * We want to know when input layouts are added.
+		 */
 		$this->addCallback(array($this, 'onAddLayout'));
 	}
 	
+	/**
+	 * Callback used to trap input layout.
+	 * @see Ea_Layout_Container::addCallback()
+	 * 
+	 * @param Ea_Layout_Abstract $layout
+	 */
 	public function onAddLayout(Ea_Layout_Abstract $layout)
 	{
 		if($layout instanceof Ea_Layout_Form)
@@ -40,12 +107,26 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 	
+	/**
+	 * Add input layout to handle.
+	 * Input must have a valid id.
+	 * @see Ea_Layout_Input_Abstract::$_id
+	 * 
+	 * @param Ea_Layout_Input_Abstract $input
+	 */
 	public function addInput(Ea_Layout_Input_Abstract $input)
 	{
 		$input->setForm($this);
 		$this->setArrayInputAt($input->getId(), $input);
 	}
 	
+	/**
+	 * Put an input at the given id.
+	 * ie. the id array('foo', 'bar') will reference $this['foo']['bar'].
+	 * 
+	 * @param array(string) $id
+	 * @param Ea_Layout_Input_Abstract$input
+	 */
 	protected function setArrayInputAt(array $id, Ea_Layout_Input_Abstract $input)
 	{
 		$arr=$this;
@@ -113,35 +194,57 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}
 
 	/**
-	 * Action
+	 * Action can be a route or an url.
 	 *
-	 * @var Ea_Route
+	 * @var Ea_Route|string
 	 */
 	protected $_action=null;
 	
-	public function setAction(Ea_Route $route)
+	/**
+	 * Set action.
+	 * @see $_action
+	 * 
+	 * @param Ea_Route|string $route
+	 */
+	public function setAction($route)
 	{
 		$this->_action=$route;
-		//parent::setAttribute('action', $this->getActionUrl());
 	}
 
 	/**
-	 * Return action
+	 * Return action.
+	 * @see $_action
 	 *
-	 * @return Ea_Route
+	 * @return Ea_Route|string
 	 */
 	public function getAction()
 	{
 		return $this->_action;
 	}
 	
+	/**
+	 * Return the URL string of the action.
+	 * 
+	 * @return string
+	 */
 	public function getActionUrl()
 	{
-		if($this->getAction()) return $this->getPage()->getRouter()->url($this->getAction());
-		return '';
+		if($this->getAction() instanceof Ea_Route) return $this->getPage()->getRouter()->url($this->getAction());
+		return $this->getAction();
 	}
 
+	/**
+	 * The method 'post' or 'get'
+	 * 
+	 * @var string
+	 */
 	protected $_method=null;
+
+	/**
+	 * Set the method.
+	 * 
+	 * @param string $method
+	 */
 	public function setMethod($method)
 	{
 		$method=strtolower($method);
@@ -156,11 +259,21 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		parent::setAttribute('method', $method);
 	}
 
+	/**
+	 * Get the method.
+	 * 
+	 * @return string
+	 */
 	public function getMethod()
 	{
 		return $this->_method;
 	}
 	
+	/**
+	 * Set the form id.
+	 * 
+	 * @param string $id
+	 */
 	public function setId($id)
 	{
 		if(!$id)
@@ -168,16 +281,28 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			throw new Ea_Layout_Form_Exception('Empty Id');
 		}
 		$this->_id=$id;
+		//TODO simplify this
 		parent::setAttribute('id', $id);
 		parent::setAttribute('name', $id);
 	}
 	
+	/**
+	 *  Get the form id.
+	 * 
+	 * @return string
+	 */
 	public function getId()
 	{
 		return $this->_id;
 	}
 	
-	//FIXME : simplify
+	/**
+	 * Set layout attribute.
+	 * 
+	 * @param string $name
+	 * @param string $value
+	 * TODO : simplify
+	 */
 	public function setAttribute($name, $value)
 	{
 		$name=strtolower($name);
@@ -197,12 +322,39 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	} 
 
-	/*
-	 * Add some magic stuff
+	/**
+	 * Use(render) magic hidden input to determine if the form was submitted.
+	 * 
+	 * @var boolean
 	 */
-	protected $_init=false;
+	protected $_useMagic=true;
+
+	/**
+	 * Set use magic.
+	 * @see $_useMagic
+	 * 
+	 * @param boolean $use
+	 */
+	public function useMagic($use)
+	{
+		$this->_useMagic=$use;
+	}	
+	
+	/**
+	 * To know if magic() was called.
+	 * 
+	 * @var boolean
+	 */
+	protected $_magic=false;
+
+	/**
+	 * Add a magic hidden input.
+	 * @see useMagic()
+	 * 
+	 */
 	protected function magic()
 	{
+		if(!$this->_useMagic) return;
 		if(!$this->_magic)
 		{
 			//magic input
@@ -211,12 +363,29 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 
+	/**
+	 * Magic inputs name prefix.
+	 * 
+	 * @var string
+	 */
 	protected $_magicNamePrefix='eaf';
+
+	/**
+	 * Get the magic name for the given string.
+	 * Prepend the magic prefix.
+	 * 
+	 * @param string $name
+	 * @return string
+	 */
 	protected function getMagicName($name)
 	{
 		return $this->_magicNamePrefix.'_'.$name;
 	}
 	
+	/**
+	 * Render the form.
+	 * 
+	 */
 	public function render()
 	{
 		$this->magic();
@@ -224,8 +393,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		parent::render();
 	}
 
-	/*
-	 * POST stuff
+	/**
+	 * Get the $_POST value for the given id.
+	 * ie. the id array('foo','bar') reference $_POST['foo']['bar']
+	 * if array contains null try to increment a counter.
+	 * 
+	 * @param array $id
+	 * @return string
 	 */
 	public function getFromPost(array $id)
 	{
@@ -244,6 +418,12 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 	
+	/**
+	 * This method allow you to test if some data where submitted in this form.
+	 * @see Ea_Layout_Form
+	 * @todo method='get' form
+	 * 
+	 */
 	public function tryCatch()
 	{
 		switch($this->getMethod())
@@ -262,6 +442,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 	
+	/**
+	 * Retrieve value from submitted data for given input.
+	 * 
+	 * @param Ea_Layout_Input_Abstract $input
+	 */
 	public function parseInput(Ea_Layout_Input_Abstract $input)
 	{
 		switch($this->getMethod())
@@ -272,21 +457,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			default:
 				throw new Ea_Layout_Form_Exception('Not yet done');
 		}
-	}
-	
-	protected function compute()
-	{
-		throw new Ea_Layout_Form_Exception('To use run() please overload compute()');
-	}
-	
-	public function run()
-	{
-		if($this->parse())
-		{
-			$this->compute();
-		}
-	}
-	
+	}	
 }
 
 ?>

@@ -90,6 +90,15 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 		parent::render();
 	}
 	
-	//TODO : parse may be different...
+	/**
+	 * Set the value from $_POST.
+	 * 
+	 */
+	public function setFromPost()
+	{
+		parent::setFromPost();
+		$this->setChecked($this->getValue()!=null);
+	}
+	
 }
 ?>

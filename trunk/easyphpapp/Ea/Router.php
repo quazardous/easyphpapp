@@ -171,9 +171,9 @@ class Ea_Router
 		if($this->isPost()) $this->requestRedirect();
 		$infos=parse_url($_SERVER['REQUEST_URI']);
 		$this->_targetScript=$infos['path'].'?';
-		if(isset($_GET[$this->_moduleParamName])) $this->_targetModule=$_GET[$this->_moduleParamName];
+		if(isset($_GET[$this->_moduleParamName])) $this->_targetModule=$this->standardize($_GET[$this->_moduleParamName]);
 		else $this->_targetModule=$this->_defaultModule;
-		if(isset($_GET[$this->_actionParamName])) $this->_targetAction=$_GET[$this->_actionParamName];
+		if(isset($_GET[$this->_actionParamName])) $this->_targetAction=$this->standardize($_GET[$this->_actionParamName]);
 		else $this->_targetAction=$this->_defaultAction;
 	}
 
@@ -218,6 +218,21 @@ class Ea_Router
 	}
 	
 	/**
+	 * Standardize module and action id.
+	 * 
+	 * @param string $name
+	 * @return string
+	 */
+	protected function standardize($name)
+	{
+		return $name;
+		//TODO : think about it
+		$name=preg_replace('/\s/', '', strtolower($name));
+		$name=preg_replace('/(-_)[-_]*/', '-', $name);
+		return $name;
+	}
+	
+	/**
 	 * Set the default module.
 	 * @see $_defaultModule
 	 * 
@@ -225,7 +240,7 @@ class Ea_Router
 	 */
 	public function setDefaultModule($module)
 	{
-		$this->_defaultModule=$module;
+		$this->_defaultModule=$this->standardize($module);
 	}
 
 	/**
@@ -236,7 +251,7 @@ class Ea_Router
 	 */
 	public function setDefaultAction($action)
 	{
-		$this->_defaultAction=$action;
+		$this->_defaultAction=$this->standardize($action);
 	}
 	
 	/**
@@ -307,7 +322,7 @@ class Ea_Router
 	 */
 	protected function getActionMethodName($action=null, $prefix='action')
 	{
-		if(!$action) $action=$this->_targetAction;
+		if(!$action)$action=$this->_targetAction;
 		$name='';
 		foreach(preg_split('/[-_]/',$action) as $word)
 		{
@@ -483,7 +498,7 @@ class Ea_Router
 
 	public function initSecurity(Ea_Security $security, $module)
 	{
-		$this->_securityModule=$module;
+		$this->_securityModule=$this->standardize($module);
 		$this->_security=$security;
 	}
 	
