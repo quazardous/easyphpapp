@@ -167,6 +167,8 @@ class Ea_Router
 	 */
 	protected function _analyze()
 	{
+		// if post redirect
+		if($this->isPost()) $this->requestRedirect();
 		$infos=parse_url($_SERVER['REQUEST_URI']);
 		$this->_targetScript=$infos['path'].'?';
 		if(isset($_GET[$this->_moduleParamName])) $this->_targetModule=$_GET[$this->_moduleParamName];
@@ -358,6 +360,7 @@ class Ea_Router
 		$obj->$actionMethod();
 		$obj->_complete();
 		$this->executeCallbacks();
+		$this->applyRequestedRedirect();
 		if($render&&$this->_renderModule) $obj->render();
 		$this->_runningModule=null;
 		$this->_runningAction=null;
@@ -547,6 +550,7 @@ class Ea_Router
 				$this->getSecurity()->authenticate($user);
 				$module->_complete();
 				$this->executeCallbacks();
+				$this->applyRequestedRedirect();
 				if($render&&$this->_renderModule) $module->render();
 				die();
 			}
@@ -789,6 +793,58 @@ class Ea_Router
 		}
 		
 		$this->_callbackQueues=array();
+	}
+	
+	/**
+	 * Last/max redirect priority.
+	 * @see requestRedirect()
+	 * 
+	 */
+	const redirectPriority_last = 1000;
+
+	/**
+	 * The redirect priority.
+	 * @see requestRedirect()
+	 * 
+	 * @var _requestedRedirectPriority
+	 */
+	protected $_requestedRedirectPriority=false;
+
+	/**
+	 * The redirect route.
+	 * @see requestRedirect()
+	 * 
+	 * @var _requestedRedirectRoute
+	 */
+	protected $_requestedRedirectRoute=null;
+	
+	/**
+	 * Request a redirect to the given route befor render.
+	 * This redirect will happen after the callbacks.
+	 * 
+	 * @param Ea_Route $route null means current URL
+	 * @param redirectPriority $priority you can specify a priority. The redirect will be set only if the given priority number is lower than the previous priority. null means lower priority.
+	 */
+	public function requestRedirect($route=null, $priority=null)
+	{
+		if($priotity===null) $priotity=self::redirectPriority_last;
+		if($this->_requestedRedirectPriority===false||$priority<=$this->_requestedRedirectPriority)
+		{
+			$this->_requestedRedirectPriority=$priority;
+			$this->_requestedRedirectRoute=$route;
+		}
+	}
+	
+	/**
+	 * Apply requested redirect if any.
+	 * @see requestRedirect()
+	 * 
+	 */
+	protected function applyRequestedRedirect()
+	{
+		if($this->_requestedRedirectPriority===false) return;
+		if(!$this->_requestedRedirectRoute) $this->_requestedRedirectRoute=$this->getRoute();
+		$this->redirect($this->_requestedRedirectRoute);
 	}
 }
 ?>

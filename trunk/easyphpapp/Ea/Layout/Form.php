@@ -245,8 +245,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	
 	public function parse()
 	{
-		// add before render callback if need redirect (post)
-		$this->getPage()->getRouter()->addCallback('exit', array($this, 'complete'), null, 'append', true);
 		switch($this->getMethod())
 		{
 			case 'post':
@@ -273,39 +271,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			default:
 				throw new Ea_Layout_Form_Exception('Not yet done');
 		}
-	}
-	
-	/*
-	 * before render callback
-	 */
-	protected $_complete=false;
-	public function complete($exit=true)
-	{
-		if(!$this->_complete)
-		{
-			$this->_complete=true;
-			switch($this->getMethod())
-			{
-				case 'post':
-					if($this->getPage()->getRouter()->isPost())
-					{
-						$this->redirect($exit);
-						return true;
-					}
-					break;
-			}
-		}
-		return false;
-	}
-	
-	public function redirect($exit=true)
-	{
-		$route=$this->getAction();
-		if(!$route)
-		{
-			$route=$this->getPage()->getRouter()->getRoute();
-		}
-		$this->getPage()->getRouter()->redirect($route, $exit);
 	}
 	
 	protected function compute()
