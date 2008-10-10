@@ -20,7 +20,7 @@ require_once 'Ea/Module/Abstract.php';
  */
 class Module_Index extends Ea_Module_Abstract
 {
-	protected function init()
+	public function init()
 	{
 		// set the page title
 		$this->getPage()->setTitle('Hello World');

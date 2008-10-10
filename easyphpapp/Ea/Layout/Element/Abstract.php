@@ -144,6 +144,16 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 		return $this->_attributes;
 	}
 
+	
+	/**
+	 * Render the attribute list.
+	 * 
+	 */
+	protected function renderAttributes()
+	{
+		foreach($this->_attributes as $name=>$value) echo ' '.$name.'="'.$this->escape($value).'"';
+	}
+	
 	public function render()
 	{
 		if(!$this->_tag)

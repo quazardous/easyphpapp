@@ -34,7 +34,7 @@ class Ea_Layout_Single extends Ea_Layout_Element_Abstract
 		parent::render();
 		echo '<';
 		echo $this->_tag;
-		foreach($this->_attributes as $name=>$value) echo ' '.$name.'="'.$this->escape($value).'"';
+		$this->renderAttributes();
 		echo " />";
 	}
 }

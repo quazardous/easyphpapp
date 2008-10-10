@@ -151,39 +151,15 @@ abstract class Ea_Module_Abstract
 	 * @var boolean
 	 */
 	protected $_init=false;
-
-	/**
-	 * Wrapper for the init() method.
-	 * Used to call init only once.
-	 * @see $_init
-	 * @uses init()
-	 * 
-	 */
-	public function _init()
-	{
-		if($this->_init) return;
-		$this->_init=true;
-		$this->init();
-	}
 	
 	/**
 	 * Before action trigger.
 	 * Overload this method to add common init stuff.
-	 * init() is called only once.
+	 * init() is called before the action method.
 	 */
-	protected function init()
+	public function init()
 	{
 		
-	}
-
-
-	/**
-	 * Wrapper for the complete() method.
-	 * 
-	 */
-	public function _complete()
-	{
-		$this->complete();
 	}
 	
 	/**
@@ -192,7 +168,7 @@ abstract class Ea_Module_Abstract
 	 * complete is called before render() each time an action is triggered.
 	 * 
 	 */
-	protected function complete()
+	public function complete()
 	{
 		
 	}

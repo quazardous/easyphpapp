@@ -167,7 +167,7 @@ class Ea_Router
 	 */
 	protected function _analyze()
 	{
-		// if post redirect
+		// if post router will redirect before render()
 		if($this->isPost()) $this->requestRedirect();
 		$infos=parse_url($_SERVER['REQUEST_URI']);
 		$this->_targetScript=$infos['path'].'?';
@@ -371,9 +371,9 @@ class Ea_Router
 			}
 		}
 		$this->_runningAction=$action;
-		$obj->_init();
+		$obj->init();
 		$obj->$actionMethod();
-		$obj->_complete();
+		$obj->complete();
 		$this->executeCallbacks();
 		$this->applyRequestedRedirect();
 		if($render&&$this->_renderModule) $obj->render();
@@ -558,12 +558,11 @@ class Ea_Router
 			{
 				throw new Ea_Router_Exception("{$c} does not extend Ea_Module_Abstract or implements Ea_Module_Security_Interface");
 			}
-			//FIXME : call init just once => _init().
-			$module->_init();
+			$module->init();
 			if($user=$module->getSecurityUser())
 			{
 				$this->getSecurity()->authenticate($user);
-				$module->_complete();
+				$module->complete();
 				$this->executeCallbacks();
 				$this->applyRequestedRedirect();
 				if($render&&$this->_renderModule) $module->render();
