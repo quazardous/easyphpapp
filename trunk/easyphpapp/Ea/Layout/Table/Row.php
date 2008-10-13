@@ -30,13 +30,13 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	 * Accept only cells.
 	 *
 	 */
-	public function add($content)
+	public function add($content, $append=true)
 	{
 		if(!($content instanceof Ea_Layout_Table_Cell))
 		{
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Cell");
 		}
-		parent::add($content);
+		parent::add($content, $append);
 	}
 
 	/**
@@ -44,13 +44,20 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	 * 
 	 * @param Ea_Layout_Abstract|string|array $content
 	 * @param array $config config for the cell constructor
+	 * @param boolean $append
+	 * @param string $class cell class
 	 * 
 	 * @return Ea_Layout_Table_Cell the new cell
 	 */
-	public function addCell($content=null, $config=null)
+	public function addCell($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Cell')
 	{
-		$cell=new Ea_Layout_Table_Cell($config);
-		$this->add($cell);
+		Zend_Loader::loadClass($class);
+		$cell=new $class($config);
+		if(!$cell instanceof Ea_Layout_Table_Cell)
+		{
+			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Cell");
+		}
+		$this->add($cell, $append);
 		if($content) $cell->add($content);
 		return $cell;
 	}
@@ -60,13 +67,20 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	 * 
 	 * @param Ea_Layout_Abstract|string|array $content
 	 * @param array $config config for the cell constructor
+	 * @param boolean $append
+	 * @param string $class header cell class
 	 * 
 	 * @return Ea_Layout_Table_Header the new cell
 	 */
-	public function addHeader($content=null, $config=null)
+	public function addHeader($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Header')
 	{
-		$cell=new Ea_Layout_Table_Header($config);
-		$this->add($cell);
+		Zend_Loader::loadClass($class);
+		$cell=new $class($config);
+		if(!$cell instanceof Ea_Layout_Table_Header)
+		{
+			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Header");
+		}
+		$this->add($cell, $append);
 		if($content) $cell->add($content);
 		return $cell;
 	}

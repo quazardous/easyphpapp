@@ -26,13 +26,13 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	protected $_tag='table';
 
 	/**
-	 * Enter description here...
+	 * Add a row to the table.
 	 * 
-	 * @param $content
-	 * @return unknown_type
-	 * @see Ea/Layout/Ea_Layout_Container#add()
+	 * @param mixed $content
+	 * @param boolean $append
+	 * @return Ea_Layout_Table_Row
 	 */
-	public function add($content)
+	public function add($content, $append=true)
 	{
 		if(!($content instanceof Ea_Layout_Table_Row))
 		{
@@ -52,12 +52,19 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 * Add a new row.
 	 *
 	 * @param mixed $config pass it to the row constructor
+	 * @param boolean $append
+	 * @param string $class row class
 	 * @return Ea_Layout_Table_Row
 	 */
-	public function addRow($config=null)
+	public function addRow($config=null, $append=true, $class='Ea_Layout_Table_Row')
 	{
-		$this->_currentRow=new Ea_Layout_Table_Row($config);
-		$this->add($this->_currentRow);
+		Zend_Loader::loadClass($class);
+		$this->_currentRow=new $class($config);
+		if(!$this->_currentRow instanceof Ea_Layout_Table_Row)
+		{
+			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Row");
+		}
+		$this->add($this->_currentRow, $append);
 		return $this->_currentRow;
 	}
 	
@@ -66,15 +73,17 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 * 
 	 * @param mixed $content to add to the new cell if given
 	 * @param mixed $config pass it to the cell constructor
+	 * @param boolean $append
+	 * @param string $class cell class
 	 * @return Ea_Layout_Table_Cell
 	 */
-	public function addCell($content=null, $config=null)
+	public function addCell($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Cell')
 	{
 		if(!$this->_currentRow)
 		{
 			throw new Ea_Layout_Table_Exception("no current row");
 		}
-		return $this->_currentRow->addCell($content, $config);
+		return $this->_currentRow->addCell($content, $config, $append, $class);
 	}
 
 	/**
@@ -82,15 +91,17 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 * 
 	 * @param mixed $content to add to the new cell if given
 	 * @param mixed $config pass it to the header cell constructor
+	 * @param boolean $append
+	 * @param string $class header cell class
 	 * @return Ea_Layout_Table_Header
 	 */
-	public function addHeader($content=null, $config=null)
+	public function addHeader($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Header')
 	{
 		if(!$this->_currentRow)
 		{
 			throw new Ea_Layout_Table_Exception("no current row");
 		}
-		return $this->_currentRow->addHeader($content, $config);
+		return $this->_currentRow->addHeader($content, $append, $config, $class);
 	}
 }
 

@@ -102,17 +102,10 @@ class Ea_Layout_Link extends Ea_Layout_Container
 		}
 	} 
 
-	/**
-	 * Render the container and the sublayouts.
-	 * 
-	 */
-	public function render()
+	public function preRender()
 	{
-		/*
-		 * Display the reserved attributes...
-		 */
+		parent::preRender();
 		parent::setAttribute('href', $this->getUrlString());
-		parent::render();
 	}
 	
 }

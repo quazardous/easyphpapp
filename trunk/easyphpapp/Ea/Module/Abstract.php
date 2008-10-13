@@ -249,9 +249,9 @@ abstract class Ea_Module_Abstract
 	 * 
 	 * @param mixed $content
 	 */
-	public function add($content)
+	public function add($content, $append=true)
 	{
-		$this->getPage()->add($content);
+		$this->getPage()->add($content, $append);
 	}
 
 	/**

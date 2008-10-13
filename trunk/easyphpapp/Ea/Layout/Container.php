@@ -45,33 +45,6 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	}
 	
 	/**
-	 * Parent container.
-	 *
-	 * @var Ea_Layout_Container
-	 */
-	protected $_parent=null;
-	
-	/**
-	 * Set the parent container.
-	 * 
-	 * @param Ea_Layout_Container $parent
-	 */
-	public function setParent(Ea_Layout_Container $parent)
-	{
-		$this->_parent=$parent;
-	}
-
-	/**
-	 * Return parent container
-	 *
-	 * @return Ea_Layout_Container
-	 */
-	public function getParent()
-	{
-		return $this->_parent;
-	}
-	
-	/**
 	 * The sublayouts array.
 	 * 
 	 * @var array(Ea_Layout_Abstract)
@@ -87,19 +60,16 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 * 
 	 * @param Ea_Layout_Abstract|mixed $content
 	 */
-	public function add($content)
+	public function add($content, $append=true)
 	{
-		if($content instanceof Ea_Layout_Container)
-		{
-			$content->setParent($this);
-		}
-		else if(!($content instanceof Ea_Layout_Abstract))
+		if(!($content instanceof Ea_Layout_Abstract))
 		{
 			$content=new Ea_Layout_Text($content);
 		}
-		$content->setPage($this->getPage());
+		$content->setParent($this);
 		$this->execCallbacksOn($content);
-		array_push($this->_subLayouts, $content);
+		if($append) array_push($this->_subLayouts, $content);
+		else array_unshift($this->_subLayouts, $content);
 	}
 	
 	/**
@@ -120,9 +90,12 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 */
 	public function render()
 	{
-		parent::render();
 		$this->open();
-		foreach($this->_subLayouts as $layout) $layout->render();
+		foreach($this->_subLayouts as $layout)
+		{
+			$layout->preRender();
+			$layout->render();
+		}
 		$this->close();
 	}
 	

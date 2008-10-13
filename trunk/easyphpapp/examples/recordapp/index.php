@@ -12,7 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-// This app will display 'Hello World'
+// This app will display a table of record
 
 // don't forget to set your include path
 require '../conf/config.php';

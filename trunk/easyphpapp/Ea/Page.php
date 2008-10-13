@@ -223,6 +223,7 @@ class Ea_Page
 <?php
 		}
 		?></head><?php
+		$this->_top->preRender();
 		$this->_top->render();
 		?>
 </html><?php
@@ -236,9 +237,9 @@ class Ea_Page
 	 * 
 	 * @param mixed $content
 	 */
-	public function add($content)
+	public function add($content, $append=true)
 	{
-		$this->_main->add($content);
+		$this->_main->add($content, $append);
 	}
 	
 	/**

@@ -46,6 +46,34 @@ abstract class Ea_Layout_Abstract
 			}
 		}
 	}
+
+	/**
+	 * Parent container.
+	 *
+	 * @var Ea_Layout_Container
+	 */
+	protected $_parent=null;
+	
+	/**
+	 * Set the parent container.
+	 * 
+	 * @param Ea_Layout_Container $parent
+	 */
+	public function setParent(Ea_Layout_Container $parent)
+	{
+		$this->_parent=$parent;
+		$this->setPage($parent->getPage());
+	}
+
+	/**
+	 * Return parent container
+	 *
+	 * @return Ea_Layout_Container
+	 */
+	public function getParent()
+	{
+		return $this->_parent;
+	}
 	
 	/**
 	 * The page to which the layout belongs.
@@ -60,7 +88,7 @@ abstract class Ea_Layout_Abstract
 	 * @param Ea_Page $page
 	 * @see $_page
 	 */
-	public function setPage(Ea_Page $page)
+	public function setPage($page)
 	{
 		$this->_page=$page;
 	}
@@ -73,6 +101,8 @@ abstract class Ea_Layout_Abstract
 	 */
 	public function getPage()
 	{
+		if($this->_page) return $this->_page;
+		if($this->getParent()) $this->_page=$this->getParent()->getPage(); 
 		return $this->_page;
 	}
 	
@@ -92,9 +122,24 @@ abstract class Ea_Layout_Abstract
 	}
 	
 	/**
+	 * Pre render validation stuff.
+	 * It's highly recommended that preRender() call parent::preRender().
+	 */
+	public function preRender()
+	{
+		
+	}
+	
+	/**
 	 * Abstract render method.
 	 * 
 	 * Derived class must overload this method in order to render the layout.
+	 * 
+	 * It's highly recommended that abstract implements only render stuff.
+	 * Special stuff like validaion shoud be put in preRender().
+	 * So it's highly recommended that render() call preRender().
+	 * 
+	 * @see preRender()
 	 * 
 	 */
 	abstract public function render();
