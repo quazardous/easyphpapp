@@ -382,15 +382,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return $this->_magicNamePrefix.'_'.$name;
 	}
 	
-	/**
-	 * Render the form.
-	 * 
-	 */
-	public function render()
+	public function preRender()
 	{
-		$this->magic();
+		parent::preRender();
 		parent::setAttribute('action', $this->getActionUrl());
-		parent::render();
+		$this->magic();
 	}
 
 	/**
@@ -418,22 +414,31 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 	
+	protected $_post=null;
+	
 	/**
 	 * This method allow you to test if some data where submitted in this form.
 	 * @see Ea_Layout_Form
 	 * @todo method='get' form
 	 * 
 	 */
-	public function tryCatch()
+	public function catchInput()
 	{
 		switch($this->getMethod())
 		{
 			case 'post':
-				if(!$this->getPage()->getRouter()->isPost()) return false;
-				//testing magic input
+				if(!count($_POST)) return false;
 				$magicId=$this->getMagicName('id');
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
+				if(count($this->_items)==0)
+				{
+					// special not initialized mode
+					$this->_post=$_POST;
+					unset($this->_post[$magicId]);
+					return true;
+				}
+				//testing magic input
 				$this->recusiveWalk(array($this, 'parseInput'));
 				return true;
 				break;
@@ -457,7 +462,102 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			default:
 				throw new Ea_Layout_Form_Exception('Not yet done');
 		}
-	}	
-}
+	}
+	
+	protected function usePostData()
+	{
+		return $this->_post!==null;
+	}
+	
+	public function offsetExists($offset)
+	{
+		if($this->usePostData())
+		{
+			return array_key_exists($offset, $this->_post);
+		}
+		return parent::offsetExists($offset);
+	}
+	
+ 	public function offsetGet($offset)
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return $this->_post[$offset];
+ 		}
+ 		return parent::offsetGet($offset);
+ 	}
+ 	 	
+ 	public function offsetSet($offset, $value)
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
+ 		}
+ 		parent::offsetSet($offset, $value);
+ 	}
+ 	
+ 	public function offsetUnset($offset)
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
+ 		}
+ 		parent::offsetUnset($offset);
+  	}
+ 	
+ 	public function current()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return current($this->_post);
+ 		}
+ 		return parent::current();
+  	}
+ 	
+ 	public function key()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return key($this->_post);
+ 		}
+ 		return key($this->_items);
+ 	}
+ 	
+ 	public function next()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return next($this->_post);
+ 		}
+ 		return next($this->_items);
+ 	}
+ 	
+ 	public function rewind()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return reset($this->_post);
+ 		}
+ 		return reset($this->_items);
+ 	}
+ 	
+ 	public function valid()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return current($this->_post)!==false;
+ 		}
+ 		return $this->current()!==false;
+ 	}
+ 	
+ 	public function count()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			return count($this->_post);
+ 		}
+ 		return count($this->_items);
+ 	}
+ }
 
 ?>

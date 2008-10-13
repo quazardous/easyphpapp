@@ -31,7 +31,6 @@ class Ea_Layout_Single extends Ea_Layout_Element_Abstract
 {
 	public function render()
 	{
-		parent::render();
 		echo '<';
 		echo $this->_tag;
 		$this->renderAttributes();

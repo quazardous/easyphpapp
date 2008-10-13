@@ -77,17 +77,13 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 		}
 	} 
 	
-	/**
-	 * Render the container and the sublayouts.
-	 * 
-	 */
-	public function render()
+	public function preRender()
 	{
+		parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
 		if($this->isChecked()) parent::setAttribute('checked', 'checked');
-		parent::render();
 	}
 	
 	/**

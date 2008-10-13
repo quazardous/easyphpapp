@@ -282,15 +282,15 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->setValue($this->getForm()->getFromPost($this->getId()));
 	}
 	
-	public function render()
+	public function preRender()
 	{
+		parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
 		parent::setAttribute('name', $this->getName());
 		parent::setAttribute('value', $this->getValue());
 		parent::setAttribute('type', $this->getType());
-		parent::render();
 	}
 	
 }

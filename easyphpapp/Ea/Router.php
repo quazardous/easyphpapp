@@ -841,7 +841,7 @@ class Ea_Router
 	 */
 	public function requestRedirect($route=null, $priority=null)
 	{
-		if($priotity===null) $priotity=self::redirectPriority_last;
+		if($priority===null) $priority=self::redirectPriority_last;
 		if($this->_requestedRedirectPriority===false||$priority<=$this->_requestedRedirectPriority)
 		{
 			$this->_requestedRedirectPriority=$priority;

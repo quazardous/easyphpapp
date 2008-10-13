@@ -144,6 +144,21 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 		return $this->_attributes;
 	}
 
+	/**
+	 * Pre render validation stuff.
+	 * It's highly recommended that preRender() call parent::preRender().
+	 */
+	public function preRender()
+	{
+		parent::preRender();
+		if(!$this->_tag)
+		{
+			/*
+			 * Cannot render tag without $_tag
+			 */
+			throw new Ea_Layout_Element_Exception("no tag defined");
+		}
+	}
 	
 	/**
 	 * Render the attribute list.
@@ -152,17 +167,6 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	protected function renderAttributes()
 	{
 		foreach($this->_attributes as $name=>$value) echo ' '.$name.'="'.$this->escape($value).'"';
-	}
-	
-	public function render()
-	{
-		if(!$this->_tag)
-		{
-			/*
-			 * Cannot render tag without $_tag
-			 */
-			throw new Ea_Layout_Element_Exception("no tag defined");
-		}
 	}
 }
 ?>
