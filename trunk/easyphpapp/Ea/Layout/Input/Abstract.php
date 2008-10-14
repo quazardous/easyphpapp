@@ -84,7 +84,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function __construct($id, $value=null, $config=null)
 	{
-		parent::__construct($config);
+		parent::__construct(null, $config);
 		$this->setId($id);
 		$this->setValue($value);
 	}

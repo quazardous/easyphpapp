@@ -31,9 +31,11 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 	 * - 'escape' : is the text escaped
 	 * 
 	 */
-	public function __construct($config=null)
+	public function __construct($text=null, $escape=null, $config=null)
 	{
 		parent::__construct($config);
+		if($text!==null)$this->setText($text);
+		if($escape!==null)$this->setEscape($escape);
 		if(is_array($config))
 		{
 			if(array_key_exists('text', $config))
@@ -47,7 +49,7 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 		}
 		else if(is_string($config)||is_numeric($config))
 		{
-			$this->_text=$config;
+			$this->setText($config);
 		}
 	}
 	

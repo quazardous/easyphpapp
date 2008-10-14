@@ -115,7 +115,7 @@ class Ea_Page
 			if(array_key_exists('title', $config)) $this->setTitle($config['title']);
 		}
 		
-		$this->_top=new Ea_Layout_Container(array('page'=>$this, 'tag'=>'body'));
+		$this->_top=new Ea_Layout_Container('body', $this);
 
 		/*
 		 * Can be usefull to make difference between top layout and main layout (where to add new content)

@@ -22,6 +22,18 @@ require_once 'Ea/Layout/Container.php';
 class Ea_Layout_Table_Cell extends Ea_Layout_Container
 {
 	protected $_tag='td';
+	
+	/**
+	 * Table cell layout constructor.
+	 * 
+	 * @param array $config associative array of parameters
+	 *  
+	 */
+	public function __construct($config=null)
+	{
+		parent::__construct(null, $config);
+	}
+	
 }
 
 ?>
