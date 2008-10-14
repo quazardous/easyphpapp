@@ -19,6 +19,8 @@ require_once 'Ea/Layout/Input/Password.php';
 require_once 'Ea/Layout/Input/Submit.php';
 require_once 'Security/User.php';
 require_once 'Ea/Module/Security/Interface.php';
+require_once 'Ea/Layout/Link.php';
+require_once 'Ea/Layout/Single.php';
 
 /**
  * Security module.
@@ -27,20 +29,16 @@ require_once 'Ea/Module/Security/Interface.php';
  *
  */
 class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security_Interface
-{
-	
-	public function init()
-	{
-		// set the page title
-		$this->getPage()->setTitle('Login form');
-	}
-	
+{	
 	/**
 	 * This method is called when no registered user is detected.
 	 * 
 	 */
 	public function securityChallenge()
 	{
+		// set the page title
+		$this->getPage()->setTitle('Login form');
+		
 		// declare the form
 		$form=new Ea_Layout_Form('login');
 		
@@ -73,7 +71,17 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
 
 	public function securityDeny()
 	{
-		die("denied");
+		// set the page title
+		$this->getPage()->setTitle('Security error');
+		
+		// add a cool deny message
+		$this->add($this->getRouter()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getRouter()->getTargetModule()."::".$this->getRouter()->getTargetAction());
+		
+		// classic <br/>
+		$this->getPage()->add(new Ea_Layout_Single('br'));
+
+		// add a back link
+		$this->add(new Ea_Layout_Link('javascript:history.back()', 'Back'));
 	}
 	
 	/**

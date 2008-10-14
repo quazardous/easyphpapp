@@ -34,10 +34,11 @@ $router->initSecurity($security, 'mySecurity');
 // says that admin is a user
 $security->addRole('admin', 'user');
 
-// says that user can access module 'index' action 'index'
-$router->allow('user', 'index', 'index');
+// says that user can access module 'index'
+$router->allow('user', 'index');
 
-// says that admin can access module 'index' action admin 'admin'
+// says that only admin can access module 'index' action admin 'admin'
+$router->deny('user', 'index', 'admin');
 $router->allow('admin', 'index', 'admin');
 
 // NB : if you do not specifically allow or deny, all authenticated users will be granted to access everything
