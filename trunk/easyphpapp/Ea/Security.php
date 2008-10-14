@@ -208,7 +208,7 @@ class Ea_Security
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
-		return $indentity['login'];
+		return $identity['login'];
 	}
 
 	/**
@@ -220,7 +220,7 @@ class Ea_Security
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
-		return $indentity['roles'];
+		return $identity['roles'];
 	}
 	
 	/**
@@ -233,7 +233,7 @@ class Ea_Security
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
-		return array_key_exists($role, $indentity['roles']);
+		return array_key_exists($role, $identity['roles']);
 	}
 	
 	/**
