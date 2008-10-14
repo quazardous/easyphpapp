@@ -29,6 +29,21 @@ require_once 'Ea/Layout/Element/Abstract.php';
  */
 class Ea_Layout_Single extends Ea_Layout_Element_Abstract
 {
+	/**
+	 * Single tag layout constructor.
+	 * 
+	 * @param array $config associative array of parameters
+	 * @param array $config associative array of parameters
+	 * 
+	 * @see addCallback()
+	 * 
+	 */
+	public function __construct($tag=null, $config=null)
+	{
+		parent::__construct($config);
+		if($tag) $this->setTag($tag);
+	}
+	
 	public function render()
 	{
 		echo '<';

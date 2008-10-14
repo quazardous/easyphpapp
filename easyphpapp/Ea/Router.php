@@ -403,17 +403,19 @@ class Ea_Router
 	 * @see Ea_Route
 	 * 
 	 * @param string $name
+	 * @param string $module if null take the current module
 	 * @return string|numeric|null
 	 */
-	public function getParam($name)
+	public function getParam($name, $module=null)
 	{
-		if(!$this->_runningModule)
+		if(!$module) $module=$this->_runningModule;
+		if(!$module)
 		{
-			throw new Ea_Router_Exception("no running module");
+			throw new Ea_Router_Exception("no module");
 		}
-		if(isset($_GET[$this->_runningModule][$name]))
+		if(isset($_GET[$module][$name]))
 		{
-			return $_GET[$this->_runningModule][$name];
+			return $_GET[$module][$name];
 		}
 		return null;
 	}
@@ -496,6 +498,13 @@ class Ea_Router
 	 */
 	protected $_security=null;
 
+	/**
+	 * Initialize security layer.
+	 * @see Ea_Module_Security_Interface
+	 * 
+	 * @param Ea_Security $security
+	 * @param string $module module to use for security stuff
+	 */
 	public function initSecurity(Ea_Security $security, $module)
 	{
 		$this->_securityModule=$this->standardize($module);
@@ -594,6 +603,13 @@ class Ea_Router
 	}
 	
 	/**
+	 * Must we use ACL to grant access to modules and actions.
+	 * 
+	 * @var boolean
+	 */
+	protected $_useRouterAcl=false;
+	
+	/**
 	 * Wrapper for security layer allow() method.
 	 * @see Ea_Security::allow()
 	 * 
@@ -603,6 +619,7 @@ class Ea_Router
 	 */
 	public function allow($roles, $modules=null, $actions=null)
 	{
+		$this->_useRouterAcl=true;
 		$this->_prepareArrayOfId($modules, 'module');
 		$this->_prepareArrayOfId($actions, 'action');
 		$this->getSecurity()->allow($roles, $modules, $actions);		
@@ -618,6 +635,7 @@ class Ea_Router
 	 */
 	public function deny($roles, $modules=null, $actions=null)
 	{
+		$this->_useRouterAcl=true;
 		$this->_prepareArrayOfId($modules, 'module');
 		$this->_prepareArrayOfId($actions, 'action');
 		$this->getSecurity()->deny($roles, $modules, $actions);		
@@ -642,7 +660,9 @@ class Ea_Router
 	 */
 	public function isAllowed()
 	{
-		return $this->getSecurity()->isAllowed("module::{$this->_targetModule}", "module::{$this->_targetAction}");
+		// if no router level ACL return true
+		if(!$this->_useRouterAcl) return true;
+		return $this->getSecurity()->isAllowed("module::{$this->_targetModule}", "action::{$this->_targetAction}");
 	}
 	
 	/**

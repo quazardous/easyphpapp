@@ -37,7 +37,7 @@ class Ea_Layout_Link extends Ea_Layout_Container
 	 */
 	public function __construct($url, $content=null, $target=null, $config=null)
 	{
-		parent::__construct($config);
+		parent::__construct(null, $config);
 		if($content) $this->add($content);
 		if($target) $this->setAttribute('target', $target);
 		$this->setUrl($url);

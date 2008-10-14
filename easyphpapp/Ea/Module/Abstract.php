@@ -260,11 +260,12 @@ abstract class Ea_Module_Abstract
 	 * @uses Ea_Router::getParam()
 	 * 
 	 * @param string $name
+	 * @param string $module
 	 * @return string|numeric|null
 	 */
-	public function getParam($name)
+	public function getParam($name, $module=null)
 	{
-		return $this->getRouter()->getParam($name);
+		return $this->getRouter()->getParam($name, $module);
 	}
 	
 	

@@ -26,15 +26,17 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	/**
 	 * Container layout constructor.
 	 * 
+	 * @param string $tag
 	 * @param array $config associative array of parameters
 	 * 
 	 * - 'callbacks' : an array of "on add layout" callbacks
 	 * @see addCallback()
 	 * 
 	 */
-	public function __construct($config=null)
+	public function __construct($tag=null, $config=null)
 	{
 		parent::__construct($config);
+		if($tag) $this->setTag($tag);
 		if(is_array($config))
 		{
 			if(array_key_exists('callbacks', $config))
@@ -64,7 +66,7 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	{
 		if(!($content instanceof Ea_Layout_Abstract))
 		{
-			$content=new Ea_Layout_Text($content);
+			$content=new Ea_Layout_Text(null, null, $content);
 		}
 		$content->setParent($this);
 		$this->execCallbacksOn($content);

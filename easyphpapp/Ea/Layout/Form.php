@@ -70,7 +70,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function __construct($id, $config=null)
 	{
 		$this->setMethod('post');
-		parent::__construct($config);
+		parent::__construct(null, $config);
 		$this->setId($id);
 		if(is_array($config))
 		{

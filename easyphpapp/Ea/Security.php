@@ -13,6 +13,8 @@
  */
 
 require_once 'Zend/Acl.php';
+require_once 'Zend/Acl/Role.php';
+require_once 'Zend/Acl/Resource.php';
 require_once 'Zend/Auth.php';
 require_once 'Zend/Auth/Result.php';
 require_once 'Zend/Auth/Storage/Session.php';
@@ -358,7 +360,7 @@ class Ea_Security
 	 * @param string|array(string) $parents
 	 * @return numeric
 	 */
-		public function addResource($resourceIds, $parents=null)
+	public function addResource($resourceIds, $parents=null)
 	{
 		$this->initAcl();
 		if(!is_array($resourceIds))
@@ -374,12 +376,12 @@ class Ea_Security
 			}
 		}
 		$ret=0;
-		foreach($roleIds as $roleId)
+		foreach($resourceIds as $resourceId)
 		{
 			if(!array_key_exists($resourceId, $this->_resources))
 			{
 				$this->_resources[$resourceId]=new Zend_Acl_Resource($resourceId);
-				$this->_acl->addResource($this->_resources[$resourceId], $parents);
+				$this->_acl->add($this->_resources[$resourceId], $parents);
 				$ret++;
 			}
 		}
@@ -430,13 +432,14 @@ class Ea_Security
     {
     	// if no rules always allowed...
 		if(!$this->_acl) return true;
-		$roles=$this->getConnectedUserRole();
-		// if no role alwas deny...
+		$roles=$this->getConnectedUserRoles();
+		// if no role always deny...
 		if($roles===null) return false;
 		if(!is_array($roles)) $roles=array($roles);
 		$allowed=false;
+		//TODO : add user test
 		// allowed if one of the user's role is allowed
-		foreach($roles as $roleId) $allowed|=$this->_acl->isAllowed($roleId, $resourceId, $privilegeId);
+		foreach($roles as $roleId) $allowed=$allowed||$this->_acl->isAllowed($roleId, $resourceId, $privilegeId);
 		return $allowed;
 	}
 }

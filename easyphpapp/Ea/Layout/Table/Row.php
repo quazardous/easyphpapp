@@ -26,6 +26,17 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	protected $_tag='tr';
 
 	/**
+	 * Table row layout constructor.
+	 * 
+	 * @param array $config associative array of parameters
+	 *  
+	 */
+	public function __construct($config=null)
+	{
+		parent::__construct(null, $config);
+	}
+	
+	/**
 	 * Add content to row.
 	 * Accept only cells.
 	 *
