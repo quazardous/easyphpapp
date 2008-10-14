@@ -14,6 +14,7 @@
 
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Link.php';
+require_once 'Ea/Layout/Text.php';
 require_once 'Ea/Layout/Single.php';
 
 /**
@@ -22,14 +23,12 @@ require_once 'Ea/Layout/Single.php';
  */
 class Module_Index extends Ea_Module_Abstract
 {
-	public function init()
-	{
-		// set the page title
-		$this->getPage()->setTitle('Hello '.$this->getRouter()->getSecurity()->getConnectedUserLogin());
-	}
 	
 	public function actionIndex()
 	{
+		// set the page title
+		$this->getPage()->setTitle('Common stuff');
+		
 		// add the text 'Hello <user>' to the page
 		$this->getPage()->add('Hello '.$this->getRouter()->getSecurity()->getConnectedUserLogin().', your are in common stuff.');
 
@@ -50,6 +49,9 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionAdmin()
 	{
+		// set the page title
+		$this->getPage()->setTitle('Admin stuff');
+		
 		// add the text 'Hello <user>' to the page
 		$this->getPage()->add('Hello '.$this->getRouter()->getSecurity()->getConnectedUserLogin().', your are in admin stuff.');
 
