@@ -28,8 +28,8 @@ $router->setModuleClassPrefix('Module');
 require_once 'Ea/Security.php';
 $security=Ea_Security::singleton();
 
-// initialize security layer and specify 'mySecurity' (Module_MySecurity) as security module.
-$router->initSecurity($security, 'mySecurity');
+// initialize security layer and specify 'my-security' (Module_MySecurity) as security module.
+$router->initSecurity($security, 'my-security');
 
 // says that admin is a user
 $security->addRole('admin', 'user');
