@@ -30,7 +30,7 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
-		// declare new form
+		// declare new records table
 		$table=new Ea_Layout_Record_Table;
 		
 		// declare the column using the basic record to field adapter.
