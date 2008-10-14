@@ -223,12 +223,26 @@ class Ea_Router
 	 * @param string $name
 	 * @return string
 	 */
-	protected function standardize($name)
+	protected function standardize($id)
 	{
-		return $name;
-		//TODO : think about it
-		$name=preg_replace('/\s/', '', strtolower($name));
-		$name=preg_replace('/(-_)[-_]*/', '-', $name);
+		$id=preg_replace('/[^a-zA-Z0-9_-]/', '', strtolower($id));
+		$id=preg_replace('/\-+/', '-', $id);
+		$id=preg_replace('/[-_]*_[-_]*/', '_', $id);
+		$id=trim($id,"-_");
+		return $id;
+	}
+	
+	protected function getStandardName($id)
+	{
+		$name='';
+		foreach(preg_split('/[-_]/', $id, -1, PREG_SPLIT_OFFSET_CAPTURE) as $word)
+		{
+			if($word[0])
+			{
+				if($word[1]>0&&$id{$word[1]-1}=='_') $name.='_';
+				$name.=ucfirst($word[0]);
+			}
+		}
 		return $name;
 	}
 	
@@ -299,15 +313,7 @@ class Ea_Router
 	protected function getModuleClassName($module=null)
 	{
 		if(!$module)$module=$this->_targetModule;
-		$class='';
-		foreach(preg_split('/[-_]/',$module) as $word)
-		{
-			if($word)
-			{
-				$class.='_'.ucfirst($word);
-			}
-		}
-		$class=$this->getModuleClassPrefix().'_'.$class;
+		$class=$this->getModuleClassPrefix().'_'.$this->getStandardName($module);
 		return preg_replace('/_+/','_',$class);
 	}
 	
@@ -323,15 +329,7 @@ class Ea_Router
 	protected function getActionMethodName($action=null, $prefix='action')
 	{
 		if(!$action)$action=$this->_targetAction;
-		$name='';
-		foreach(preg_split('/[-_]/',$action) as $word)
-		{
-			if($word)
-			{
-				$name.=ucfirst($word);
-			}
-		}
-		return $prefix.ucfirst($name);
+		return $prefix.$this->getStandardName($action);
 	}
 	
 	/**
@@ -369,6 +367,11 @@ class Ea_Router
 			{
 				throw new Ea_Router_Exception("{$moduleClasse} does not extend Ea_Module_Abstract");
 			}
+		}
+		$m=get_class_methods($moduleClasse);
+		if(! in_array( $actionMethod, $m))
+		{
+			throw new Ea_Router_Exception("{$actionMethod} does not exists in {$moduleClasse}");
 		}
 		$this->_runningAction=$action;
 		$obj->init();
