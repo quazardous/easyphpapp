@@ -1,0 +1,20 @@
+#summary EasyPhpApp Quick Start.
+
+= Introduction =
+
+How to create your first EasyPhpApp project.
+
+
+= Details =
+
+Get the [http://framework.zend.com/download/overview Zend Framework] library. The last snapshot should work with EasyPhpApp.
+
+Download the last *EasyPhpApp tarball* and untar it. You can also checkout the SVN repository.
+
+Look at the *./examples* folder.
+
+Just set up the *./examples/conf/config.php*.
+
+Play with the examples.
+
+Have fun.
