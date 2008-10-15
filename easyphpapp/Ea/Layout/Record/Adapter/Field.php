@@ -15,7 +15,7 @@
 /**
  * Generic class to get column cell content from record (array or object).
  */
-class Ea_Layout_Record_Column_Field implements Ea_Layout_Record_Column_Interface
+class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interface
 {
 	protected $_field;
 	

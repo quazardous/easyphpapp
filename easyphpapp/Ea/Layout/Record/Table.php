@@ -13,7 +13,7 @@
  */
 
 require_once 'Ea/Layout/Table.php';
-require_once 'Ea/Layout/Record/Column/Interface.php';
+require_once 'Ea/Layout/Record/Adapter/Interface.php';
 
 /**
  * Table of records layout class.
@@ -57,21 +57,21 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 
 	/**
 	 * Columns to display
-	 * @var array(Ea_Layout_Record_Column)
+	 * @var array(Ea_Layout_Record_Adapter_Interface)
 	 */
 	protected $_columns=array();
 	
 	/**
 	 * Add a column to the table.
 	 * 
-	 * @param Ea_Layout_Record_Column_Interface $column an object that take record and return Ea_Layout_Abstract
+	 * @param Ea_Layout_Record_Adapter_Interface $column an object that take record and return Ea_Layout_Abstract
 	 * @param mixed $content a header content if given
 	 * @param array $config the header class constructor config array
 	 * @param string $class the header class
 	 * @return Ea_Layout_Table_Header
-	 * @see Ea_Layout_Record_Column
+	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	public function addColumn(Ea_Layout_Record_Column_Interface $column, $content=null, $config=null, $class='Ea_Layout_Table_Header')
+	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $config=null, $class='Ea_Layout_Table_Header')
 	{
 		array_push($this->_columns, $column);
 		if($content!==null) $this->addColumnHeader($content, $config, $class);
