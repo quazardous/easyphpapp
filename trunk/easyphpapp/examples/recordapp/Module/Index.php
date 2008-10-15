@@ -14,7 +14,7 @@
 
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Record/Table.php';
-require_once 'Ea/Layout/Record/Column/Field.php';
+require_once 'Ea/Layout/Record/Adapter/Field.php';
 
 /**
  * My basic module.
@@ -34,9 +34,9 @@ class Module_Index extends Ea_Module_Abstract
 		$table=new Ea_Layout_Record_Table;
 		
 		// declare the column using the basic record to field adapter.
-		$table->addColumn(new Ea_Layout_Record_Column_Field('name'),   'Name');
-		$table->addColumn(new Ea_Layout_Record_Column_Field('age'),    'Age');
-		$table->addColumn(new Ea_Layout_Record_Column_Field('gender'), 'Gender');
+		$table->addColumn(new Ea_Layout_Record_Adapter_Field('name'),   'Name');
+		$table->addColumn(new Ea_Layout_Record_Adapter_Field('age'),    'Age');
+		$table->addColumn(new Ea_Layout_Record_Adapter_Field('gender'), 'Gender');
 		
 		// set the records...
 		$table->setRecords(

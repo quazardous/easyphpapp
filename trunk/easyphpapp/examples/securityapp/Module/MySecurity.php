@@ -69,6 +69,10 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
 		// router will call render
 	}
 
+	/**
+	 * This method is called when registered user is not allowed to access a module/action.
+	 * 
+	 */
 	public function securityDeny()
 	{
 		// set the page title

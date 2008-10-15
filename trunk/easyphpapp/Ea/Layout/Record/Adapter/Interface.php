@@ -15,7 +15,7 @@
 /**
  * Interface to get column cell content from record.
  */
-interface Ea_Layout_Record_Column_Interface
+interface Ea_Layout_Record_Adapter_Interface
 {
 	/**
 	 * This function must return content from record.
