@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.3.20081015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -415,6 +415,16 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}
 	
 	protected $_post=null;
+
+	/**
+	 * Test if request is POST.
+	 * 
+	 * @return boolean
+	 */
+	public function isPost()
+	{
+		return strtoupper($_SERVER['REQUEST_METHOD'])=='POST';
+	}
 	
 	/**
 	 * This method allow you to test if some data where submitted in this form.
@@ -427,7 +437,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		switch($this->getMethod())
 		{
 			case 'post':
-				if(!count($_POST)) return false;
+				if(!$this->isPost()) return false;
 				$magicId=$this->getMagicName('id');
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
@@ -443,6 +453,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				return true;
 				break;
 			default:
+				//TODO : implements get form
 				throw new Ea_Layout_Form_Exception('Not yet done');
 		}
 	}

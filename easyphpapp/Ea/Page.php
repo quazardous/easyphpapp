@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.3.20081015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -43,6 +43,18 @@ class Ea_Page
 	 * @var Ea_Layout_Container
 	 */
 	protected $_main=null;
+	
+	/**
+	 * Set the main layout.
+	 * When you use add(), you will add layout to this layout.
+	 * This layout must be somewhat linked to the page before to be in the render flow.
+	 * 
+	 * @param Ea_Layout_Abstract $layout
+	 */
+	public function setMainLayout(Ea_Layout_Abstract $layout)
+	{
+		$this->_main=$layout;
+	}
 	
 	/**
 	 * The title of the page.

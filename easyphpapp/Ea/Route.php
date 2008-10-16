@@ -7,14 +7,17 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.3.20081016
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Router.php';
+require_once 'Ea/Route/Exception.php';
+
 /**
  * Route class.
- * The route is a structured way to represent url.
+ * The route is a structured way to represent internal url.
  * @see Ea_Router
  * 
  */
@@ -46,7 +49,14 @@ class Ea_Route
 	 * 
 	 * @var array
 	 */
-	protected $_params=null;
+	protected $_params=array();
+
+	/**
+	 * Params for other module to put in the query part.
+	 * 
+	 * @var array(string=>array))
+	 */
+	protected $_otherParams=array();
 
 	/**
 	 * Fragement is what is behind th #.
@@ -62,7 +72,64 @@ class Ea_Route
 	 */
 	protected $_router=null;
 	
+	/**
+	 * Url string. Used for optimization.
+	 * 
+	 * @var string
+	 */
 	protected $_url=null;
+	
+	/**
+	 * Define if route must propagate existing params.
+	 * 
+	 * @var boolean|array
+	 * - false : don't propagate other modules params
+	 * - true : propagate other modules params
+	 * - array : propagate given modules params
+	 */
+	protected $_propagate=true;
+	
+	/**
+	 * Set propagate.
+	 * @see $_propagate
+	 * 
+	 * @param boolean|string|array(string) $propagate
+	 */
+	public function propagate($propagate)
+	{
+		$this->_url=null;
+		if(is_array($propagate))
+		{
+			$this->_propagate=array();
+			foreach($propagate as $module)
+			{
+				array_push($this->_propagate, Ea_Router::standardize($module));
+			}
+		}
+		else if(is_string($propagate))
+		{
+			$this->_propagate=array(Ea_Router::standardize($propagate));
+		}
+		else if($propagate)
+		{
+			$this->_propagate=true;
+		}
+		else
+		{
+			$this->_propagate=false;
+		}
+	}
+	
+	/**
+	 * Get propagate.
+	 * @see $_propagate
+	 * 
+	 * @return boolean|array
+	 */
+	public function getPropagate()
+	{
+		return $this->_propagate;
+	}
 	
 	/**
 	 * Route constructor.
@@ -71,16 +138,16 @@ class Ea_Route
 	 * @param string $script
 	 * @param string $module
 	 * @param string $action
-	 * @param array $params
+	 * @param array $params for the given module
 	 * @param string $fragment
 	 */
-	public function __construct(Ea_Router $router, $script=null, $module=null, $action=null, $params=array(), $fragment=null)
+	public function __construct(Ea_Router $router, $script=null, $module=null, $action=null, $params=null, $fragment=null)
 	{
 		$this->_router=$router;
 		$this->_script=$script;
-		$this->_module=$module;
-		$this->_action=$action;
-		$this->_params=$params;
+		if($module)$this->setModule($module);
+		if($action)$this->setAction($action);
+		$this->_params=is_array($params)?$params:array();
 		$this->_fragment=$fragment;
 	}
 
@@ -98,16 +165,34 @@ class Ea_Route
 	}
 
 	/**
-	 * Return the associative array of params.
+	 * Return an array of associative arrays of params for each module.
 	 *
-	 * @return array(string=>string)
+	 * @param string $module target module
+	 * 
+	 * @return array(string=>array(string=>string))
 	 */
-	public function getParams()
+	public function getAllParams($module=null)
 	{
-		if(is_array($this->_params)) return $this->_params;
-		return array();
-	}
-
+		if($module)
+		{
+			$modul=Ea_Router::standardize($module);
+		}
+		else
+		{
+			$module=$this->_module;
+		}
+		if(!$module)
+		{
+			throw new Ea_Route_Exception('no target module');
+		}
+		foreach($this->_params as $name=>$value)
+		{
+			if(!array_key_exists($module, $this->_otherParams)) $this->_otherParams[$module]=array();
+			$this->_otherParams[$module][$name]=$value;
+		}
+		return $this->_otherParams;
+	}	
+	
 	/**
 	 * Set the script.
 	 * @see $_script
@@ -161,7 +246,7 @@ class Ea_Route
 	 */
 	public function setModule($module)
 	{
-		$this->_module=$module;
+		$this->_module=Ea_Router::standardize($module);
 		$this->_url=null;
 	}
 
@@ -184,7 +269,7 @@ class Ea_Route
 	 */
 	public function setAction($action)
 	{
-		$this->_action=$action;
+		$this->_action=Ea_Router::standardize($action);
 		$this->_url=null;
 	}
 	
@@ -202,10 +287,19 @@ class Ea_Route
 	 * Get a given param value.
 	 * 
 	 * @param string $name
+	 * @param string $module if null will impact route module
+	 * 
 	 * @return string|numeric
 	 */
-	public function getParam($name)
+	public function getParam($name, $module=null)
 	{
+		if($module)
+		{
+			$module=Ea_Router::standardize($module);
+			if(!array_key_exists($module, $this->_otherParams)) return null;
+			if(!array_key_exists($name, $this->_otherParams[$module])) return null;
+			return $this->_otherParams[$module][$name];
+		}
 		if(isset($this->_params[$name])) return $this->_params[$name];
 		return null;		
 	}
@@ -215,11 +309,21 @@ class Ea_Route
 	 * 
 	 * @param string $name
 	 * @param string|numeric $value
+	 * @param string $module if null will impact route module
 	 */
-	public function setParam($name, $value)
+	public function setParam($name, $value, $module=null)
 	{
-		if(isset($this->_params[$name])&&$value===null) unset($this->_params[$name]);
-		else $this->_params[$name]=$value;
+		$this->_url=null;
+		if($module)
+		{
+			$module=Ea_Router::standardize($module);
+			if(!array_key_exists($module, $this->_otherParams)) $this->_otherParams[$module]=array();
+			$this->_otherParams[$module][$name]=$value;
+		}
+		else
+		{
+			$this->_params[$name]=$value;
+		}
 	}
 	
 }
