@@ -7,10 +7,13 @@
  * @package     examples
  * @subpackage  config
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.2.20081015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
+
+// just to be sure you wont use magic quotes....
+set_magic_quotes_runtime(false);
 
 set_include_path(
 '/path/to/your/include'.PATH_SEPARATOR. // where to search your classes

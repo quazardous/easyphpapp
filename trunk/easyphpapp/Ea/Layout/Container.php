@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.3.20081015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -61,6 +61,7 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 * @uses execCallbacksOn()
 	 * 
 	 * @param Ea_Layout_Abstract|mixed $content
+	 * @param boolean $append
 	 */
 	public function add($content, $append=true)
 	{

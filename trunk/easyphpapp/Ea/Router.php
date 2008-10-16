@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.3.20081016
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -50,12 +50,32 @@ class Ea_Router
 	protected $_defaultModule='index';
 
 	/**
+	 * Get default module.
+	 * 
+	 * @return string
+	 */
+	public function getDefaultModule()
+	{
+		return $this->_defaultModule;
+	}
+	
+	/**
 	 * Default action.
 	 * 
 	 * @var string
 	 */
 	protected $_defaultAction='index';
 
+	/**
+	 * Get default action.
+	 * 
+	 * @return string
+	 */
+	public function getDefaultAction()
+	{
+		return $this->_defaultAction;
+	}
+	
 	/**
 	 * Default script.
 	 * 
@@ -170,10 +190,17 @@ class Ea_Router
 		// if post router will redirect before render()
 		if($this->isPost()) $this->requestRedirect();
 		$infos=parse_url($_SERVER['REQUEST_URI']);
-		$this->_targetScript=$infos['path'].'?';
-		if(isset($_GET[$this->_moduleParamName])) $this->_targetModule=$this->standardize($_GET[$this->_moduleParamName]);
+		if(preg_match('|/$|', $infos['path']))
+		{
+			$this->_targetScript='?';
+		}
+		else
+		{
+			$this->_targetScript=basename($infos['path']).'?';
+		}
+		if(isset($_GET[$this->_moduleParamName])) $this->_targetModule=self::standardize($_GET[$this->_moduleParamName]);
 		else $this->_targetModule=$this->_defaultModule;
-		if(isset($_GET[$this->_actionParamName])) $this->_targetAction=$this->standardize($_GET[$this->_actionParamName]);
+		if(isset($_GET[$this->_actionParamName])) $this->_targetAction=self::standardize($_GET[$this->_actionParamName]);
 		else $this->_targetAction=$this->_defaultAction;
 	}
 
@@ -186,24 +213,56 @@ class Ea_Router
 	public function url(Ea_Route $route)
 	{
 		$script=$route->getScript();
-		//if($script===null) $script=$this->_targetScript;
-		$get=$_GET;
-		if($route->getModule())
+		if(!$script) $script=$this->_targetScript;
+		
+		$propagate=$route->getPropagate();
+		if(is_array($propagate))
 		{
-			$get[$this->_moduleParamName]=$route->getModule();
-		}
-		if($route->getAction())
-		{
-			$get[$this->_actionParamName]=$route->getAction();
-		}
-		if($route->getModule())
-		{
-			foreach($route->getParams() as $param => $value)
+			$get=array();
+			foreach($propagate as $module)
 			{
-				if($value!==null)$get[$get[$this->_moduleParamName]][$param]=urlencode($value);
+				if(array_key_exists($module, $_GET))
+				{
+					$get[$module]=$_GET[$module];
+				}
 			}
 		}
-		return $script.http_build_query($get);
+		else if($propagate)
+		{
+			$get=$_GET;
+		}
+		else
+		{
+			$get=array();
+		}
+		unset($get[$this->_moduleParamName]);
+		unset($get[$this->_actionParamName]);
+
+		$module=$route->getModule();
+		$action=$route->getAction();
+		
+		if(!$module)$module=$this->_defaultModule;
+		if(!$action) $action=$this->_defaultAction;
+		if($module!=$this->_defaultModule)
+		{
+			$get[$this->_moduleParamName]=$module;
+		}
+		if($action!=$this->_defaultAction)
+		{
+			$get[$this->_actionParamName]=$action;
+		}
+		foreach($route->getAllParams($module) as $mod => $params)
+		{
+			foreach($params as $name=>$value)
+			{
+				if(!array_key_exists($mod, $get)) $get[$mod]=array();
+				$get[$mod][$name]=$value;
+			}
+		}
+		$url=$script.http_build_query($get);
+		$url=rtrim($url, '?');
+		if(!$url)$url='?';
+		return $url;
 	}
 
 	/**
@@ -223,7 +282,7 @@ class Ea_Router
 	 * @param string $name
 	 * @return string
 	 */
-	protected function standardize($id)
+	public static function standardize($id)
 	{
 		$id=preg_replace('/[^a-zA-Z0-9_-]/', '', strtolower($id));
 		$id=preg_replace('/\-+/', '-', $id);
@@ -254,7 +313,7 @@ class Ea_Router
 	 */
 	public function setDefaultModule($module)
 	{
-		$this->_defaultModule=$this->standardize($module);
+		$this->_defaultModule=self::standardize($module);
 	}
 
 	/**
@@ -265,7 +324,7 @@ class Ea_Router
 	 */
 	public function setDefaultAction($action)
 	{
-		$this->_defaultAction=$this->standardize($action);
+		$this->_defaultAction=self::standardize($action);
 	}
 	
 	/**
@@ -276,7 +335,7 @@ class Ea_Router
 	 * @var string
 	 */
 	protected $_moduleClassPrefix='Ea_Module_';
-
+	
 	/**
 	 * Set the module class prefix.
 	 * @see $_moduleClassPrefix
@@ -435,7 +494,10 @@ class Ea_Router
 	
 	/**
 	 * Return a default route.
-	 * Null elements are filled with current URL elements.     
+	 * Null elements are filled with current URL elements.
+	 * If you specify a script, module and action are not auto filled.
+	 * If you specify a module, action is not auto filled.
+	 *    
 	 * @see Ea_Route
 	 *
 	 * @param array $params
@@ -450,17 +512,11 @@ class Ea_Router
 	{
 		if(!$script)
 		{
-			$script=$this->_targetScript;
+			$script=$this->_targetScript;			
 			//FIXME : zarb, pourquoi y a un if ici
-		}
-		else
-		{
 			if(!$module)
 			{
 				$module=$this->_targetModule;
-			}
-			else
-			{
 				if(!$action)$action=$this->_targetAction;
 			}
 		}
@@ -478,6 +534,7 @@ class Ea_Router
 	public function redirect(Ea_Route $route, $exit=true)
 	{
 		$location=$this->url($route);
+		if(!$location) $location='.';
 		header("Location: {$location}");
 		if($exit)exit;
 	}
@@ -491,7 +548,7 @@ class Ea_Router
 	 * @var unknown_type
 	 */
 	protected $_securityModule=null;
-	
+
 	/**
 	 * Security layer : if set security page enable.
 	 * @see initSecurity()
@@ -510,7 +567,7 @@ class Ea_Router
 	 */
 	public function initSecurity(Ea_Security $security, $module)
 	{
-		$this->_securityModule=$this->standardize($module);
+		$this->_securityModule=self::standardize($module);
 		$this->_security=$security;
 	}
 	
@@ -776,7 +833,7 @@ class Ea_Router
 			case 'exlusive':
 				if(count($this->_callbacksQueues[$queue]['callbacks'])>0)
 				{
-					throw new Ea_Router_Exception("Failed to 'exclusive'' add callback to '{$queue}'' queue");
+					throw new Ea_Router_Exception("Failed to 'exclusive' add callback to '{$queue}' queue");
 				}
 				array_push($this->_callbackQueues[$queue]['callbacks'], $callback);
 				break;
