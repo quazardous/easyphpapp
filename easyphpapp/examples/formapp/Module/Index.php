@@ -16,6 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Text.php';
+require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
 /**
  * My basic module.
@@ -49,6 +50,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// draw the form
 		$form->add(new Ea_Layout_Input_Text('text1'));
+		$form->add(new Ea_Layout_Input_Select('select1', array(1=>'one', 2=>'two', 3=>'three'), 2));
 		$form->add(new Ea_Layout_Input_Submit('send', 'Send'));
 		
 		// add the form to the page
