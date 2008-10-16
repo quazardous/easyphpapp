@@ -10,6 +10,7 @@
  * @version     0.0.2.3.20081015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
+ * @filesource
  */
 
 // This app will display 'Hello World'
