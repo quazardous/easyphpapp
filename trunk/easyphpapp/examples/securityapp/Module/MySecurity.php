@@ -10,6 +10,7 @@
  * @version     0.0.1
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
+ * @filesource
  */
 
 require_once 'Ea/Layout/Form.php';

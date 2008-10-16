@@ -5,11 +5,12 @@
  * 
  * @category    EasyPhpApp
  * @package     examples
- * @subpackage  basicapp
+ * @subpackage  routeapp
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.0.1
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
+ * @filesource
  */
 
 require_once 'Ea/Module/Abstract.php';
