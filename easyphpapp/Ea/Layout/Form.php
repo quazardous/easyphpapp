@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.3.20081015
+ * @version     0.0.2.5.20081020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -154,7 +154,8 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					if( ($arr[$pid] instanceof Ea_Layout_Input_Radio) && ($input instanceof Ea_Layout_Input_Radio) )
 					{
 						// last radio is selected ?
-						$selected=($input->getValue()==$input->getRadioValue());
+						// do it before setting parent !
+						$selected=$input->isSelected();
 						$input->setGroupParent($arr[$pid]);
 						if($selected) $arr[$pid]->setValue($input->getRadioValue());
 					}
