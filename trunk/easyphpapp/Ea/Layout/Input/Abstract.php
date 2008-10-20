@@ -288,9 +288,9 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		/*
 		 * Display the reserved attributes...
 		 */
-		parent::setAttribute('name', $this->getName());
-		parent::setAttribute('value', $this->getValue());
-		parent::setAttribute('type', $this->getType());
+		$this->_setAttribute('name', $this->getName());
+		$this->_setAttribute('value', $this->getValue());
+		$this->_setAttribute('type', $this->getType());
 	}
 	
 }

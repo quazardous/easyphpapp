@@ -16,6 +16,7 @@ require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Layout/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Array.php';
 require_once 'Ea/Layout/Input/Hidden.php';
+require_once 'Ea/Layout/Input/Radio.php';
 require_once 'Ea/Layout/Form/Exception.php';
 
 /**
@@ -148,6 +149,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					if(!($arr[$pid] instanceof Ea_Layout_Input_Abstract))
 					{
 						throw new Ea_Layout_Form_Exception('Not an input');
+					}
+					// special case four radio buttons
+					if( ($arr[$pid] instanceof Ea_Layout_Input_Radio) && ($input instanceof Ea_Layout_Input_Radio) )
+					{
+						// last radio is selected ?
+						$selected=($input->getValue()==$input->getRadioValue());
+						$input->setGroupParent($arr[$pid]);
+						if($selected) $arr[$pid]->setValue($input->getRadioValue());
 					}
 					// if same id => same input just break
 					break;

@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.4.20081020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -124,10 +124,24 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	 */
 	public function setAttribute($name, $value)
 	{
+		$this->_setAttribute($name, $value);
+	}
+
+	/**
+	 * Set an attribute. Protected version.
+	 *
+	 * @param string $name
+	 * @param string|numeric $value
+	 * 
+	 * @see $_attributes
+	 * @final
+	 */
+	final protected function _setAttribute($name, $value)
+	{
 		$name=strtolower($name);
 		$this->_attributes[$name]=$value;
 	}
-
+	
 	public function getAttribute($name)
 	{
 		$name=strtolower($name);
@@ -166,7 +180,13 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	 */
 	protected function renderAttributes()
 	{
-		foreach($this->_attributes as $name=>$value) echo ' '.$name.'="'.$this->escape($value).'"';
+		foreach($this->_attributes as $name=>$value)
+		{
+			if($value!==null)
+			{
+				echo ' '.$name.'="'.$this->escape($value).'"';
+			}
+		}
 	}
 }
 ?>
