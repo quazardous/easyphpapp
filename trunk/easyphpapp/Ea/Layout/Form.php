@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.0.2.5.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -18,6 +18,7 @@ require_once 'Ea/Layout/Input/Array.php';
 require_once 'Ea/Layout/Input/Hidden.php';
 require_once 'Ea/Layout/Input/Radio.php';
 require_once 'Ea/Layout/Form/Exception.php';
+require_once 'Zend/Session/Namespace.php';
 
 /**
  * Form layout class.
@@ -83,6 +84,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			{
 				$this->setAction($config['action']);
 			}
+			if(array_key_exists('remember_all_inputs_values', $config))
+			{
+				$this->rememberAllInputsValues($config['remember_all_inputs_values']);
+			}
 		}
 		/*
 		 * We want to know when input layouts are added.
@@ -119,6 +124,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		$input->setForm($this);
 		$this->setArrayInputAt($input->getId(), $input);
+		if($this->_rememberAllInputsValues)
+		{
+			$input->rememberValue();
+		}
 	}
 	
 	/**
@@ -266,7 +275,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			default:
 				throw new Ea_Layout_Form_Exception("$method: unknown method");
 		}
-		parent::setAttribute('method', $method);
 	}
 
 	/**
@@ -278,7 +286,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		return $this->_method;
 	}
-	
+
+	/**
+	 * The form id (and name).
+	 * 
+	 * @var string
+	 */
+	protected $_id=null;
+		
 	/**
 	 * Set the form id.
 	 * 
@@ -291,9 +306,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			throw new Ea_Layout_Form_Exception('Empty Id');
 		}
 		$this->_id=$id;
-		//TODO simplify this
-		parent::setAttribute('id', $id);
-		parent::setAttribute('name', $id);
 	}
 	
 	/**
@@ -395,33 +407,63 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function preRender()
 	{
 		parent::preRender();
-		parent::setAttribute('action', $this->getActionUrl());
+		$this->_setAttribute('action', $this->getActionUrl());
+		$this->_setAttribute('id', $this->getId());
+		$this->_setAttribute('name', $this->getId());
+		$this->_setAttribute('method', $this->getMethod());
 		$this->magic();
 	}
 
 	/**
-	 * Get the $_POST value for the given id.
-	 * ie. the id array('foo','bar') reference $_POST['foo']['bar']
-	 * if array contains null try to increment a counter.
+	 * Get an array element from an array of keys.
+	 * ie. the id array('foo','bar') wil return $array['foo']['bar']
 	 * 
-	 * @param array $id
-	 * @return string
+	 * @param array $array
+	 * @param array|string $id
+	 * @return mixed
 	 */
-	public function getFromPost(array $id)
+	static public function array_get_from_id(array &$array, $id)
 	{
-		$arr=&$_POST;
+		if(!is_array($id))
+		{
+			$id=array($id);
+		}
+		$arr=&$array;
 		$i=0;
-		// add inputs in an array pattern
-		// $form[id1][id2][...][idn]=input
 		foreach($id as $pid)
 		{
-			// can't be null part of id : if part of is null => autoincrement
+			// can't be null part of id
 			if($pid===null) return null;
 			if(!isset($arr[$pid])) return null;
 			if(($i+1)==count($id)) return $arr[$pid];
 			$arr=&$arr[$pid];
 			$i++;
 		}
+	}
+	
+	/**
+	 * Get the $_POST value for the given id.
+	 * ie. the id array('foo','bar') reference $_POST['foo']['bar']
+	 * 
+	 * @param array $id
+	 * @return string
+	 */
+	public function getValueFromPost(array $id)
+	{
+		return self::array_get_from_id($_POST, $id);
+	}
+	
+	/**
+	 * Get the stored value for the given id.
+	 * 
+	 * @param array $id
+	 * @return string
+	 */
+	public function getValueFromSession(array $id)
+	{
+		if(!isset($this->getSession()->forms[$this->getId()])) return null;
+		$input=self::array_get_from_id($this->getSession()->forms[$this->getId()], $id);
+		return $input->getValue();
 	}
 	
 	protected $_post=null;
@@ -449,8 +491,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			case 'post':
 				if(!$this->isPost()) return false;
 				$magicId=$this->getMagicName('id');
+				//testing magic input
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
+				$stored=$this->tryRestore();
 				if(count($this->_items)==0)
 				{
 					// special not initialized mode
@@ -458,8 +502,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					unset($this->_post[$magicId]);
 					return true;
 				}
-				//testing magic input
-				$this->recusiveWalk(array($this, 'parseInput'));
+				$this->recursiveWalk(array($this, 'parseInput'));
+				// store new values
+				if($stored) $this->store();
 				return true;
 				break;
 			default:
@@ -478,7 +523,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		switch($this->getMethod())
 		{
 			case 'post':
-				$input->setValue($this->getFromPost($input->getId()));
+				$input->setValue($this->getValueFromPost($input->getId()));
 				break;
 			default:
 				throw new Ea_Layout_Form_Exception('Not yet done');
@@ -579,6 +624,105 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  		}
  		return count($this->_items);
  	}
- }
 
-?>
+ 	protected $_sessionNamespace=__CLASS__;
+	/**
+	 * Set session namespace.
+	 * @uses $_sessionNamespace
+	 * 
+	 * @param string $name
+	 */
+	public function setSessionNamespace($namespace)
+	{
+		$this->_sessionNamespace=$namespace;
+	}
+
+	/**
+	 * Get session namespace.
+	 * 
+	 * @return string
+	 */
+	public function getSessionNamespace()
+	{
+		return $this->_sessionNamespace;
+	}
+  	
+	/**
+	 * Session used to store structure.
+	 * 
+	 * @var Zend_Session_Namespace
+	 */
+	protected $_session=null;
+	
+	/**
+	 * Get session.
+	 * 
+	 * @return Zend_Session_Namespace
+	 */
+	protected function getSession()
+	{
+		if(!$this->_session)
+		{
+			$this->_session=new Zend_Session_Namespace($this->_sessionNamespace);
+		}
+		return $this->_session;
+	}
+	
+ 	/**
+ 	 * Store the structure using session.
+ 	 * This can be usefull to remember inputs values, etc...
+ 	 * 
+ 	 */
+ 	public function store()
+ 	{
+ 		if(!isset($this->getSession()->forms)) $this->getSession()->forms=array();
+ 		$this->getSession()->forms[$this->getId()]=$this->_items;
+ 	}
+ 	
+ 	/**
+ 	 * Try to restore structure.
+ 	 * 
+ 	 * @return boolean
+ 	 */
+ 	public function tryRestore()
+ 	{
+ 		if(!isset($this->getSession()->forms[$this->getId()])) return false;
+		$this->_items=$this->getSession()->forms[$this->getId()];
+		$this->recursiveWalk(array($this, 'setInputForm'));
+		return true;
+ 	}
+ 	
+ 	/**
+ 	 * Delete any stored structure.
+ 	 * 
+ 	 */
+ 	public function unstore()
+ 	{
+ 		unset($this->getSession()->forms[$this->getId()]);
+ 	}
+
+	public function setInputForm(Ea_Layout_Input_Abstract $input)
+	{
+		$input->setForm($this);
+	}
+
+	/**
+	 * Remember all inputs values.
+	 * When the input is added to the form, automatically call $input->rememebrValue();
+	 * @see Ea_Layout_Input_Abstract::rememberValue()
+	 * 
+	 * @var boolean
+	 */
+	protected $_rememberAllInputsValues=false;
+	
+    /**
+     * Set remember all inputs values.
+     * 
+     * @param boolean $remember
+     */
+    public function rememberAllInputsValues($remember=true)
+    {
+    	$this->_rememberAllInputsValues=$remember;
+    }
+	
+}

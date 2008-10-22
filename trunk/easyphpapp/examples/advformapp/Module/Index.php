@@ -32,10 +32,10 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		// we will use session to display our inputs
 		// do not use session_start()
-		Zend_Session::start();		
+		Zend_Session::start();
 		
 		// set the page title
-		$this->getPage()->setTitle('Simple form');
+		$this->getPage()->setTitle('Advanced form');
 	}
 	
 	public function actionIndex()
@@ -47,25 +47,40 @@ class Module_Index extends Ea_Module_Abstract
 		if($form->catchInput())
 		{
 			// do you form stuff
-			$_SESSION['text1']=$form['text1'];
-			$_SESSION['select1']=$form['select1'];
-			$_SESSION['textarea1']=$form['textarea1'];
-			$_SESSION['radio1']=$form['radio1'];
+			$_SESSION['text1']=(string)$form['text1'];
+			$_SESSION['select1']=(string)$form['select1'];
+			$_SESSION['textarea1']=(string)$form['textarea1'];
+			$_SESSION['radio1']=(string)$form['radio1'];
 			
-			// NB : this is the optimistic way to use form data.
+			// There is two ways to use forms.
+
+			// The optimistic way :
 			// You draw the form at display time and af submit time you don't and call catchInput().
 			// In this case $form[] will just map $_POST[].
+			// The "pessimistic" way :
+			// If you draw the form (or store the structure with ->store()) at submit time, $form[] will access each input and get the correspondng value from $_POST.
+			// $form[] will return the input layout, it's why we cast with string to get the value.
+
+			// This example demonstrate the "pessimistic" way.
+			// Using this way, you can use $iput->rememberValue() to automatically get the submitted data and display id (if no value set).
 			
 			// nothing else to do, router will redirect to current URL
 			return;
 		}
+
+		// You can use rememberAllInputsValues() to remember all inputs values
+		// automatically call $input->rememberValue() when adding input
+		// $form->rememberAllInputsValues();
 		
 		$form->add($table=new Ea_Layout_Table);
 		
 		// draw the form
 		$table->addRow();
 		$table->addHeader('text');
-		$table->addCell(new Ea_Layout_Input_Text('text1'));
+		$table->addCell($input=new Ea_Layout_Input_Text('text1'));
+		// if no value is set, try to get stored value
+		$input->rememberValue();
+		
 		// if session, it means we hit send last time...
 		if(isset($_SESSION['text1']))
 		{
@@ -76,36 +91,33 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$table->addRow();
 		$table->addHeader('select');
-		$table->addCell(new Ea_Layout_Input_Select('select1', array(1=>'one', 2=>'two', 3=>'three'), 2));
-		// if session, it means we hit send last time...
+		$table->addCell($input=new Ea_Layout_Input_Select('select1', array(1=>'one', 2=>'two', 3=>'three')));
+		$input->rememberValue();
 		if(isset($_SESSION['select1']))
 		{
 			$table->addCell($_SESSION['select1']);
-			// clean up
 			unset($_SESSION['select1']);
 		}
 
 		$table->addRow();
 		$table->addHeader('textarea');
-		$table->addCell(new Ea_Layout_Input_Textarea('textarea1', 5, 20));
-		// if session, it means we hit send last time...
+		$table->addCell($input=new Ea_Layout_Input_Textarea('textarea1', 5, 20));
+		$input->rememberValue();
 		if(isset($_SESSION['textarea1']))
 		{
 			$table->addCell($_SESSION['textarea1']);
-			// clean up
 			unset($_SESSION['textarea1']);
 		}
 		
 		$table->addRow();
 		$table->addHeader('radio');
-		$cell=$table->addCell($toto=new Ea_Layout_Input_Radio('radio1', 'One'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two', true)); // you can use $form['radio1']='Two';
+		$cell=$table->addCell($input=new Ea_Layout_Input_Radio('radio1', 'One'));
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two')); // you can use $form['radio1']='Two';
 		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three'));
-		// if session, it means we hit send last time...
+		$input->rememberValue();
 		if(isset($_SESSION['radio1']))
 		{
 			$table->addCell($_SESSION['radio1']);
-			// clean up
 			unset($_SESSION['radio1']);
 		}
 
@@ -116,6 +128,9 @@ class Module_Index extends Ea_Module_Abstract
 		// add the form to the page
 		$this->getPage()->add($form);
 		
+		// store the form structure
+		// store() is mandatory if you want to use $input->rememberValue()
+		$form->store();
 		
 		// router will call render
 	}

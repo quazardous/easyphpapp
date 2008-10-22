@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.4.20081020
+ * @version     0.0.2.5.20081020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -140,6 +140,16 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	{
 		$name=strtolower($name);
 		$this->_attributes[$name]=$value;
+	}
+
+	public function __get($name)
+	{
+		return $this->getAttribute($name);
+	}
+	
+	public function __set($name, $value)
+	{
+		$this->setAttribute($name, $value);
 	}
 	
 	public function getAttribute($name)

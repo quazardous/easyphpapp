@@ -75,7 +75,7 @@ class Ea_Security
 	 * 
 	 * @var string
 	 */
-	protected $_sessionNamespace='Ea_Security';
+	protected $_sessionNamespace=__CLASS__;
 
 	/**
 	 * Set session namespace.
