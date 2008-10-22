@@ -44,7 +44,6 @@ class Module_Index extends Ea_Module_Abstract
 		if($form->catchInput())
 		{
 			// do you form stuff
-			//echo((string)$form['file1']);
 			
 			echo $form['file1']->getName()."=".$form['file1']->getFileName()."\n------------------\n";
 			echo $form['file1']->getFileContents(256);
@@ -59,6 +58,7 @@ class Module_Index extends Ea_Module_Abstract
 			echo "\n------------------\n";
 			
 			// ok it's testing ;p
+			// you can use $input->moveUploadedFile($dst) to put your file where you want.
 			die;
 			
 			return;
@@ -71,12 +71,10 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addHeader('file1');
 		$table->addCell(new Ea_Layout_Input_File('file1'));
 
-		// draw the form
 		$table->addRow();
 		$table->addHeader('file2');
 		$table->addCell(new Ea_Layout_Input_File(array('record', 'file2')));
 		
-		// draw the form
 		$table->addRow();
 		$table->addHeader('file3');
 		$table->addCell(new Ea_Layout_Input_File(array('records', 0,'file3')));
