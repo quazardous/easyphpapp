@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -85,6 +85,13 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 	protected $_row=null;
 	
 	/**
+	 * Cols you want to keep track in session.
+	 * 
+	 * @var array(string)
+	 */
+	protected $_attributesCols=array();
+	
+	/**
 	 * Return the user row.
 	 * @see $_row
 	 *
@@ -118,6 +125,8 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 	 * 
 	 * - row : Zend_Db_Table_Row_Abstract instance
 	 * 
+	 * - attributes_cols : array of cols you want to keep in session => getAttributes()
+	 * 
 	 */
 	public function __construct(array $config)
 	{
@@ -133,6 +142,7 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 		if(array_key_exists('password', $config)) $this->_password=$config['password'];
 		if(array_key_exists('login', $config)) $this->_login=$config['login'];
 		if(array_key_exists('password_col', $config)) $this->_passwordCol=$config['password_col'];
+		if(array_key_exists('attributes_cols', $config)) $this->_attributesCols=(array)$config['attributes_cols'];
 		if(array_key_exists('login_col', $config)) $this->_loginCol=$config['login_col'];
 		if(array_key_exists('role_col', $config)) $this->_roleCol=$config['role_col'];
 		if(array_key_exists('row', $config))
@@ -253,5 +263,22 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 		$roleCol=$this->_roleCol;
 		return array($this->_row->$roleCol);
 	}
+	
+	/**
+	 * Return array of string with user's attributes.
+	 *
+	 * @return array of attributess
+	 */
+	public function getAttributes()
+	{
+		if(!($this->_row)) return null;
+		$ret=array();
+		foreach($this->_attributesCols as $col)
+		{
+			$ret[$col]=$this->_row->$col;
+		}
+		return $ret;
+	}
+	
 }
 ?>

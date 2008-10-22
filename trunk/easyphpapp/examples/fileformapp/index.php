@@ -7,13 +7,13 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081022
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
  */
 
-// This app will demonstrate advanced form support
+// This app will demonstrate file form support
 
 // don't forget to set your include path
 require '../conf/config.php';
@@ -29,5 +29,3 @@ Ea_Router::singleton()->dispatch();
 
 // so calling url index.php will tell the router to target module 'index' and action 'index' (the default).
 // router will try to call Module_Index::actionIndex().
-
-?>

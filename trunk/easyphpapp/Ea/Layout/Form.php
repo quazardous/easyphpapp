@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081022
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -17,6 +17,7 @@ require_once 'Ea/Layout/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Array.php';
 require_once 'Ea/Layout/Input/Hidden.php';
 require_once 'Ea/Layout/Input/Radio.php';
+require_once 'Ea/Layout/Input/File.php';
 require_once 'Ea/Layout/Form/Exception.php';
 require_once 'Zend/Session/Namespace.php';
 
@@ -127,6 +128,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		if($this->_rememberAllInputsValues)
 		{
 			$input->rememberValue();
+		}
+		if($input instanceof Ea_Layout_Input_File)
+		{
+			$this->uploadFile();
 		}
 	}
 	
@@ -339,11 +344,27 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			case 'id':
 				$this->setId($value);
 				break;
+			case 'enctype':
+				$this->uploadFile(strtolower($value)=='multipart/form-data');
+				break;
 			default:
 				parent::setAttribute($name, $value);
 		}
 	} 
 
+	public function getAttribute($name)
+	{
+		$name=strtolower($name);
+		switch($name)
+		{
+			case 'name': case 'id':	return $this->getId();	
+			case 'action': return $this->getActionUrl();
+			case 'method': return $this->getMethod();
+			case 'enctype': return $this->canUploadFile()?'multipart/form-data':null;
+			default: return parent::getAttribute($name);
+		}
+	}	
+	
 	/**
 	 * Use(render) magic hidden input to determine if the form was submitted.
 	 * 
@@ -411,6 +432,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		$this->_setAttribute('id', $this->getId());
 		$this->_setAttribute('name', $this->getId());
 		$this->_setAttribute('method', $this->getMethod());
+		if($this->canUploadFile()) $this->_setAttribute('enctype', 'multipart/form-data');
 		$this->magic();
 	}
 
@@ -724,5 +746,33 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     {
     	$this->_rememberAllInputsValues=$remember;
     }
+    
+    /**
+     * File upload support.
+     * 
+     * @var boolean
+     */
+    protected $_uploadFile=false;
+    
+    /**
+     * Enable/disable file upload support.
+     * 
+     * @param boolean $upload
+     */
+    public function uploadFile($upload=true)
+    {
+    	$this->_uploadFile=$upload;
+    }
+    
+    /**
+     * Get file upload support.
+     * 
+     * @return boolean
+     */
+    public function canUploadFile()
+    {
+    	return $this->_uploadFile;
+    }
+    
 	
 }

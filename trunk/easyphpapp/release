@@ -1,3 +1,9 @@
+*** 0.0.2.6.20081022-guru ***
+Improved security layer :
+ - storage of user's defined attributes in session
+Improved form support :
+ - file upload support
+
 *** 0.0.2.5.20081022-guru ***
 Improved form support :
  - form structure storage in session

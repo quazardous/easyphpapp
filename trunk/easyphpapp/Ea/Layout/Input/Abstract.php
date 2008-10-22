@@ -124,10 +124,10 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			/*
 			 * Some reserved attributes...
 			 */
-			case 'type': return $this->getType(); break;
-			case 'value': return $this->getValue(); break;
-			case 'name': return $this->getName(); break;
-			case 'id': return $this->getId(); break;
+			case 'type': return $this->getType();
+			case 'value': return $this->getValue();
+			case 'name': return $this->getName();
+			case 'id': return $this->getId();
 			default: return parent::getAttribute($name);
 		}
 	}

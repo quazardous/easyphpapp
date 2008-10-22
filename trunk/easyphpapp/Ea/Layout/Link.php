@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -100,7 +100,17 @@ class Ea_Layout_Link extends Ea_Layout_Container
 			default:
 				parent::setAttribute($name, $value);
 		}
-	} 
+	}
+	
+	public function getAttribute($name)
+	{
+		$name=strtolower($name);
+		switch($name)
+		{
+			case 'href': return $this->getUrlString();
+			default: return parent::getAttribute($name);
+		}
+	}
 
 	public function preRender()
 	{

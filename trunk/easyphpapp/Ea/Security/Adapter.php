@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -75,7 +75,7 @@ class Ea_Security_Adapter implements Zend_Auth_Adapter_Interface
         		default: $code=Zend_Auth_Result::FAILURE;
         	}
         }
-        return new Zend_Auth_Result($code, array('login'=>$this->_user->getLogin(), 'roles'=>$this->_user->getRoles()), (array)$this->_user->getAuthMessage());
+        return new Zend_Auth_Result($code, array('login'=>$this->_user->getLogin(), 'roles'=>$this->_user->getRoles(), 'attributes'=>$this->_user->getAttributes()), (array)$this->_user->getAuthMessage());
     }	
 }
 ?>

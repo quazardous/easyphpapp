@@ -85,7 +85,7 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 			/*
 			 * Some reserved attributes...
 			 */
-			case 'checked': return $this->isChecked()?'checked':null; break;
+			case 'checked': return $this->isChecked()?'checked':null;
 			default: return parent::getAttribute($name);
 		}
 	}
