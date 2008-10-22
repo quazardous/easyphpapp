@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.3.20081016
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -261,7 +261,7 @@ class Ea_Router
 		}
 		$url=$script.http_build_query($get);
 		$url=rtrim($url, '?');
-		if(!$url)$url='?';
+		if(!$url)$url='.';
 		return $url;
 	}
 

@@ -1,0 +1,8 @@
+*** 0.0.2.5.20081022-guru ***
+Improved form support :
+ - form structure storage in session
+ - inputs can remember last submitted value
+ 
+*** 0.0.2.4.20081020-guru ***
+Improved form support :
+ - radio buttons support
