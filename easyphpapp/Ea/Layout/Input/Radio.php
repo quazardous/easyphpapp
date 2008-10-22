@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.4.20081020
+ * @version     0.0.2.5.20081021
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -135,6 +135,21 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 			case 'checked': if(strtolower($value)=='checked') $this->setValue($this->getRadioValue()); break;
 			default:
 				parent::setAttribute($name, $value);
+		}
+	}
+	
+	public function getAttribute($name)
+	{
+		$name=strtolower($name);
+		switch($name)
+		{
+			/*
+			 * Some reserved attributes...
+			 */
+			//TODO : think about it
+			case 'value': return $this->getRadioValue(); break;
+			case 'checked': return $this->isSelected()?'checked':null; break;
+			default: return parent::getAttribute($name);
 		}
 	}
 	

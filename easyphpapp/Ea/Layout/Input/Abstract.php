@@ -7,12 +7,13 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.5.20081021
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Single.php';
+require_once 'Ea/Layout/Input/Exception.php';
 
 /**
  * Abstract input layout class.
@@ -87,9 +88,16 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		parent::__construct(null, $config);
 		$this->setId($id);
 		$this->setValue($value);
+		if(is_array($config))
+		{
+			if(array_key_exists('remember_value', $config))
+			{
+				$this->rememberValue();
+			}
+		}
+		
 	}
 
-	//TODO comment
 	public function setAttribute($name, $value)
 	{
 		$name=strtolower($name);
@@ -106,7 +114,23 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			default:
 				parent::setAttribute($name, $value);
 		}
-	} 
+	}
+	
+	public function getAttribute($name)
+	{
+		$name=strtolower($name);
+		switch($name)
+		{
+			/*
+			 * Some reserved attributes...
+			 */
+			case 'type': return $this->getType(); break;
+			case 'value': return $this->getValue(); break;
+			case 'name': return $this->getName(); break;
+			case 'id': return $this->getId(); break;
+			default: return parent::getAttribute($name);
+		}
+	}
 	
 	/**
 	 * Set the input Id.
@@ -247,31 +271,6 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		return $this->getValue();
 	}
 	
-	/**
-	 * Used to easily access the input name and value in string expression.
-	 * 
-	 * Example :
-	 * <code>
-	 * <?php
-	 * 	echo "value: {$input->value}";
-	 * ?>
-	 * </code>
-	 *
-	 * @return string the name or the value
-	 * 
-	 * @property-read int $name the input name
-	 * @property-read int $value the input value
-	 */
-	public function __get($name)
-	{
-		switch($name)
-		{
-			case 'value': return $this->getValue();
-			case 'name': return $this->getName();
-			default :
-				throw new Ea_Form_Input_Exception("'$name' incorrect field for input");
-		}
-	}
 	
 	/**
 	 * Set the value from $_POST.
@@ -279,7 +278,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function setFromPost()
 	{
-		$this->setValue($this->getForm()->getFromPost($this->getId()));
+		$this->setValue($this->getForm()->getValueFromPost($this->getId()));
 	}
 	
 	public function preRender()
@@ -293,5 +292,22 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->_setAttribute('type', $this->getType());
 	}
 	
+	public function __sleep()
+    {
+        return array('_id', '_value');
+    }
+	    
+    /**
+     * Set remember Value.
+     * 
+     * @param boolean $remember
+     */
+    public function rememberValue()
+    {
+    	if($this->_value===null)
+    	{
+    		$this->setValue($this->getForm()->getValueFromSession($this->getId()));
+    	}
+    }
 }
 ?>
