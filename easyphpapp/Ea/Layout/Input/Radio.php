@@ -147,8 +147,8 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 			 * Some reserved attributes...
 			 */
 			//TODO : think about it
-			case 'value': return $this->getRadioValue(); break;
-			case 'checked': return $this->isSelected()?'checked':null; break;
+			case 'value': return $this->getRadioValue();
+			case 'checked': return $this->isSelected()?'checked':null;
 			default: return parent::getAttribute($name);
 		}
 	}

@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -50,7 +50,7 @@ class Module_Index extends Ea_Module_Abstract
 			$_SESSION['text1']=(string)$form['text1'];
 			$_SESSION['select1']=(string)$form['select1'];
 			$_SESSION['textarea1']=(string)$form['textarea1'];
-			$_SESSION['radio1']=(string)$form['radio1'];
+			$_SESSION['radio1']=$form['radio1']->getValue();
 			
 			// There is two ways to use forms.
 
@@ -112,7 +112,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addRow();
 		$table->addHeader('radio');
 		$cell=$table->addCell($input=new Ea_Layout_Input_Radio('radio1', 'One'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two')); // you can use $form['radio1']='Two';
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two'));
 		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three'));
 		$input->rememberValue();
 		if(isset($_SESSION['radio1']))

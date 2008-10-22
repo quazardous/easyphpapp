@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -223,6 +223,31 @@ class Ea_Security
 		$this->init();
 		$identity=$this->_auth->getIdentity();
 		return $identity['roles'];
+	}
+
+	/**
+	 * Get the attributes of an user.
+	 * 
+	 * @return array(string)
+	 */
+	public function getConnectedUserAttributes()
+	{
+		$this->init();
+		$identity=$this->_auth->getIdentity();
+		return $identity['attributes'];
+	}
+
+	/**
+	 * Get an attribute of an user.
+	 * 
+	 * @return string
+	 */
+	public function getConnectedUserAttribute($name)
+	{
+		$this->init();
+		$identity=$this->_auth->getIdentity();
+		if(array_key_exists($name, $identity['attributes'])) return $identity['attributes'][$name];
+		return null;
 	}
 	
 	/**

@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.6.20081022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -47,6 +47,18 @@ abstract class Ea_Security_User_Abstract
 	public function getRoles()
 	{
 		// default is no role
+		return array();
+	}
+
+	/**
+	 * Return array of user attributes roles.
+	 * It can be any attribute you want to keep track in the session.
+	 *
+	 * @return array attributes
+	 */
+	public function getAttributes()
+	{
+		// default is no attributes
 		return array();
 	}
 	
