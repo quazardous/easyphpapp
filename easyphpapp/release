@@ -1,3 +1,7 @@
+*** 0.0.2.7.20081023-guru ***
+Improved modularity :
+- layouts can now be used outside EasyPhpApp router engine
+
 *** 0.0.2.6.20081022-guru ***
 Improved security layer :
  - storage of user's defined attributes in session

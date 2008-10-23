@@ -7,11 +7,12 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.3.20081015
+ * @version     0.0.2.7.20081023
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Page/Interface.php';
 require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Module/Abstract.php';
 
@@ -22,7 +23,7 @@ require_once 'Ea/Module/Abstract.php';
  * @see Ea_Layout_Abstract
  * 
  */
-class Ea_Page
+class Ea_Page implements Ea_Page_Interface
 {
 	/**
 	 * Top layout.
