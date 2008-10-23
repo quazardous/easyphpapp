@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.0.2.7.20081023
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -77,7 +77,15 @@ class Ea_Layout_Link extends Ea_Layout_Container
 	 */
 	public function getUrlString()
 	{
-		if($this->_url instanceof Ea_Route) return $this->getPage()->getRouter()->url($this->_url);
+		if($this->_url instanceof Ea_Route)
+		{
+			$page=$this->getPage();
+			if(!$page instanceof Ea_Page)
+			{
+				throw new Ea_Layout_Link_Exception('Cannot use route outside EasyPhpApp router engine !');
+			}
+			return $page->getRouter()->url($this->_url);
+		}
 		return $this->_url;
 	}
 	

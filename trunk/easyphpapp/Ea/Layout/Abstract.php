@@ -7,10 +7,13 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.2.7.20081023
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
+
+require_once 'Ea/Page/Interface.php';
+require_once 'Ea/Page.php';
 
 /**
  * Abstract layout class.
@@ -23,7 +26,7 @@ abstract class Ea_Layout_Abstract
 	/**
 	 * Abstract layout constructor.
 	 *
-	 * @param array|Ea_Page $config
+	 * @param array|Ea_Page|Ea_Page_Interface $config
 	 * 
 	 *  - if associative array : config params, can be
 	 * 
@@ -31,10 +34,13 @@ abstract class Ea_Layout_Abstract
 	 * 
 	 *  - if Ea_Page : the page to which the layout belongs
 	 * 
+	 * You can use your own Page class  even outside EasyPhpApp engine (like Zend_View).
+	 * @see Ea_Page_Interface
+	 * @see setPage()
 	 */
 	public function __construct($config=null)
 	{
-		if($config instanceof Ea_Page)
+		if($config instanceof Ea_Page_Interface)
 		{
 			$config=array('page'=>$config);
 		}
@@ -83,7 +89,14 @@ abstract class Ea_Layout_Abstract
 	protected $_page=null;
 
 	/**
-	 * Set the page
+	 * Set the page.
+	 * You can use your own Page class even outside EasyPhpApp engine (like Zend_View).
+	 * Your page class must "mimic"(*) Ea_Page_Interface.
+	 * Some routing functionalities will be restricted.
+	 * (*) If you use $layout=new Ea_Layout_Abstract($mypage); $mypage will not be recognized if it doesn't implement Ea_Page_Interface.
+	 * But if you use $layout->setPage($mypage), your class just have to "mimic" Ea_Page_Interface.
+	 * @see Ea_Page_Interface
+	 * @see __construct()
 	 *
 	 * @param Ea_Page $page
 	 * @see $_page

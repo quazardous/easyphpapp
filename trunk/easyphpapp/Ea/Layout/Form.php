@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.0.2.7.20081023
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -253,7 +253,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function getActionUrl()
 	{
-		if($this->getAction() instanceof Ea_Route) return $this->getPage()->getRouter()->url($this->getAction());
+		if($this->getAction() instanceof Ea_Route)
+		{
+			$page=$this->getPage();
+			if(!$page instanceof Ea_Page)
+			{
+				throw new Ea_Layout_Form_Exception('Cannot use route outside EasyPhpApp router engine !');
+			}
+			return $page->getRouter()->url($this->getAction());
+		}
 		return $this->getAction();
 	}
 
