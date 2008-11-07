@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.3.0.20081106
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -21,25 +21,10 @@ interface Ea_Layout_Record_Adapter_Interface
 	 * This function must return content from record.
 	 * 
 	 * @param mixed $record
+	 * @param integer $i record number
 	 * @return mixed
 	 */
-	function getContent($record);
-	
-	/**
-	 * This function must return config for the cell constructor class.
-	 * 
-	 * @param mixed $record
-	 * @return array
-	 */
-	function getConfig($record);
-	
-	/**
-	 * This function must return the cell class.
-	 * 
-	 * @param mixed $record
-	 * @return string
-	 */
-	function getClass($record);
+	function getContent($record, $i);
 }
 
 ?>

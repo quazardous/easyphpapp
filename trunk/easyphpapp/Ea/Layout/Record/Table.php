@@ -7,13 +7,15 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.3.0.20081106
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Table.php';
 require_once 'Ea/Layout/Record/Adapter/Interface.php';
+
+require_once 'Ea/Model/Layout.php';
 
 /**
  * Table of records layout class.
@@ -22,6 +24,17 @@ require_once 'Ea/Layout/Record/Adapter/Interface.php';
  */
 class Ea_Layout_Record_Table extends Ea_Layout_Table
 {
+	const orientation_vertical   = 'vertical';
+	const orientation_horizontal = 'horizontal';
+	
+	protected $_orientation=null;
+	
+	public function setOrientation($orientation)
+	{
+		if(strtolower($orientation)==self::orientation_horizontal) $this->_orientation=self::orientation_horizontal;
+		else $this->_orientation=self::orientation_vertical;
+	}
+	
 	/**
 	 * The array of records.
 	 * 
@@ -37,12 +50,24 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	public function setRecords($records)
 	{
+		if(!$this->_orientation) $this->setOrientation(self::orientation_vertical);
 		if($records===null)$records=array();
 		if(!(is_array($records)||($records instanceof Iterator)))
 		{
 			throw new Ea_Layout_Record_Table_Exception("Array of records must be an array or an Iterator");
 		}
 		$this->_records=$records;
+	}
+
+	/**
+	 * You can set only one record.
+	 * 
+	 * @param mixed $record
+	 */
+	public function setRecord($record)
+	{
+		if(!$this->_orientation) $this->setOrientation(self::orientation_horizontal);
+		$this->_records=array($record);
 	}
 	
 	/**
@@ -52,6 +77,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	public function addRecord($record)
 	{
+		if(!$this->_orientation) $this->setOrientation(self::orientation_vertical);
 		array_push($this->_records, $record);
 	}
 
@@ -61,72 +87,86 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	protected $_columns=array();
 	
+	protected $_autoIdCol=0;
+		
+	protected $_displayHeaderRow=false;
+	
+	/**
+	 * Toggle header row display.
+	 * 
+	 * @param boolean $display
+	 */
+	public function displayHeaderRow($display=true)
+	{
+		$this->_displayHeaderRow=$display;
+	}
+	
 	/**
 	 * Add a column to the table.
 	 * 
 	 * @param Ea_Layout_Record_Adapter_Interface $column an object that take record and return Ea_Layout_Abstract
 	 * @param mixed $content a header content if given
+	 * @param numeric|string $idCol a column id, if null auto increment
 	 * @param array $config the header class constructor config array
 	 * @param string $class the header class
-	 * @return Ea_Layout_Table_Header
 	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $config=null, $class='Ea_Layout_Table_Header')
+	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
 	{
-		array_push($this->_columns, $column);
-		if($content!==null) $this->addColumnHeader($content, $config, $class);
+		if($idCol===null)
+		{
+			$idCol=$this->_autoIdCol;
+			$this->_autoIdCol++;
+		}
+		if(array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : column id already used");
+		}
+		$this->_columns[$idCol]=array('record'=>array('adapter'=>$column, 'config'=>$recordConfig, 'class'=>$recordClass), 'header'=>array('content'=>$content, 'config'=>$headerConfig, 'class'=>$headerClass));
+		
+		if($content) $this->displayHeaderRow(true);
+		
+		return $idCol;
 	}
 
 	/**
-	 * Add a column header.
+	 * Set the column adapter.
+	 * Works only on existing columns.
 	 * 
-	 * @param mixed $content
-	 * @param array $config config array for constructor
-	 * @param string $class class of the header
-	 * @return Ea_Layout_Table_Header
+	 * @param numeric|string $idCol a column id, if null auto increment
+	 * @param Ea_Layout_Record_Adapter_Interface $column an object that take record and return Ea_Layout_Abstract
+	 * @param array $config the cell class constructor config array
+	 * @param string $class the cell class
+	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	protected function addColumnHeader($content, $config, $class)
+	public function setColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $column, $config=null,  $class='Ea_Layout_Table_Cell')
 	{
-		return $this->getHeadersRow()->addHeader($content, $config, true, $class);
-	}
-	
-	/**
-	 * Add a headers row.
-	 * 
-	 * @param $config the constructor config array of the headers row
-	 * @param string $class the class of the header row
-	 * @return Ea_Layout_Table_Row
-	 */
-	public function addHeadersRow($config=null, $class='Ea_Layout_Table_Row')
-	{
-		Zend_Loader::loadClass($class);
-		$this->_headersRow=new $class($config);
-		if(!$this->_headersRow instanceof Ea_Layout_Table_Row)
+		if(!array_key_exists($idCol, $this->_columns))
 		{
-			throw new Ea_Layout_Record_Table_Exception("$class not an instance of Ea_Layout_Table_Row");
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
 		}
-		return $this->_headersRow;
+		$this->_columns[$idCol]['record']=array('adapter'=>$column, 'config'=>$config, 'class'=>$class);
 	}
-	
+
 	/**
-	 * Get the headers row.
-	 * May instanciate a default one.
+	 * Set the column header.
+	 * Works only on existing columns.
 	 * 
-	 * @return Ea_Layout_Table_Row
+	 * @param numeric|string $idCol a column id, if null auto increment
+	 * @param mixed $content a header content if given
+	 * @param array $config the header class constructor config array
+	 * @param string $class the header class
 	 */
-	protected function getHeadersRow()
+	public function setColumnHeader($idCol, $content, $config=null, $class='Ea_Layout_Table_Header')
 	{
-		if(!$this->_headersRow) $this->addHeadersRow();
-		return $this->_headersRow;
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['header']=array('content'=>$content, 'config'=>$config, 'class'=>$class);
 	}
 	
-	/**
-	 * The headers row.
-	 * 
-	 * @var Ea_Layout_Table_Row
-	 */
-	protected $_headersRow=null;
-	
+			
 	/**
 	 * To know if table was populated.
 	 * @var boolean
@@ -137,19 +177,47 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * This method will populate the table from the records, filling the table with record rows.
 	 * If you don't call populate(), preRender() will do it for you.
 	 * 
-	 * @param array $config the config array for the row constructor 
-	 * @param string $class the row class
+	 * @param array $headerConfig the config array for the row constructor 
+	 * @param array $recordConfig the config array for the row constructor 
+	 * @param string $headerRowClass the row class
+	 * @param string $recordRowClass the row class
 	 */
-	public function populate($config=null, $class='Ea_Layout_Table_Row')
+	public function populate($headerConfig=null, $recordConfig=null, $headerRowClass='Ea_Layout_Table_Row', $recordRowClass='Ea_Layout_Table_Row')
 	{
 		$this->_populated=true;
-		if($this->_headersRow)$this->add($this->_headersRow);
-		foreach($this->_records as $record)
+		if($this->_orientation==self::orientation_vertical)
 		{
-			$this->addRow($config, true, $class);
+			if($this->_displayHeaderRow)
+			{
+				$this->addRow($headerConfig, true, $headerRowClass);
+				foreach($this->_columns as $column)
+				{
+					$this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
+				}
+			}
+			$i=0;
+			foreach($this->_records as $record)
+			{
+				$this->addRow($recordConfig, true, $recordRowClass);
+				foreach($this->_columns as $column)
+				{
+					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
+				}
+				$i++;
+			}
+		}
+		else
+		{
 			foreach($this->_columns as $column)
 			{
-				$this->addCell($column->getContent($record), $column->getConfig($record), true, $column->getClass($record));
+				$this->addRow($headerConfig, true, $headerRowClass);
+				$this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
+				$i=0;
+				foreach($this->_records as $record)
+				{
+					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
+					$i++;
+				}
 			}
 		}
 	}

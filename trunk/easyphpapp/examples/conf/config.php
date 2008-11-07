@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  config
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.2.20081015
+ * @version     0.0.3.0.20081105
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -23,5 +23,12 @@ set_include_path(
 get_include_path()
 );
 
+// db config
+define('DB_HOST',       	 'localhost');
+define('DB_NAME',     		 'test');
+define('DB_USER_NAME',       'user');
+define('DB_USER_PASSWORD',   'xxxxxxxxx');
+
+error_reporting(E_ALL|E_STRICT);
 
 ?>
