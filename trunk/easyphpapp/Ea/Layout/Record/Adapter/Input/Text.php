@@ -12,34 +12,23 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Interface.php';
+require_once 'Ea/Layout/Record/Adapter/Input/Abstract.php';
+require_once 'Ea/Layout/Input/Text.php';
 
 /**
- * Generic class to get column cell input from record (array or object).
+ * Generic class to get column cell content from record (array or object).
  */
-class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interface
-{
-	protected $_field;
-	
-	public function __construct($field)
-	{
-		$this->_field=$field;
-	}
-	
+class Ea_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter_Input_Abstract
+{	
 	/**
 	 * This function must return content from record.
 	 * 
 	 * @param array $record
-	 * @param integer $i record number
 	 * @return string
 	 */
 	public function getContent($record, $i)
 	{
-		if(is_array($record))
-		{
-			return $record[$this->_field];
-		}
-		return $record->{$this->_field};
+		return new Ea_Layout_Input_Text($this->getId($i), $this->getValue($record), $this->_config);
 	}
 }
 

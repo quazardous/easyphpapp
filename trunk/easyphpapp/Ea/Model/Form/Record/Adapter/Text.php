@@ -12,17 +12,17 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Field.php';
-require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';'
+require_once 'Ea/Layout/Record/Adapter/Input/Text.php';
+require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
 
 /**
- * Text layout for field.
+ * Text input for column.
  */
-class Ea_Model_Layout_Record_Adapter_Text extends Ea_Layout_Record_Adapter_Field implements Ea_Model_Layout_Record_Adapter_Interface
+class Ea_Model_Form_Record_Adapter_Text extends Ea_Layout_Record_Adapter_Input_Text implements Ea_Model_Layout_Record_Adapter_Interface
 {
-	function __construct($field, $meta, $config)
+	function __construct($column, $config, $data)
 	{
-		parent::__construct($field, $config);
+		parent::__construct($column, $data['base_id'], $config);
 	}	
 }
 

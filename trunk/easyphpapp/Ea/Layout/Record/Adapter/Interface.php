@@ -26,5 +26,3 @@ interface Ea_Layout_Record_Adapter_Interface
 	 */
 	function getContent($record, $i);
 }
-
-?>
