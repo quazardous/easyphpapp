@@ -13,11 +13,9 @@
  */
 
 /**
- * Layout model field interface.
+ * Layout model column interface.
  */
 interface Ea_Model_Layout_Record_Adapter_Interface
 {
-	function __construct($field, $baseId, $meta, $config);
+	function __construct($column, $config, $data);
 }
-
-?>

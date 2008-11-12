@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.0.20081112
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -42,6 +42,25 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	protected $_records=array();
 
+	public function applyModel($model, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	{
+		$model=Ea_Model_Layout::factory($model);
+		if($model instanceof Ea_Model_Layout)
+		{
+			foreach($model->getOrderedColumns() as $column)
+			{
+				if($model->getColumnDisplay($column))
+				{
+					$this->addColumn(
+						$model->getColumnAdapter($column),
+						$model->getColumnHeader($column),
+						$column,
+						$headerConfig, $recordConfig, $headerClass, $recordClass);
+				}
+			}
+		}
+	} 
+	
 	/**
 	 * You can set the array of records.
 	 * The array you pass must implement Iterator inteface.
@@ -139,7 +158,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * @param string $class the cell class
 	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	public function setColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $column, $config=null,  $class='Ea_Layout_Table_Cell')
+	public function setColumn($idCol, Ea_Layout_Record_Adapter_Interface $column, $config=null,  $class='Ea_Layout_Table_Cell')
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
@@ -148,6 +167,33 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['record']=array('adapter'=>$column, 'config'=>$config, 'class'=>$class);
 	}
 
+	public function seColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $column)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['record']['adapter']=$column;
+	}
+	
+	public function seColumnConfig($idCol, $config)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['record']['config']=$column;
+	}
+
+	public function seColumnClass($idCol, $class)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['record']['class']=$class;
+	}
+	
 	/**
 	 * Set the column header.
 	 * Works only on existing columns.
@@ -166,7 +212,33 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['header']=array('content'=>$content, 'config'=>$config, 'class'=>$class);
 	}
 	
-			
+	public function setColumnHeaderContent($idCol, $content)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['header']['content']=$content;
+	}
+
+	public function setColumnHeaderConfig($idCol, $config)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['header']['config']=$config;
+	}
+
+	public function setColumnHeaderClass($idCol, $class)
+	{
+		if(!array_key_exists($idCol, $this->_columns))
+		{
+			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
+		}
+		$this->_columns[$idCol]['header']['class']=$class;
+	}
+	
 	/**
 	 * To know if table was populated.
 	 * @var boolean

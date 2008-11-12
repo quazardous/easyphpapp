@@ -31,7 +31,7 @@ abstract class Ea_Model_Abstract
 	/**
 	 * Meta info on columns.
 	 * array(
-	 *   'field name'=>array(
+	 *   'column name'=>array(
 	 *   	'type'          => 'string|text|integer|float|date|boolean|enum',
 	 *   	'date'          => array('format'=>'strptime() format to read from base', 'outformat'=>'strftime() format to read/write from base'),
 	 *      'boolean'       => array('value true'=>true, 'value false'=>false),
@@ -105,7 +105,7 @@ abstract class Ea_Model_Abstract
 		return $this->_columns;
 	}
 
-	public function sortColumns()
+	public function getOrderedColumns()
 	{
 		if(!$this->_ordered)
 		{

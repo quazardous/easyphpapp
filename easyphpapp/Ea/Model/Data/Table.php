@@ -110,45 +110,45 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 		if($this->_dbTable->getAdapter() instanceof Zend_Db_Adapter_Pdo_Mysql)
 		{
 			$i=0;
-			foreach($info['cols'] as $field)
+			foreach($info['cols'] as $column)
 			{
-				$meta=$info['metadata'][$field];
-				$this->setColumnOrder($field, $i);
+				$meta=$info['metadata'][$column];
+				$this->setColumnOrder($column, $i);
 				if($meta['DEFAULT'])
 				{
-					$this->setColumnMeta($field, 'default', $meta['DEFAULT']);
+					$this->setColumnMeta($column, 'default', $meta['DEFAULT']);
 				}
 				switch($meta['DATA_TYPE'])
 				{
 					case 'int': case 'tinyint': case 'smallint': case 'mediumint': case 'bigint':
-						$this->setColumnType($field, self::type_integer);
+						$this->setColumnType($column, self::type_integer);
 						break;
 					case 'float': case 'double':
-						$this->setColumnType($field, self::type_float);
+						$this->setColumnType($column, self::type_float);
 						break;
 					case 'decimal':
-						$this->setColumnType($field, self::type_float);
-						$this->setColumnMeta($field, 'number', array('decimals' => $meta['SCALE']));
+						$this->setColumnType($column, self::type_float);
+						$this->setColumnMeta($column, 'number', array('decimals' => $meta['SCALE']));
 						break;
 					case 'varchar': case 'char':
-						$this->setColumnType($field, self::type_string);
-						$this->setColumnMeta($field, 'string', array('length' => $meta['LENGTH']));
+						$this->setColumnType($column, self::type_string);
+						$this->setColumnMeta($column, 'string', array('length' => $meta['LENGTH']));
 						break;
 					case 'text': case 'tinytext': case 'mediumtext': case 'longtext':
-						$this->setColumnType($field, self::type_text);
+						$this->setColumnType($column, self::type_text);
 						switch($meta['DATA_TYPE'])
 						{
 							case 'tinytext':
-								$this->setColumnMeta($field, 'string', array('length' => 256));
+								$this->setColumnMeta($column, 'string', array('length' => 256));
 								break;
 							case 'text':
-								$this->setColumnMeta($field, 'string', array('length' => 65536));
+								$this->setColumnMeta($column, 'string', array('length' => 65536));
 								break;
 							case 'mediumtext':
-								$this->setColumnMeta($field, 'string', array('length' => 16777216));
+								$this->setColumnMeta($column, 'string', array('length' => 16777216));
 								break;
 							case 'longtext':
-								$this->setColumnMeta($field, 'string', array('length' => 4294967296));
+								$this->setColumnMeta($column, 'string', array('length' => 4294967296));
 								break;
 						}
 						break;
@@ -156,21 +156,21 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 						switch($meta['DATA_TYPE'])
 						{
 							case 'date':
-								$this->setColumnMeta($field, 'date', array('format' => '%Y-%m-%d'));
+								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d'));
 								break;
 							default:
-								$this->setColumnMeta($field, 'date', array('format' => '%Y-%m-%d %H:%M:%S'));
+								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d %H:%M:%S'));
 						}
 						if($meta['DEFAULT']=='CURRENT_TIMESTAMP')
 						{
-							$this->setColumnMeta($field, 'default', array('type'=>'callback', 'callback'=>array(__CLASS__, 'default_date_now')));
+							$this->setColumnMeta($column, 'default', array('type'=>'callback', 'callback'=>array(__CLASS__, 'default_date_now')));
 						}
-						$this->setColumnType($field, self::type_date);
+						$this->setColumnType($column, self::type_date);
 						break;
 					default:
 						if(substr($meta['DATA_TYPE'],0,4)=='enum')
 						{
-							$this->setColumnType($field, self::type_enum);
+							$this->setColumnType($column, self::type_enum);
 							preg_match('/enum\((.+)\)/i', $meta['DATA_TYPE'], $matches);
 							$list=array();
 							foreach(explode(',', $matches[1]) as $item)
@@ -178,11 +178,11 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 								$item=eval("return $item;");
 								$list[$item]=$item;
 							}
-							$this->setColumnMeta($field, 'enum', $list);
+							$this->setColumnMeta($column, 'enum', $list);
 						}
 						else
 						{
-							$this->setColumnType($field, self::type_unknown);
+							$this->setColumnType($column, self::type_unknown);
 							trigger_error("{$meta['DATA_TYPE']}: unsupported type");
 						}
 				}
