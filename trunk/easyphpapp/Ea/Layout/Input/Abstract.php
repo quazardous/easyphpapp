@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.0.3.1-20081113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -132,6 +132,20 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		}
 	}
 	
+	public static function get_id_from_name($name)
+	{
+		if(preg_match('|\[|', $name))
+		{
+			$id=array();
+			foreach(explode('[', $name) as $pid)
+			{
+				$id[]=trim($pid, '[]');
+			}
+			return $id;
+		}
+		return array($name);
+	}
+	
 	/**
 	 * Set the input Id.
 	 *
@@ -141,7 +155,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function setId($id)
 	{
-		if(!is_array($id)) $id=array($id);
+		if(!is_array($id)) $id=self::get_id_from_name($id);
 		if(count($id)<1)
 		{
 			throw new Ea_Layout_Input_Exception("Empty id");

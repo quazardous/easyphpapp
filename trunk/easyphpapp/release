@@ -1,6 +1,10 @@
+*** 0.0.3.1-dumb ***
+GET form support :
+- GET form can be use to build route (search criteria, etc)
+
 *** 0.0.3.0-dumb ***
 Introduce data model in EasyPhpApp :
-- You can generate record table structure (display or form) from data.
+- EasyPhpApp can now generate record list/form structure from data model (table).
 
 *** 0.0.2.7-guru ***
 Improved modularity :

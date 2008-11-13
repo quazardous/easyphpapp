@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.7.20081023
+ * @version     0.0.3.1-20081113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -406,10 +406,46 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	protected function magic()
 	{
 		if(!$this->_useMagic) return;
+		
 		if(!$this->_magic)
 		{
-			//magic input
-			$this->add(new Ea_Layout_Input_Hidden($this->getMagicName('id'), $this->getId()));
+			if($this->getMethod()=='post')
+			{
+				//magic input for post
+				$this->add(new Ea_Layout_Input_Hidden($this->getMagicName('id'), $this->getId()));
+			}
+			else
+			{
+				//magic input for get => module and route.
+				$action=$this->_action;
+				if(!$action)
+				{
+					$action=$this->getPage()->getRouter()->getRoute();
+				}
+				if($action instanceof Ea_Route)
+				{
+					// if a route was set
+					$action=$this->getPage()->getRouter()->url($action);
+				}
+				
+				if($action)
+				{
+					$infos=parse_url($action);
+					
+					if(isset($infos['query']))
+					{
+						//add input for each params
+						foreach(explode('&',urldecode($infos['query'])) as $string)
+						{
+							$tmp=explode('=',$string);
+							if(!self::array_get_from_id($this, Ea_Layout_Input_Abstract::get_id_from_name($tmp[0])))
+							{
+								$this->add(new Ea_Layout_Input_Hidden($tmp[0], $tmp[1]), false);
+							}
+						}
+					}
+				}
+			}
 			$this->_magic=true;
 		}
 	}
@@ -452,7 +488,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * @param array|string $id
 	 * @return mixed
 	 */
-	static public function array_get_from_id(array &$array, $id)
+	static public function array_get_from_id(&$array, $id)
 	{
 		if(!is_array($id))
 		{
@@ -538,8 +574,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				return true;
 				break;
 			default:
-				//TODO : implements get form
-				throw new Ea_Layout_Form_Exception('Not yet done');
+				throw new Ea_Layout_Form_Exception('Use Ea_Router::getParam()');
 		}
 	}
 	
