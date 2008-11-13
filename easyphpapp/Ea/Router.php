@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.0.3.1-20081113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -205,16 +205,13 @@ class Ea_Router
 	}
 
 	/**
-	 * Return the URL string of the given route.
+	 * Return the URL params array of the given route.
 	 * 
 	 * @param Ea_Route $route
-	 * @return string
+	 * @return array
 	 */
-	public function url(Ea_Route $route)
+	public function getUrlParams(Ea_Route $route)
 	{
-		$script=$route->getScript();
-		if(!$script) $script=$this->_targetScript;
-		
 		$propagate=$route->getPropagate();
 		if(is_array($propagate))
 		{
@@ -259,6 +256,22 @@ class Ea_Router
 				$get[$mod][$name]=$value;
 			}
 		}
+		return $get;
+	}
+	
+	/**
+	 * Return the URL string of the given route.
+	 * 
+	 * @param Ea_Route $route
+	 * @return string
+	 */
+	public function url(Ea_Route $route)
+	{
+		$script=$route->getScript();
+		if(!$script) $script=$this->_targetScript;
+		
+		$get=$this->getUrlParams($route);
+	
 		$url=$script.http_build_query($get);
 		$url=rtrim($url, '?');
 		if(!$url)$url='.';
