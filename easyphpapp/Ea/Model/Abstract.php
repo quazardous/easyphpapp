@@ -24,6 +24,7 @@ abstract class Ea_Model_Abstract
 	const type_integer     = 'integer';
 	const type_float       = 'float';
 	const type_date        = 'date';
+	const type_datetime    = 'datetime';
 	const type_boolean     = 'boolean';
 	const type_enum        = 'enum';
 	const type_unknown     = 'unknown';
@@ -32,7 +33,7 @@ abstract class Ea_Model_Abstract
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
-	 *   	'type'          => 'string|text|integer|float|date|boolean|enum',
+	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum',
 	 *   	'date'          => array('format'=>'strptime() format to read from base', 'outformat'=>'strftime() format to read/write from base'),
 	 *      'boolean'       => array('value true'=>true, 'value false'=>false),
 	 *      'number'        => array('decimals'=>2, 'dec_point'=>',', 'thousands_sep'=>' '),
@@ -102,6 +103,25 @@ abstract class Ea_Model_Abstract
 		return $this->getMetaData($name, 'label');
 	}
 	
+	/**
+	 * Return the list of columns with given type.
+	 * 
+	 * @param string|array(string) $type
+	 * @return array
+	 */
+	public function getColumnsOfType($type)
+	{
+		if(!is_array($type)) $type=array($type);
+		$res=array();
+		foreach($this->getColumns() as $column)
+		{
+			if(in_array($this->getColumnType($column),$type))
+			{
+				$res[]=$column;
+			}
+		}
+		return $res;
+	}
 	
 	/**
 	 * Set meta data.

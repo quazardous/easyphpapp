@@ -50,9 +50,9 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->_dataModel=$model;
 	}
 	
-	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Text';
+	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_String';
 	protected $_defaultRecordAdapterClassByType=array(
-		self::type_string => 'Ea_Model_Layout_Record_Adapter_Text',
+		self::type_string => 'Ea_Model_Layout_Record_Adapter_String',
 	);
 	
 	protected function getDefaultRecordAdapterClassByType($type)
@@ -115,7 +115,22 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	
 	public function filterRecordValue($column, $value)
 	{
-		return $value;
+		
+		switch($this->getColumnType($column))
+		{
+			case self::type_date: case self::type_datetime:
+				$d=strptime($value, $this->getMetaData($column, 'date', 'format'));
+				if(!$d) return null;
+				return strftime($this->getMetaData($column, 'date', 'outformat'),
+					mktime(
+						$d['tm_hour'],
+						$d['tm_min'],
+						$d['tm_sec'],
+						$d['tm_mon'],
+						$d['tm_mday'],
+						$d['tm_year']));
+			default: return $value;
+		}
 	}
 	
 }

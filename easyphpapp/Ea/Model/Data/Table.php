@@ -158,16 +158,18 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 						switch($meta['DATA_TYPE'])
 						{
 							case 'date':
-								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d'));
+								$this->setColumnType($column, self::type_date);
+								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d', 'outformat' => '%Y-%m-%d'));
 								break;
 							default:
-								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d %H:%M:%S'));
+								$this->setColumnType($column, self::type_datetime);
+								$this->setColumnMeta($column, 'date', array('format' => '%Y-%m-%d %H:%M:%S', 'outformat' => '%Y-%m-%d %H:%M:%S'));
 						}
 						if($meta['DEFAULT']=='CURRENT_TIMESTAMP')
 						{
 							$this->setColumnMeta($column, 'default', array('type'=>'callback', 'callback'=>array(__CLASS__, 'default_date_now')));
 						}
-						$this->setColumnType($column, self::type_date);
+						
 						break;
 					default:
 						if(substr($meta['DATA_TYPE'],0,4)=='enum')

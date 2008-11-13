@@ -16,14 +16,14 @@ require_once 'Ea/Layout/Record/Adapter/Field/Input/Text.php';
 require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
 
 /**
- * Text input for column.
+ * Select input for column.
  */
-class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter_Field_Input_Text implements Ea_Model_Layout_Record_Adapter_Interface
+class Ea_Model_Layout_Record_Adapter_Input_Enum extends Ea_Layout_Record_Adapter_Field_Input_Select implements Ea_Model_Layout_Record_Adapter_Interface
 {
 	public function __construct($column, Ea_Model_Layout $model)
 	{
-		parent::__construct($column, $model->getBaseId(), $model->getMetaData($column, 'adapter', 'config'));
-		$this->_filter=array($model, 'filterRecordValue');
+		parent::__construct($column, $model->getMetaData($column, 'enum'), $model->getBaseId(), $model->getMetaData($column, 'adapter', 'config'));
+		//$this->_filter=array($model, 'filterRecordValue');
 	}	
 }
 

@@ -15,7 +15,7 @@
 require_once 'Ea/Layout/Record/Adapter/Interface.php';
 
 /**
- * Generic class to get column cell input from record (array or object).
+ * Field value from record (array or object).
  */
 class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interface
 {
