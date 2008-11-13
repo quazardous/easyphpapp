@@ -12,7 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Field/Input/Text.php';
+require_once 'Ea/Layout/Record/Adapter/Field/Input/Select.php';
 require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
 
 /**
