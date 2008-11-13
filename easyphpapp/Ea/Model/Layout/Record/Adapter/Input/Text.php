@@ -12,26 +12,28 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Field/Input/Text.php';
+require_once 'Ea/Layout/Record/Adapter/Field/Input/Textarea.php';
 require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
 
 /**
  * Text input for column.
  */
-class Ea_Model_Layout_Record_Adapter_Input_String extends Ea_Layout_Record_Adapter_Field_Input_Text implements Ea_Model_Layout_Record_Adapter_Interface
+class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter_Field_Input_Textarea implements Ea_Model_Layout_Record_Adapter_Interface
 {
 	public function __construct($column, Ea_Model_Layout $model)
 	{
 		$config=$model->getMetaData($column, 'adapter', 'config');
-		if((!isset($config['size'])&&(!isset($config['attributes']['size']))))
+		$rows=null;
+		if((!isset($config['rows'])&&(!isset($config['attributes']['rows']))))
 		{
-			$config['attributes']['size']=$model->getMetaData($column, 'string', 'length');
+			$rows=round(log($model->getMetaData($column, 'string', 'length'))/2);
 		}
-		if((!isset($config['maxlength'])&&(!isset($config['attributes']['maxlength']))))
+		$cols=null;
+		if((!isset($config['cols'])&&(!isset($config['attributes']['cols']))))
 		{
-			$config['attributes']['maxlength']=$model->getMetaData($column, 'string', 'length');
+			$cols=40;
 		}
-		parent::__construct($column, $model->getBaseId(), $config);
+		parent::__construct($column, $rows, $cols, $model->getBaseId(), $config);
 		//$this->_filter=array($model, 'filterRecordValue');
 	}	
 }

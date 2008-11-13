@@ -1,5 +1,6 @@
 *** 0.0.3.0-dumb ***
-Introduce data model in EasyPhpApp
+Introduce data model in EasyPhpApp :
+- You can generate record table structure (display or form) from data.
 
 *** 0.0.2.7-guru ***
 Improved modularity :
