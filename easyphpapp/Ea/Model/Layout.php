@@ -7,12 +7,13 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.0.20081113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Model/Abstract.php';
+require_once 'Ea/Model/Data.php';
 require_once 'Ea/Model/Data/Abstract.php';
 require_once 'Ea/Model/Layout/Exception.php';
 require_once 'Zend/Loader.php';
@@ -26,32 +27,10 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 {
 	
 	/**
-	 * Factory.
-	 * Factory can handle known data model class.
-	 * 
-	 * @param mixed $config
-	 * @return Ea_Model_Layout
-	 */
-	static public function factory($config=null, $class=__CLASS__)
-	{
-		if($config instanceof self)
-		{
-			return $config;
-		}
-		if($config)
-		{
-			$config=array('data_model'=>Ea_Model_Data_Abstract::factory($config));
-		}
-		Zend_Loader::loadClass($class);
-		return new $class($config);
-	}
-	
-	/**
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
 	 *      'adapter'		    => array('class'=>'Ea_Layout_Record_Adapter_Interface+Ea_Model_Layout_Record_Adapter_Interface', 'config'=>$congig_for_the_adapter),
-	 *      'display'		    => true|false, // display column
 	 *   ),
 	 * )
 	 * 
@@ -84,9 +63,9 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	
 	public function __construct($config=null)
 	{
-		if($config instanceof Ea_Model_Data_Abstract)
+		if($model=Ea_Model_Data::factory($config))
 		{
-			$config=array('data_model'=>$config);
+			$config=array('data_model'=>$model);
 		}
 		if(array_key_exists('data_model', $config))
 		{
@@ -105,7 +84,6 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		foreach($this->_dataModel->getOrderedColumns() as $column)
 		{
 			$this->_metadata[$column]=$this->_dataModel->getMetaData($column);
-			$this->setColumnDisplay($column, true);
 			$this->_columns[]=$column;
 		}
 		$this->_ordered=true;
@@ -137,18 +115,8 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		// try to get some user content
 		$content=$this->getMetaData($name, 'header', 'content');
 		if($content) return $content;
-		return $name;
+		return $this->getColumnLabel($name);;
 		//TODO add some header adapter support
-	}
-	
-	public function setColumnDisplay($name, $display)
-	{
-		$this->setColumnMeta($name, 'display', $display);
-	}
-	
-	public function getColumnDisplay($name)
-	{
-		return $this->getMetaData($name, 'display');
 	}
 	
 }

@@ -14,6 +14,7 @@
  */
 
 require_once 'Table/EaTestTable1.php';
+require_once 'Ea/Model/Data.php';
 require_once 'Ea/Model/Layout.php';
 require_once 'Ea/Layout/Record/Table.php';
 require_once 'Zend/Session.php';
@@ -40,8 +41,11 @@ class Module_Index extends Ea_Module_Abstract
 		// get some test table
 		$ea_test_table1=new Table_EaTestTable1;
 		
+		// build the data model
+		$dataModel1=Ea_Model_Data::factory($ea_test_table1);
+		
 		// build the layout model
-		$model1=Ea_Model_Layout::factory($ea_test_table1, 'Ea_Model_Layout');
+		$model1=Ea_Model_Layout::factory($dataModel1, 'Ea_Model_Layout');
 		
 		// hide some column
 		$model1->setColumnDisplay('valtinyblob', false);
@@ -57,9 +61,11 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$this->add($table1);
 		
+		// now we'll do the same for a form...
 		$table2=new Ea_Layout_Record_Table;
 		
 		// build the form model
+		// Ea_Model_Layout::factory() can handle db table => it calls Ea_Model_Data_Abstract::factory()
 		$model2=Ea_Model_Layout::factory($ea_test_table1, 'Ea_Model_Form');
 
 		// you can set the base id for the inputs

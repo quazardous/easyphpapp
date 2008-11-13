@@ -40,7 +40,9 @@ abstract class Ea_Model_Abstract
 	 *      'enum'          => array('value'=>'option', ...),
 	 *      'default'       => 'value'|array('type'=>'value|callback', 'value'=>'value', 'callback'=>'callback'),
 	 *      'mandatory'		=> true|false,
-	 *      'order'		    => $i,
+	 *      'order'		    => $i, // display order
+	 *      'display'		=> true|false, // display column
+	 *      'label'		    => 'nice label',
 	 *   ),
 	 * )
 	 * 
@@ -79,22 +81,68 @@ abstract class Ea_Model_Abstract
 		$this->_ordered=false;
 		$this->setColumnMeta($name, 'order', $type);
 	}
-	
-	public function setColumnMeta($name, $param, $value)
+
+	public function setColumnDisplay($name, $display)
 	{
-		if(!is_array($this->_metadata)) $this->_metadata=array();
-		if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
-		if($value===null) unset($this->_metadata[$name][$param]);
-		else $this->_metadata[$name][$param]=$value;
+		$this->setColumnMeta($name, 'display', $display);
+	}
+	
+	public function getColumnDisplay($name)
+	{
+		return $this->getMetaData($name, 'display');
 	}
 
-	public function setColumnMetaPart($name, $param, $part, $value)
+	public function setColumnLabel($name, $display)
+	{
+		$this->setColumnMeta($name, 'label', $display);
+	}
+	
+	public function getColumnLabel($name)
+	{
+		return $this->getMetaData($name, 'label');
+	}
+	
+	
+	/**
+	 * Set meta data.
+	 * 
+	 * @param string|array(string) $name column or list of columns, '*' for all columns
+	 * @param $param
+	 * @param $value
+	 */
+	public function setColumnMeta($columns, $param, $value)
 	{
 		if(!is_array($this->_metadata)) $this->_metadata=array();
-		if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
-		if(!array_key_exists($param, $this->_metadata[$name])) $this->_metadata[$name][$param]=array();
-		if($value===null) unset($this->_metadata[$name][$param][$part]);
-		else $this->_metadata[$name][$param][$part]=$value;
+		if($columns=='*') $columns=$this->getColumns();
+		else if(!is_array($columns)) $columns=array($columns);
+		foreach($columns as $name)
+		{
+			if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
+			if($value===null) unset($this->_metadata[$name][$param]);
+			else $this->_metadata[$name][$param]=$value;
+		}
+	}
+
+	/**
+	 * Set part of meta data.
+	 * 
+	 * @param string|array(string) $name column or list of columns, '*' for all columns
+	 * @param $param
+	 * @param $part
+	 * @param $value
+	 */
+	public function setColumnMetaPart($columns, $param, $part, $value)
+	{
+		if(!is_array($this->_metadata)) $this->_metadata=array();
+		if($columns=='*') $columns=$this->getColumns();
+		else if(!is_array($columns)) $columns=array($columns);
+		foreach($columns as $name)
+		{
+			if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
+			if(!array_key_exists($param, $this->_metadata[$name])) $this->_metadata[$name][$param]=array();
+			if($value===null) unset($this->_metadata[$name][$param][$part]);
+			else $this->_metadata[$name][$param][$part]=$value;
+		}
 	}
 
 	protected $_ordered=true;

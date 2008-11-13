@@ -1,21 +1,21 @@
-*** 0.0.3.0.20081107-dumb ***
+*** 0.0.3.0-dumb ***
 Introduce data model in EasyPhpApp
 
-*** 0.0.2.7.20081023-guru ***
+*** 0.0.2.7-guru ***
 Improved modularity :
 - layouts can now be used outside EasyPhpApp router engine
 
-*** 0.0.2.6.20081022-guru ***
+*** 0.0.2.6-guru ***
 Improved security layer :
  - storage of user's defined attributes in session
 Improved form support :
  - file upload support
 
-*** 0.0.2.5.20081022-guru ***
+*** 0.0.2.5-guru ***
 Improved form support :
  - form structure storage in session
  - inputs can remember last submitted value
  
-*** 0.0.2.4.20081020-guru ***
+*** 0.0.2.4-guru ***
 Improved form support :
  - radio buttons support
