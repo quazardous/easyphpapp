@@ -18,7 +18,7 @@ require_once 'Ea/Layout/Record/Adapter/Field.php';
 /**
  * Text layout for column.
  */
-class Ea_Model_Layout_Record_Adapter_Text extends Ea_Layout_Record_Adapter_Field implements Ea_Model_Layout_Record_Adapter_Interface
+class Ea_Model_Layout_Record_Adapter_String extends Ea_Layout_Record_Adapter_Field implements Ea_Model_Layout_Record_Adapter_Interface
 {
 	public function __construct($column, Ea_Model_Layout $model)
 	{
