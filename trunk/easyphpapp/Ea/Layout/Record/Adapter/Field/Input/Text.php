@@ -12,13 +12,13 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Input/Abstract.php';
+require_once 'Ea/Layout/Record/Adapter/Field/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Text.php';
 
 /**
  * Generic class to get column cell content from record (array or object).
  */
-class Ea_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter_Input_Abstract
+class Ea_Layout_Record_Adapter_Field_Input_Text extends Ea_Layout_Record_Adapter_Field_Input_Abstract
 {	
 	/**
 	 * This function must return content from record.
