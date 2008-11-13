@@ -93,21 +93,15 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	{
 		$obj=$this->getMetaData($name, 'adapter', 'instance');
 		if($obj) return $obj;
-		$config=$this->getMetaData($name, 'adapter', 'config');
 		$class=$this->getMetaData($name, 'adapter', 'class');
 		if(!$class)
 		{
 			$class=$this->getDefaultRecordAdapterClassByType($this->getColumnType($name));
 		}
 		Zend_Loader::loadClass($class);
-		$instance=$this->newColumnAdapter($class, $name, $config, $this->getMetaData($name));
+		$instance=new $class($name, $this);
 		$this->setColumnMetaPart($name, 'adapter', 'instance', $instance);
 		return $instance;
-	}
-
-	protected function newColumnAdapter($class, $name, $config, $meta)
-	{
-		return new $class($name, $config, $meta);
 	}
 	
 	public function getColumnHeader($name)
@@ -117,6 +111,11 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		if($content) return $content;
 		return $this->getColumnLabel($name);;
 		//TODO add some header adapter support
+	}
+	
+	public function filterRecordValue($column, $value)
+	{
+		return $value;
 	}
 	
 }

@@ -17,6 +17,6 @@
  */
 interface Ea_Model_Layout_Record_Adapter_Interface
 {
-	function __construct($column, $config, $data);
+	function __construct($column, Ea_Model_Layout $model);
 	
 }
