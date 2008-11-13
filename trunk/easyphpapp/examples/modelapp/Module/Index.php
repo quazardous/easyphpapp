@@ -54,6 +54,9 @@ class Module_Index extends Ea_Module_Abstract
 		// display some columns
 		$model1->setColumnDisplay(array('id', 'valdatetime', 'valenum'), true);
 		
+		// change output format for datetime cols
+		$model1->setColumnMetaPart($model1->getColumnsOfType(Ea_Model_Layout::type_datetime), 'date', 'outformat', '%d/%m/%Y');
+		
 		// define a table layout
 		$table1=new Ea_Layout_Record_Table;
 		
@@ -72,6 +75,9 @@ class Module_Index extends Ea_Module_Abstract
 		// Ea_Model_Layout::factory() can handle db table => it calls Ea_Model_Data_Abstract::factory()
 		$model2=new Ea_Model_Layout_Form($ea_test_table1);
 
+		// change output format for datetime cols
+		$model2->setColumnMetaPart($model1->getColumnsOfType(array(Ea_Model_Layout::type_datetime, Ea_Model_Layout::type_date)), 'date', 'outformat', '%d/%m/%Y');
+		
 		// you can set the base id for the inputs
 		//$model2->setBaseId($id);
 		

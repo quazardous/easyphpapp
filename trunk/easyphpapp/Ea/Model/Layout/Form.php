@@ -34,9 +34,10 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		return $this->_baseId;
 	}
 	
-	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Input_String';
+	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Input_Default';
 	protected $_defaultRecordAdapterClassByType=array(
 		self::type_string => 'Ea_Model_Layout_Record_Adapter_Input_String',
+		self::type_text => 'Ea_Model_Layout_Record_Adapter_Input_Text',
 		self::type_enum   => 'Ea_Model_Layout_Record_Adapter_Input_Enum',
 	);
 	

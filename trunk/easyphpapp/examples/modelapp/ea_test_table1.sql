@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Mer 12 Novembre 2008 à 16:26
+-- Généré le : Jeu 13 Novembre 2008 à 15:05
 -- Version du serveur: 5.0.45
 -- Version de PHP: 5.2.5
 
@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `ea_test_table1` (
   `valchar` char(32) NOT NULL,
   `valtinyblob` tinyblob NOT NULL,
   `valtinytext` tinytext NOT NULL,
+  `valtext` text NOT NULL,
   `valblob` blob NOT NULL,
   `vamediumblob` mediumblob NOT NULL,
   `valmediumtext` mediumtext NOT NULL,
@@ -51,6 +52,6 @@ CREATE TABLE IF NOT EXISTS `ea_test_table1` (
 -- Contenu de la table `ea_test_table1`
 --
 
-INSERT INTO `ea_test_table1` (`id`, `valint`, `valdate`, `valenum`, `valtinyint`, `valsmallint`, `valvarchar`, `valmediumint`, `valfloat`, `valdouble`, `valdecimal`, `valdatetime`, `valtimestamp`, `valtime`, `valyear`, `valchar`, `valtinyblob`, `valtinytext`, `valblob`, `vamediumblob`, `valmediumtext`, `vallongblob`, `vallongtext`, `valbool`) VALUES
-(1, 0, '0000-00-00', 'one', 1, 10, 'azerty', 100, 3.14159, 3.14159265358979, 3.14, '2008-11-13 00:00:00', '2008-11-12 16:25:21', '00:00:00', 2008, 'azerty', '', 'blah blah', '', '', 'blah blah', '', 'blah blah', 0),
-(2, 0, '0000-00-00', 'one', 1, 10, 'azerty', 100, 3.14159, 3.14159265358979, 3.14, '2008-11-13 00:00:00', '2008-11-12 16:25:38', '00:00:00', 2008, 'azerty', '', 'blah blah', '', '', 'blah blah', '', 'blah blah', 0);
+INSERT INTO `ea_test_table1` (`id`, `valint`, `valdate`, `valenum`, `valtinyint`, `valsmallint`, `valvarchar`, `valmediumint`, `valfloat`, `valdouble`, `valdecimal`, `valdatetime`, `valtimestamp`, `valtime`, `valyear`, `valchar`, `valtinyblob`, `valtinytext`, `valtext`, `valblob`, `vamediumblob`, `valmediumtext`, `vallongblob`, `vallongtext`, `valbool`) VALUES
+(1, 0, '2008-11-12', 'one', 1, 10, 'azerty', 100, 3.14159, 3.14159265358979, 3.14, '2008-11-13 00:00:00', '2008-11-13 12:22:31', '00:00:00', 2008, 'azerty', '', 'blah blah', '', '', '', 'blah blah', '', 'blah blah', 0),
+(2, 0, '0000-00-00', 'one', 1, 10, 'azerty', 100, 3.14159, 3.14159265358979, 3.14, '2008-11-13 00:00:00', '2008-11-12 16:25:38', '00:00:00', 2008, 'azerty', '', 'blah blah', '', '', '', 'blah blah', '', 'blah blah', 0);

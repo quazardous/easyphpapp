@@ -61,6 +61,15 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_defaultRecordAdapterClass;
 	}
 	
+	/**
+	 * Layout model constructor.
+	 * 
+	 * @param array|mixed $config constructor call Ea_Model_Data::factory() on this.
+	 * 		array(
+	 * 			'data_model' => $dataModel,
+	 * 		)
+	 * @return unknown_type
+	 */
 	public function __construct($config=null)
 	{
 		if($model=Ea_Model_Data::factory($config))
@@ -89,6 +98,12 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->_ordered=true;
 	}
 	
+	/**
+	 * Return an instance of Ea_Layout_Record_Adapter_Interface for the column.
+	 * 
+	 * @param $name column
+	 * @return Ea_Layout_Record_Adapter_Interface
+	 */
 	public function getColumnAdapter($name)
 	{
 		$obj=$this->getMetaData($name, 'adapter', 'instance');
@@ -104,6 +119,12 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $instance;
 	}
 	
+	/**
+	 * Return the column header.
+	 * 
+	 * @param $name column
+	 * @return mixed
+	 */
 	public function getColumnHeader($name)
 	{
 		// try to get some user content
@@ -113,9 +134,17 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		//TODO add some header adapter support
 	}
 	
+	/**
+	 * Apply special filter on record values.
+	 * 
+	 * @param string $column
+	 * @param string $value
+	 * @return string
+	 * 
+	 * @see Ea_Layout_Record_Adapter_Field::getValue()
+	 */
 	public function filterRecordValue($column, $value)
 	{
-		
 		switch($this->getColumnType($column))
 		{
 			case self::type_date: case self::type_datetime:
