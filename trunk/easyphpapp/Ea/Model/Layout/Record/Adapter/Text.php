@@ -20,10 +20,13 @@ require_once 'Ea/Layout/Record/Adapter/Field.php';
  */
 class Ea_Model_Layout_Record_Adapter_Text extends Ea_Layout_Record_Adapter_Field implements Ea_Model_Layout_Record_Adapter_Interface
 {
-	function __construct($column, $config, $data)
+	public function __construct($column, Ea_Model_Layout $model)
 	{
-		parent::__construct($column, $config);
-	}	
+		parent::__construct($column, $model->getMetaData($column, 'adapter', 'config'));
+		$this->_filter=array($model, 'filterRecordValue');
+	}
+	
+	
 }
 
 ?>

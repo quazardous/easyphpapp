@@ -21,6 +21,15 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 {
 	protected $_field;
 	
+	/**
+	 * If defined, callback used in getValue().
+	 * filterCallback($column, $value)
+	 * 
+	 * @var callback
+	 * @see getValue()
+	 */
+	protected $_filter=null;
+	
 	public function __construct($field)
 	{
 		$this->_field=$field;
@@ -36,9 +45,14 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	{
 		if(is_array($record))
 		{
-			return $record[$this->_field];
+			$value=$record[$this->_field];
 		}
-		return $record->{$this->_field};
+		else
+		{
+			$value=$record->{$this->_field};
+		}
+		if($this->_filter) return call_user_func($this->_filter, $this->_field, $value);
+		return $value;
 	}
 	
 	/**

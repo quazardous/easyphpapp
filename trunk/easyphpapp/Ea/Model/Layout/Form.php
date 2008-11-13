@@ -29,15 +29,14 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		$this->_baseId=$baseId;
 	}
 	
+	public function getBaseId()
+	{
+		return $this->_baseId;
+	}
+	
 	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Input_Text';
 	protected $_defaultRecordAdapterClassByType=array(
 		self::type_string => 'Ea_Model_Layout_Record_Adapter_Input_Text',
 	);
-
-	protected function newColumnAdapter($class, $name, $config, $meta)
-	{
-		$meta['base_id']=$this->_baseId;
-		return new $class($name, $config, $meta);
-	}
 	
 }

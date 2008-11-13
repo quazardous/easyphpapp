@@ -358,7 +358,7 @@ class Ea_Security
 		}
 		if($parents!==null)
 		{
-			if(!is_array($parents)) $parents=array($patents);
+			if(!is_array($parents)) $parents=array($parents);
 			foreach($parents as $parent)
 			{
 				$this->addRole($parent);
