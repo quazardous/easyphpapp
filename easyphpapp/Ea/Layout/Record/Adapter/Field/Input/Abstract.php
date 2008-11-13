@@ -12,12 +12,10 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Interface.php';
-
 /**
  * Abstract class to get column cell content from record (array or object).
  */
-abstract class Ea_Layout_Record_Adapter_Input_Abstract implements Ea_Layout_Record_Adapter_Interface
+abstract class Ea_Layout_Record_Adapter_Field_Input_Abstract extends Ea_Layout_Record_Adapter_Field
 {
 	protected $_field;
 	protected $_baseId=null;
@@ -30,20 +28,6 @@ abstract class Ea_Layout_Record_Adapter_Input_Abstract implements Ea_Layout_Reco
 		$this->_config=$config;
 	}
 	
-	/**
-	 * This function must return content from record.
-	 * 
-	 * @param array $record
-	 * @return string
-	 */
-	public function getValue($record)
-	{
-		if(is_array($record))
-		{
-			return $record[$this->_field];
-		}
-		return $record->{$this->_field};
-	}
 	
 	public function getId($i)
 	{
