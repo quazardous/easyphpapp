@@ -42,21 +42,17 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	protected $_records=array();
 
-	public function applyModel($model, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	public function applyModel(Ea_Model_Layout $model, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
 	{
-		$model=Ea_Model_Layout::factory($model);
-		if($model instanceof Ea_Model_Layout)
+		foreach($model->getOrderedColumns() as $column)
 		{
-			foreach($model->getOrderedColumns() as $column)
+			if($model->getColumnDisplay($column))
 			{
-				if($model->getColumnDisplay($column))
-				{
-					$this->addColumn(
-						$model->getColumnAdapter($column),
-						$model->getColumnHeader($column),
-						$column,
-						$headerConfig, $recordConfig, $headerClass, $recordClass);
-				}
+				$this->addColumn(
+					$model->getColumnAdapter($column),
+					$model->getColumnHeader($column),
+					$column,
+					$headerConfig, $recordConfig, $headerClass, $recordClass);
 			}
 		}
 	} 

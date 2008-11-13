@@ -114,6 +114,8 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 			{
 				$meta=$info['metadata'][$column];
 				$this->setColumnOrder($column, $i);
+				$this->setColumnLabel($column, ucfirst($column));
+				$this->setColumnDisplay($column, true);
 				if($meta['DEFAULT'])
 				{
 					$this->setColumnMeta($column, 'default', $meta['DEFAULT']);
