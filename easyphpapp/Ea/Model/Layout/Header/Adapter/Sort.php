@@ -77,7 +77,7 @@ class Ea_Model_Layout_Header_Adapter_Sort implements Ea_Model_Layout_Header_Adap
 				(isset($urlv["query"])?"?".$urlv["query"]:"").
 				(isset($urlv["fragment"])?"#".$urlv["fragment"]:"");
 		}
-		return new $class($url, $column, $this->_target, $this->_config);
+		return new $class($url, $model->getColumnLabel($column), $this->_target, $this->_config);
 	}
 }
 ?>
