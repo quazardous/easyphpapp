@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -40,18 +40,6 @@ class Ea_Layout_Input_Array extends Ea_Layout_Container implements ArrayAccess, 
  		return $this->_items[$offset];
  	}
  	
- 	protected function protectedOffsetSet($offset, $value)
- 	{
- 		if($offset===null)
- 		{
- 			$n=count($this->_items);
- 			array_push($this->_items, $value);
- 			end($this->_items);
- 			return key($this->_items);
- 		}
- 		$this->_items[$offset]=$value;
- 		return $offset;		
- 	}
  	
  	public function offsetSet($offset, $value)
  	{

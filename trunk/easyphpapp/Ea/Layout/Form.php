@@ -144,7 +144,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	protected function setArrayInputAt(array $id, Ea_Layout_Input_Abstract $input)
 	{
-		$arr=$this;
+		$arr=&$this->_items;
 		// add inputs in an array pattern
 		// $form[id1][id2][...][idn]=input
 		$nid=array();
@@ -157,7 +157,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			if(($i+1)==count($input->getId()))
 			{
 				// if valid pid and existing item
-				if($pid!==null&&$arr->offsetExists($pid))
+				if($pid!==null&&array_key_exists($pid, $arr))
 				{
 					//must be an input
 					if(!($arr[$pid] instanceof Ea_Layout_Input_Abstract))
@@ -176,7 +176,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					// if same id => same input just break
 					break;
 				}
-				$npid=$arr->protectedOffsetSet($pid, $input);
+				$npid=self::array_set_or_push($arr, $pid, $input);
 				if($pid!==$npid)
 				{
 					$isNid=true;
@@ -187,26 +187,26 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			else
 			{
 				// if valid pid and existing item
-				if($pid!==null&&$arr->offsetExists($pid))
+				if($pid!==null&&array_key_exists($pid, $arr))
 				{
 					//must be an array
-					if(!($arr[$pid] instanceof Ea_Layout_Form_Array))
+					if(!($arr[$pid] instanceof Ea_Layout_Input_Array))
 					{
 						throw new Ea_Layout_Form_Exception('Not an array');
 					}
-					$arr=$arr[$pid];
+					$arr=&$arr[$pid]->_items;
 					array_push($nid, $pid);
 				}
 				else
 				{
 					$narr=new Ea_Layout_Input_Array;
-					$npid=$arr->protectedOffsetSet($pid, $narr);
+					$npid=self::array_set_or_push($arr, $pid, $narr);
 					if($pid!==$npid)
 					{
 						$isNid=true;
 					}
 					array_push($nid, $npid);
-					$arr=$narr;
+					$arr=&$narr->_items;
 				}
 			}
 			$i++;
@@ -217,6 +217,20 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 	}
 
+ 	static protected function array_set_or_push(&$array, $offset, $value)
+ 	{
+ 		if($offset===null)
+ 		{
+ 			$n=count($array);
+ 			array_push($array, $value);
+ 			end($array);
+ 			return key($array);
+ 		}
+ 		$array[$offset]=$value;
+ 		return $offset;		
+ 	}
+	
+	
 	/**
 	 * Action can be a route or an url.
 	 *
@@ -227,6 +241,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	/**
 	 * Set action.
 	 * @see $_action
+	 * @see setMethod() if GET form and action is a route, params will be generate as hidden inputs.
 	 * 
 	 * @param Ea_Route|string $route
 	 */

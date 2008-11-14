@@ -1,26 +1,29 @@
 *** 0.0.3.1-dumb ***
-GET form support :
+Improve form support :
 - GET form can be use to build route (search criteria, etc)
+Improve layout model :
+- header adapter to generate complex headers (ie. sort headers)
+Fix bugs on form.
 
 *** 0.0.3.0-dumb ***
 Introduce data model in EasyPhpApp :
 - EasyPhpApp can now generate record list/form structure from data model (table).
 
 *** 0.0.2.7-guru ***
-Improved modularity :
+Improve modularity :
 - layouts can now be used outside EasyPhpApp router engine
 
 *** 0.0.2.6-guru ***
-Improved security layer :
+Improve security layer :
  - storage of user's defined attributes in session
-Improved form support :
+Improve form support :
  - file upload support
 
 *** 0.0.2.5-guru ***
-Improved form support :
+Improve form support :
  - form structure storage in session
  - inputs can remember last submitted value
  
 *** 0.0.2.4-guru ***
-Improved form support :
+Improve form support :
  - radio buttons support
