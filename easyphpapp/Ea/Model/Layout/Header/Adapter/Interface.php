@@ -12,14 +12,22 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Model/Layout.php';
+
 /**
- * Exception class for Ea_Model_Layout.
+ * Interface to get header cell content from field.
  * 
  * @see Ea_Model_Layout
  */
-
-class Ea_Model_Layout_Exception extends Exception
+interface Ea_Model_Layout_Header_Adapter_Interface
 {
-	
+	/**
+	 * Return the header content.
+	 * 
+	 * @param string $column
+	 * @param Ea_Model_Layout $model
+	 * @return Ea_Layout_Abstract|string
+	 */
+	function getHeader($column, Ea_Model_Layout $model);
 }
 ?>

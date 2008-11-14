@@ -17,6 +17,7 @@ require_once 'Ea/Model/Data.php';
 require_once 'Ea/Model/Data/Abstract.php';
 require_once 'Ea/Model/Layout/Exception.php';
 require_once 'Zend/Loader.php';
+require_once 'Ea/Model/Layout/Header/Adapter/Interface.php';
 
 /**
  * Layout model class.
@@ -31,6 +32,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * array(
 	 *   'column name'=>array(
 	 *      'adapter'		    => array('class'=>'Ea_Layout_Record_Adapter_Interface+Ea_Model_Layout_Record_Adapter_Interface', 'config'=>$congig_for_the_adapter),
+	 *      'header'		    => array('content'=>$content, 'adapter'=>'Ea_Layout_Record_Adapter_Interface'),
 	 *   ),
 	 * )
 	 * 
@@ -130,6 +132,11 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		// try to get some user content
 		$content=$this->getMetaData($name, 'header', 'content');
 		if($content) return $content;
+		$adapter=$this->getMetaData($name, 'header', 'adapter');
+		if($adapter instanceof Ea_Model_Layout_Header_Adapter_Interface)
+		{
+			return $adapter->getHeader($name, $this);
+		}
 		return $this->getColumnLabel($name);;
 		//TODO add some header adapter support
 	}

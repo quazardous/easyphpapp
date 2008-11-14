@@ -263,11 +263,24 @@ abstract class Ea_Module_Abstract
 	 * @param string $module
 	 * @return string|numeric|null
 	 */
-	public function getParam($name, $module=null)
+	public function getParam($name, $default=null, $module=null)
 	{
-		return $this->getRouter()->getParam($name, $module);
+		$value=$this->getRouter()->getParam($name, $module);
+		if($value===null) return $default;
+		return $value;
 	}
-	
+
+	/**
+	 * Get input id for GET form to feet with route params.
+	 * 
+	 * @param mixed $param
+	 * @param string $module
+	 * @return array
+	 */
+	public function getInputId($param, $module=null)
+	{
+		return $this->getRouter()->getInputId($param, $module);
+	}
 	
 }
 ?>

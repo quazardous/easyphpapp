@@ -498,6 +498,26 @@ class Ea_Router
 	}
 	
 	/**
+	 * Return running module.
+	 * 
+	 * @return string
+	 */
+	public function getModule()
+	{
+		return $this->_runningModule;
+	}
+
+	/**
+	 * Return running action.
+	 * 
+	 * @return string
+	 */
+	public function getAction()
+	{
+		return $this->_runningAction;
+	}
+	
+	/**
 	 * Test if request is POST.
 	 * 
 	 * @return boolean

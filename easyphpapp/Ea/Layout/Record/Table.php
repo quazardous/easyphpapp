@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081112
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -42,6 +42,32 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	protected $_records=array();
 
+	/**
+	 * Table layout constructor.
+	 * 
+	 * @param array $config associative array of parameters
+	 *  
+	 */
+	public function __construct($config=null)
+	{
+		parent::__construct($config);
+		if($config instanceof Ea_Model_Layout)
+		{
+			$config=array('model'=>$config);
+		}
+		if(is_array($config))
+		{
+			if(array_key_exists('model', $config))
+			{
+				$this->applyModel($config['model']);
+			}
+			if(array_key_exists('orientation', $config))
+			{
+				$this->setOrientation($config['orientation']);
+			}
+		}
+	}
+	
 	public function applyModel(Ea_Model_Layout $model, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
 	{
 		foreach($model->getOrderedColumns() as $column)

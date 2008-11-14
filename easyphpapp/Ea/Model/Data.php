@@ -7,12 +7,13 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Model/Data/Table.php';
+require_once 'Ea/Model/Data/Record.php';
 
 /**
  * Factory data model class.
@@ -37,6 +38,10 @@ class Ea_Model_Data
 		if($config instanceof Zend_Db_Table_Abstract)
 		{
 			return new Ea_Model_Data_Table($config);
+		}
+		if($config instanceof Iterator)
+		{
+			return new Ea_Model_Data_Record($config);
 		}
 		return null;
 	}
