@@ -13,6 +13,7 @@
  */
 
 require_once 'Ea/Model/Layout.php';
+require_once 'Ea/Layout/Input/Abstract.php';
 
 /**
  * Form model class.
@@ -26,7 +27,7 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	public function setBaseId($baseId)
 	{
-		$this->_baseId=$baseId;
+		$this->_baseId=Ea_Layout_Input_Abstract::get_id_from_name($baseId);
 	}
 	
 	public function getBaseId()

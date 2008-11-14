@@ -44,27 +44,33 @@ class Module_Index extends Ea_Module_Abstract
 		$form=new Ea_Layout_Form('form1');
 		
 		$form->setMethod('get');
+		// the goal of GET form is to produce an url from a form.
 		
 		$form->add($table=new Ea_Layout_Table);
 		
 		// draw the form
 		$table->addRow();
-		$table->addHeader('text');
+		$table->addHeader('text1');
 		$table->addCell(new Ea_Layout_Input_Text('text1'));
 		
 		$table->addRow();
-		$table->addHeader('select');
-		$table->addCell(new Ea_Layout_Input_Select('select1', array(1=>'one', 2=>'two', 3=>'three'), 2));
+		$table->addHeader('select1[titi]');
+		// ids can be string, array or "array as string"
+		// ie 'select1[titi]' is equivalent of array('select1', 'titi')
+		$table->addCell(new Ea_Layout_Input_Select('select1[titi]', array(1=>'one', 2=>'two', 3=>'three'), 2));
 
-		$table->addRow();
-		$table->addHeader('textarea');
-		$table->addCell(new Ea_Layout_Input_Textarea('textarea1', 5, 20));
+		$form['select1[titi]']=3;
+		// or $form[array('select1', 'titi')]=3;
 		
+		// now to create a EasyPhpRoute with EasyPhpParams...
 		$table->addRow();
-		$table->addHeader('radio');
-		$cell=$table->addCell(new Ea_Layout_Input_Radio('radio1', 'One'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two', true)); // you can use $form['radio1']='Two';
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three'));
+		
+		$idText2=$this->getRouter()->getInputId('text2');
+		$table->addHeader('text2');
+		$table->addCell(new Ea_Layout_Input_Text($idText2));
+		
+		$form[$idText2]='foo';
+		// now you can use Ea_Router::getParam('text2') and get 'foo'...
 
 		$table->addRow();
 		$table->addHeader('submit');

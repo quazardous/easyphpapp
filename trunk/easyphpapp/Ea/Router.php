@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081113
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -297,6 +297,7 @@ class Ea_Router
 	 */
 	public static function standardize($id)
 	{
+		if(!$id)return $id;
 		$id=preg_replace('/[^a-zA-Z0-9_-]/', '', strtolower($id));
 		$id=preg_replace('/\-+/', '-', $id);
 		$id=preg_replace('/[-_]*_[-_]*/', '_', $id);
@@ -484,6 +485,7 @@ class Ea_Router
 	public function getParam($name, $module=null)
 	{
 		if(!$module) $module=$this->_runningModule;
+		else $module=self::standardize($module);
 		if(!$module)
 		{
 			throw new Ea_Router_Exception("no module");
@@ -745,6 +747,25 @@ class Ea_Router
 	 */
 	protected $_registers=array();
 
+	/**
+	 * Get input id for GET form to feet with route params.
+	 * 
+	 * @param mixed $param
+	 * @param string $module
+	 * @return array
+	 */
+	public function getInputId($param, $module=null)
+	{
+		$param=Ea_Layout_Input_Abstract::get_id_from_name($param);
+		if(!$module) $module=$this->_runningModule;
+		if(!$module)
+		{
+			throw new Ea_Router_Exception("no module");
+		}
+		$module=array($module);
+		return array_merge($module, $param);
+	}
+	
 	/**
 	 * Set a register.
 	 * @see $_registers.

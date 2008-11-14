@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081113
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -274,6 +274,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 
 	/**
 	 * Set the method.
+	 * In EasyPhpApp POST is form data manipulation and GET for navigation (list criteria, etc).
 	 * 
 	 * @param string $method
 	 */
@@ -418,18 +419,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			{
 				//magic input for get => module and route.
 				$action=$this->_action;
-				if(!$action)
+				if(($this->getPage() instanceof Ea_Page)&&(!$action))
 				{
+					// default route
 					$action=$this->getPage()->getRouter()->getRoute();
 				}
 				if($action instanceof Ea_Route)
 				{
-					// if a route was set
+					// if a route was set, the form tries to keep all params.
 					$action=$this->getPage()->getRouter()->url($action);
-				}
-				
-				if($action)
-				{
 					$infos=parse_url($action);
 					
 					if(isset($infos['query']))
@@ -438,7 +436,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 						foreach(explode('&',urldecode($infos['query'])) as $string)
 						{
 							$tmp=explode('=',$string);
-							if(!self::array_get_from_id($this, Ea_Layout_Input_Abstract::get_id_from_name($tmp[0])))
+							if(!self::array_get_from_id($this, $tmp[0]))
 							{
 								$this->add(new Ea_Layout_Input_Hidden($tmp[0], $tmp[1]), false);
 							}
@@ -490,10 +488,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	static public function array_get_from_id(&$array, $id)
 	{
-		if(!is_array($id))
-		{
-			$id=array($id);
-		}
+		$id=Ea_Layout_Input_Abstract::get_id_from_name($id);
 		$arr=&$array;
 		$i=0;
 		foreach($id as $pid)
@@ -506,6 +501,59 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			$i++;
 		}
 	}
+
+	/**
+	 * Reset an array element from an array of keys.
+	 * ie. the id array('foo','bar') wil set $array['foo']['bar']
+	 * 
+	 * @param array $array
+	 * @param array|string $id
+	 * @param string $value
+	 * @return mixed
+	 */
+	static public function array_reset_from_id(&$array, $id, $value)
+	{
+		$id=Ea_Layout_Input_Abstract::get_id_from_name($id);
+		$arr=&$array;
+		$i=0;
+		foreach($id as $pid)
+		{
+			// can't be null part of id
+			if($pid===null) throw new Ea_Layout_Form_Exception('incorrect input id');
+			if(!isset($arr[$pid])) throw new Ea_Layout_Form_Exception('incorrect input id');
+			if(($i+1)==count($id))
+			{
+				$arr[$pid]=$value;
+				return;
+			}
+			$arr=&$arr[$pid];
+			$i++;
+		}
+	}
+	
+	/**
+	 * Test an array element from an array of keys.
+	 * ie. the id array('foo','bar') wil return $array['foo']['bar']
+	 * 
+	 * @param array $array
+	 * @param array|string $id
+	 * @return mixed
+	 */
+	static public function array_exist_from_id(&$array, $id)
+	{
+		$id=Ea_Layout_Input_Abstract::get_id_from_name($id);
+		$arr=&$array;
+		$i=0;
+		foreach($id as $pid)
+		{
+			// can't be null part of id
+			if($pid===null) return false;
+			if(!isset($arr[$pid])) return false;
+			if(($i+1)==count($id)) return true;
+			$arr=&$arr[$pid];
+			$i++;
+		}
+	}
 	
 	/**
 	 * Get the $_POST value for the given id.
@@ -514,7 +562,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * @param array $id
 	 * @return string
 	 */
-	public function getValueFromPost(array $id)
+	public function getValueFromPost($id)
 	{
 		return self::array_get_from_id($_POST, $id);
 	}
@@ -525,7 +573,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * @param array $id
 	 * @return string
 	 */
-	public function getValueFromSession(array $id)
+	public function getValueFromSession($id)
 	{
 		if(!isset($this->getSession()->forms[$this->getId()])) return null;
 		$input=self::array_get_from_id($this->getSession()->forms[$this->getId()], $id);
@@ -591,7 +639,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				$input->setValue($this->getValueFromPost($input->getId()));
 				break;
 			default:
-				throw new Ea_Layout_Form_Exception('Not yet done');
+				throw new Ea_Layout_Form_Exception('Cannot do that !');
 		}
 	}
 	
@@ -604,18 +652,22 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if($this->usePostData())
 		{
-			return array_key_exists($offset, $this->_post);
+			return self::array_exist_from_id($this->_post, $offset);
+			//return array_key_exists($offset, $this->_post);
 		}
-		return parent::offsetExists($offset);
+		return self::array_exist_from_id($this->_items, $offset);
+		//return parent::offsetExists($offset);
 	}
 	
  	public function offsetGet($offset)
  	{
  		if($this->usePostData())
  		{
- 			return $this->_post[$offset];
+ 			return self::array_get_from_id($this->_post, $offset);
+ 			//return $this->_post[$offset];
  		}
- 		return parent::offsetGet($offset);
+ 		return self::array_get_from_id($this->_items, $offset);
+ 		//return parent::offsetGet($offset);
  	}
  	 	
  	public function offsetSet($offset, $value)
@@ -624,7 +676,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  		{
  			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
  		}
- 		parent::offsetSet($offset, $value);
+ 		$input=self::array_get_from_id($this->_items, $offset);
+ 		if(!($input instanceof Ea_Layout_Input_Abstract))
+ 		{
+ 			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
+ 		}
+ 		$input->setValue($value);
+ 		//parent::offsetSet($offset, $value);
  	}
  	
  	public function offsetUnset($offset)
@@ -633,7 +691,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  		{
  			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
  		}
- 		parent::offsetUnset($offset);
+ 		$this->offsetSet($offset, null);
+ 		//self::array_reset_from_id($this->_items, $offset, null);
+ 		//parent::offsetUnset($offset);
   	}
  	
  	public function current()
