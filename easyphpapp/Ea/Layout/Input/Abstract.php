@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081113
+ * @version     0.0.3.1-20081114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -132,8 +132,16 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		}
 	}
 	
-	public static function get_id_from_name($name)
+	/**
+	 * Get array id from name.
+	 * ie 'foo[bar]' => array('foo', 'bar')
+	 * 
+	 * @param string $name
+	 * @return string|array
+	 */
+	public static function get_id_from_name($name, $alwaysArray=true)
 	{
+		if(is_array($name)) return $name;
 		if(preg_match('|\[|', $name))
 		{
 			$id=array();
@@ -143,7 +151,8 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			}
 			return $id;
 		}
-		return array($name);
+		if($alwaysArray) return array($name);
+		return $name;
 	}
 	
 	/**
