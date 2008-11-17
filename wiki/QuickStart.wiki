@@ -9,7 +9,7 @@ How to create your first EasyPhpApp project.
 
 Get the [http://framework.zend.com/download/overview Zend Framework] library. The last snapshot should work with EasyPhpApp.
 
-Download the last *EasyPhpApp tarball* and untar it. You can also checkout the SVN repository.
+Download the last *EasyPhpApp tarball* and untar it. You can also checkout the [http://code.google.com/p/easyphpapp/source/list SVN repository].
 
 Look at the *./examples* folder.
 
