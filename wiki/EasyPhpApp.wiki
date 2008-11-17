@@ -1,0 +1,15 @@
+#summary The name EasyPhpApp
+
+= Introduction =
+
+This damn Wiki put a question mark... So this page is just to say why EasyPhpApp is the name of EasyPhpApp....
+
+
+= Details =
+
+EasyPhpApp because :
+  * it's easy
+  * it's PHP
+  * it' application
+
+Something else ?
