@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  modelapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081105
+ * @version     0.0.3.2-20081201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -94,6 +94,29 @@ class Module_Index extends Ea_Module_Abstract
 		$form->add($table2);
 		
 		$this->add($form);
+
+		global $db;
+		
+		// build the data model
+		$dataModel3=Ea_Model_Data::factory($stmt=$db->query('select * from ea_test_table1'));
+		
+		// build the layout model
+		$model3=new Ea_Model_Layout($dataModel3);
+		
+		// change output format for datetime cols
+		$model3->setColumnMetaPart($model3->getColumnsOfType(Ea_Model_Layout::type_datetime), 'date', 'outformat', '%d/%m/%Y');
+		
+		// define a table layout
+		$table3=new Ea_Layout_Record_Table;
+		
+		// construct columns from model
+		$table3->applyModel($model3);
+		
+		// add some record to display
+		$table3->setRecords($stmt->fetchAll());
+		
+		$this->add($table3);
+		
 		
 		// router will call render
 	}

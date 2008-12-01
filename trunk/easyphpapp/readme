@@ -1,0 +1,31 @@
+EASYPHPAPP :
+Many times we need little PHP applications doing the same kind of job : searching, listing, editing records (CRUD = Create Read Update Delete).
+EasyPhpApp is an answer to help produce scaffold applications.
+EasyPhpApp is written on top of Zend Framework/PHP components and is designed to be easily used by non web developpers and easy to maintain.
+
+FEATURES :
+ - Clean but simple MVC approach : the framework uses structured url (routes) to target modules (your application classes) and actions (methods of the classes)
+ - Strong but simple security layer : build on top of Zend_Auth and Zend_Acl
+ - Can be HTML free : build your presentation only with layouts classes
+ - Form supports : file upload, radio buttons, automatic inputs values storage, etc
+ - Grid : generic table of records implementation
+ - PRG + CRUD
+ - Data model support : generate form and list from table 
+
+INSTALL :
+ - Get the Zend Framework library. The last snapshot should work with EasyPhpApp.
+ - Download the last EasyPhpApp tarball and untar it. You can also checkout the SVN repository.
+
+QUICKSTART :
+ - Look at the ./examples folder.
+ - Just set up the ./examples/conf/config.php.
+ - Play with the examples.
+ 
+CONTACT :
+David Berlioz <berlioz@nicematin.fr>
+
+PROJECT :
+http://code.google.com/p/easyphpapp/
+
+LICENCE :
+EasyPhpApp and all stuff around are written under GNU General Public License v3 (http://www.gnu.org/licenses/gpl-3.0.html).

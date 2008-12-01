@@ -7,13 +7,13 @@
  * @package     examples
  * @subpackage  modelapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081105
+ * @version     0.0.3.2-20081201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
  */
 
-require_once 'Ea/Model/Data/Record.php';
+require_once 'Ea/Model/Data/Db/Record.php';
 require_once 'Ea/Model/Layout.php';
 require_once 'Ea/Layout/Record/Table.php';
 require_once 'Ea/Model/Layout/Header/Adapter/Sort.php';
@@ -46,7 +46,7 @@ class Module_Index extends Ea_Module_Abstract
 		);
 		
 		// build the layout model
-		$model1=new Ea_Model_Layout(new Ea_Model_Data_Record($records[0]));
+		$model1=new Ea_Model_Layout(new Ea_Model_Data_Db_Record($records[0]));
 
 		// set the header sort adapter
 		$sortAdapter=new Ea_Model_Layout_Header_Adapter_Sort('sort', $this->getRouter()->getRoute());

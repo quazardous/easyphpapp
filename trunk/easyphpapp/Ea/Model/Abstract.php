@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.2-20081128
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -27,6 +27,9 @@ abstract class Ea_Model_Abstract
 	const type_datetime    = 'datetime';
 	const type_boolean     = 'boolean';
 	const type_enum        = 'enum';
+	const type_stream      = 'stream';
+	const type_cstream     = 'cstream';
+	const type_binary      = 'binary';
 	const type_unknown     = 'unknown';
 	
 	/**
@@ -49,15 +52,17 @@ abstract class Ea_Model_Abstract
 	 * 
 	 * @var array
 	 */
-	protected $_metadata=null;
+	protected $_metadata=array();
 	
 	public function	getMetaData($name, $param=null, $part=null)
 	{
 		if(!is_array($this->_metadata)) return null;
 		if(!array_key_exists($name, $this->_metadata)) return null;
 		if($param===null) return $this->_metadata[$name];
+		if(!is_array($this->_metadata[$name])) return null;
 		if(!array_key_exists($param, $this->_metadata[$name])) return null;
 		if($part===null) return $this->_metadata[$name][$param];
+		if(!is_array($this->_metadata[$name][$param])) return null;
 		if(!array_key_exists($part, $this->_metadata[$name][$param])) return null;
 		return $this->_metadata[$name][$param][$part];
 	}
