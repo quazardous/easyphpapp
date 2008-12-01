@@ -1,3 +1,9 @@
+*** 0.0.3.2-dumb ***
+Improve Zend_Db pdo support in model :
+- select statement model support
+- support for PDO_OCI data in model
+- partial support for Oracle CLOB
+
 *** 0.0.3.1-dumb ***
 Improve form support :
 - GET form can be use to build route (search criteria, etc)

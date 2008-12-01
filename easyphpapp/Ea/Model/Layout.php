@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081113
+ * @version     0.0.3.2-20081128
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -152,20 +152,36 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 */
 	public function filterRecordValue($column, $value)
 	{
-		switch($this->getColumnType($column))
+		$filter=$this->getMetaData($column, 'filter');
+		if($filter)
 		{
-			case self::type_date: case self::type_datetime:
-				$d=strptime($value, $this->getMetaData($column, 'date', 'format'));
-				if(!$d) return null;
-				return strftime($this->getMetaData($column, 'date', 'outformat'),
-					mktime(
-						$d['tm_hour'],
-						$d['tm_min'],
-						$d['tm_sec'],
-						$d['tm_mon'],
-						$d['tm_mday'],
-						$d['tm_year']));
-			default: return $value;
+			return call_user_func($filter, $value);
+		}
+		else
+		{
+			switch($this->getColumnType($column))
+			{
+				case self::type_date: case self::type_datetime:
+					if(!$value)return $value;
+					$format=$this->getMetaData($column, 'date', 'format');
+					$outformat=$this->getMetaData($column, 'date', 'outformat');
+					if($format==$outformat) return $value;
+					if(!($format&&$outformat)) return $value;
+					$d=strptime($value, $format);
+					if(!$d) return $value;
+					return strftime($outformat,
+						mktime(
+							$d['tm_hour'],
+							$d['tm_min'],
+							$d['tm_sec'],
+							$d['tm_mon']+1,
+							$d['tm_mday'],
+							$d['tm_year']));
+				case self::type_cstream:
+					if($value)return stream_get_contents($value);
+					return $value;
+				default: return $value;
+			}
 		}
 	}
 	
