@@ -51,7 +51,7 @@ class Module_Index extends Ea_Module_Abstract
 		// set the header sort adapter
 		$sortAdapter=new Ea_Model_Layout_Header_Adapter_Sort('sort', $this->getRouter()->getRoute());
 		
-		$model1->setColumnMetaPart('*', 'header', 'adapter', $sortAdapter);
+		$model1->setColumnAdapter('*', $sortAdapter);
 		
 		// define a table layout
 		$table1=new Ea_Layout_Record_Table;

@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081112
+ * @version     0.0.3.2-20081204
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -25,8 +25,6 @@ class Ea_Model_Layout_Record_Adapter_String extends Ea_Layout_Record_Adapter_Fie
 		parent::__construct($column, $model->getMetaData($column, 'adapter', 'config'));
 		$this->_filter=array($model, 'filterRecordValue');
 	}
-	
-	
 }
 
 ?>

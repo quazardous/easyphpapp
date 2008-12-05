@@ -92,18 +92,17 @@ class Ea_Model_Data_Db_Record extends Ea_Model_Data_Db
 		$this->_ordered=true;
 	}
 	
-	protected function _analyzeValue($i, $column, &$value)
+	protected function _analyzeValue($i, $column, $value)
 	{
 		$this->setColumnOrder($column, $i);
 		$this->setColumnLabel($column, $column);
-		$this->setColumnDisplay($column, true);
 		if(is_string($value))
 		{
 			$arrd=strptime($value, $this->_defaultDbDatetimeFormat);
 			if($arrd)
 			{
 				$this->setColumnType($column, self::type_datetime);
-				$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDatetimeFormat, 'outformat' => $this->_defaultDbDatetimeFormat));
+				$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
 			}
 			else
 			{
@@ -111,7 +110,7 @@ class Ea_Model_Data_Db_Record extends Ea_Model_Data_Db
 				if($arrd)
 				{
 					$this->setColumnType($column, self::type_date);
-					$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDateFormat, 'outformat' => $this->_defaultDbDateFormat));
+					$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 				}
 				else
 				{
@@ -129,7 +128,17 @@ class Ea_Model_Data_Db_Record extends Ea_Model_Data_Db
 		}
 		else if(is_resource($value))
 		{
-			$this->setColumnType($column, self::type_cstream);
+			$this->setColumnType($column, self::type_text);
+			$this->setColumnLobType($column, 'stream');
+			$this->setColumnLobLoad($column, $this->_defaultLobLoad);
+			$this->setColumnStringLength($column, 4294967296);
+		}
+		else if(is_a($value, 'OCI-Lob'))
+		{
+			$this->setColumnType($column, self::type_text);
+			$this->setColumnLobType($column, 'ocilob');
+			$this->setColumnLobLoad($column, $this->_defaultLobLoad);
+			$this->setColumnStringLength($column, 4294967296);
 		}
 		else
 		{

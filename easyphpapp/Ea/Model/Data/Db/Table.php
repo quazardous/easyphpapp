@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081201
+ * @version     0.0.3.2-20081203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -25,6 +25,20 @@ require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
 class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 {
 
+	/**
+	 * Meta info on columns.
+	 * array(
+	 *   'column name'=>array(
+	 *      'default'       => 'value'|array('type'=>'value|callback', 'value'=>'value', 'callback'=>'callback'),
+	 *      'mandatory'		=> true|false,
+	 *   ),
+	 * )
+	 * 
+	 * @var array
+	 */
+	//protected $_metadata=array();
+	
+	
 	protected $_name=null;
 	
 	protected $_schema=null;
@@ -80,6 +94,26 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 		$this->_dbTable=$dbTable;
 	}
 
+	public function getColumnDefault($name)
+	{
+		return $this->getMetaData($name, 'default');
+	}
+	
+	public function setColumnDefault($name, $default)
+	{
+		$this->setColumnMeta($name, 'default', $default);
+	}
+
+	public function getColumnMandatory($name)
+	{
+		return $this->getMetaData($name, 'mandatory');
+	}
+	
+	public function setColumnMandatory($name, $mandatory)
+	{
+		$this->setColumnMeta($name, 'mandatory', $mandatory);
+	}
+	
 	/**
 	 * Constructor.
 	 * 
@@ -137,6 +171,10 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 		{
 			$this->_analyzeDbTablePdoOci($info);
 		}
+		else if($this->_dbTable->getAdapter() instanceof Zend_Db_Adapter_Oracle)
+		{
+			$this->_analyzeDbTableOracle($info);
+		}
 		else
 		{
 			$this->_analyzeDbTableUnsupported($info);
@@ -156,11 +194,7 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 
 	protected function _analyzeDbTablePdoOci(&$info)
 	{
-		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
-		$stmt=$this->_dbTable->getAdapter()->query($query);
-		$dbDateFormat=$stmt->fetchColumn(0);
-		$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
-		$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->initOracleDbDateFormat();
 		$i=0;
 		foreach($this->_columns as $column)
 		{
@@ -169,8 +203,20 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 		}
 		$this->_ordered=true;
 	}
+
+	protected function _analyzeDbTableOracle(&$info)
+	{
+		$this->initOracleDbDateFormat();
+		$i=0;
+		foreach($this->_columns as $column)
+		{
+			$this->_analyzeMetaOracle($i, $column, $info['metadata'][$column]);
+			$i++;
+		}
+		$this->_ordered=true;
+	}
 	
-	protected function _analyzeDbTablePdoUnsupported(&$info)
+	protected function _analyzeDbTableUnsupported(&$info)
 	{
 		trigger_error("Unsupported adapter for meta analyze");
 		$i=0;
@@ -186,10 +232,9 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 	{
 		$this->setColumnOrder($column, $i);
 		$this->setColumnLabel($column, $column);
-		$this->setColumnDisplay($column, true);
 		if($meta['DEFAULT'])
 		{
-			$this->setColumnMeta($column, 'default', $meta['DEFAULT']);
+			$this->setColumnDefault($column, $meta['DEFAULT']);
 		}
 		switch($meta['DATA_TYPE'])
 		{
@@ -201,44 +246,63 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 				break;
 			case 'decimal':
 				$this->setColumnType($column, self::type_float);
-				$this->setColumnMeta($column, 'number', array('decimals' => $meta['SCALE']));
+				$this->setColumnNumberDecimals($column, $meta['SCALE']);
 				break;
 			case 'varchar': case 'char':
 				$this->setColumnType($column, self::type_string);
-				$this->setColumnMeta($column, 'string', array('length' => $meta['LENGTH']));
+				$this->setColumnStringLength($column, $meta['LENGTH']);
 				break;
 			case 'text': case 'tinytext': case 'mediumtext': case 'longtext':
 				$this->setColumnType($column, self::type_text);
 				switch($meta['DATA_TYPE'])
 				{
 					case 'tinytext':
-						$this->setColumnMeta($column, 'string', array('length' => 256));
+						$this->setColumnStringLength($column, 256);
 						break;
 					case 'text':
-						$this->setColumnMeta($column, 'string', array('length' => 65536));
+						$this->setColumnStringLength($column, 65536);
 						break;
 					case 'mediumtext':
-						$this->setColumnMeta($column, 'string', array('length' => 16777216));
+						$this->setColumnStringLength($column, 16777216);
 						break;
 					case 'longtext':
-						$this->setColumnMeta($column, 'string', array('length' => 4294967296));
+						$this->setColumnStringLength($column, 4294967296);
 						break;
 				}
 				break;
-			case 'date': case 'datetime': case 'timestamp':
+			case 'blob': case 'tinyblob': case 'mediumblob': case 'longblob':
+				$this->setColumnType($column, self::type_binary);
+				switch($meta['DATA_TYPE'])
+				{
+					case 'tinyblob':
+						$this->setColumnLobLength($column, 256);
+						break;
+					case 'blob':
+						$this->setColumnLobLength($column, 65536);
+						break;
+					case 'mediumblob':
+						$this->setColumnLobLength($column, 16777216);
+						break;
+					case 'longblob':
+						$this->setColumnLobLength($column, 4294967296);
+						break;
+				}
+				break;
+				case 'date': case 'datetime': case 'timestamp':
 				switch($meta['DATA_TYPE'])
 				{
 					case 'date':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDateFormat, 'outformat' => $this->_defaultDbDateFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDatetimeFormat, 'outformat' => $this->_defaultDbDatetimeFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 				}
 				if($meta['DEFAULT']=='CURRENT_TIMESTAMP')
 				{
-					$this->setColumnMeta($column, 'default', array('type'=>'callback', 'callback'=>array(__CLASS__, 'default_date_now')));
+					//TODO : todo
+					$this->setColumnDefault($column, array('type'=>'callback', 'callback'=>array(__CLASS__, 'default_date_now')));
 				}
 					
 				break;
@@ -253,12 +317,12 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 						$item=eval("return $item;");
 						$list[$item]=$item;
 					}
-					$this->setColumnMeta($column, 'enum', $list);
+					$this->setColumnEnum($column, $list);
 				}
 				else
 				{
 					$this->setColumnType($column, self::type_unknown);
-					trigger_error("{$meta['DATA_TYPE']}: unsupported type");
+					trigger_error("{$meta['DATA_TYPE']}: unsupported type for column $column");
 				}
 		}
 	}
@@ -267,10 +331,9 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 	{
 		$this->setColumnOrder($column, $i);
 		$this->setColumnLabel($column, $column);
-		$this->setColumnDisplay($column, true);
 		if($meta['DEFAULT'])
 		{
-			$this->setColumnMeta($column, 'default', $meta['DEFAULT']);
+			$this->setColumnDefaulta($column, $meta['DEFAULT']);
 		}
 		switch($meta['DATA_TYPE'])
 		{
@@ -282,21 +345,22 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 				break;
 			case 'DECIMAL': case 'DEC':
 				$this->setColumnType($column, self::type_float);
-				$this->setColumnMeta($column, 'number', array('decimals' => $meta['SCALE']));
+				$this->setColumnNumberDecimals($column, $meta['SCALE']);
 				break;
 			case 'VARCHAR': case 'VARCHAR2': case 'CHAR':
 				$this->setColumnType($column, self::type_string);
-				$this->setColumnMeta($column, 'string', array('length' => $meta['LENGTH']));
+				$this->setColumnStringLength($column, $meta['LENGTH']);
 				break;
 			case 'CLOB': case 'LONG':
-				$this->setColumnType($column, self::type_cstream);
+				$this->setColumnType($column, self::type_text);
+				$this->setColumnLobType($column, 'stream');
 				switch($meta['DATA_TYPE'])
 				{
 					case 'LONG':
-						$this->setColumnMeta($column, 'string', array('length' => 4294967296/2));
+						$this->setColumnStringLength($column4294967296/2);
 						break;
 					case 'CLOB':
-						$this->setColumnMeta($column, 'string', array('length' => 4294967296));
+						$this->setColumnStringLength($column, 4294967296);
 						break;
 				}
 				break;
@@ -305,20 +369,83 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 				{
 					case 'DATE':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDateFormat, 'outformat' => $this->_defaultDbDateFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDatetimeFormat, 'outformat' => $this->_defaultDbDatetimeFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
 				}
 					
 				break;
 			case 'BLOB':
-				$this->setColumnType($column, self::type_stream);
+				$this->setColumnType($column, self::type_binary);
+				$this->setColumnLobType($column, 'stream');
 				break;
 			default:
 				$this->setColumnType($column, self::type_unknown);
-				trigger_error("{$meta['DATA_TYPE']}: unsupported type");
+				trigger_error("{$meta['DATA_TYPE']}: unsupported type for column $column");
+		}
+	}
+	
+	protected function _analyzeMetaOracle($i, $column, &$meta)
+	{
+		$this->setColumnOrder($column, $i);
+		$this->setColumnLabel($column, $column);
+		if($meta['DEFAULT'])
+		{
+			$this->setColumnDefault($column, $meta['DEFAULT']);
+		}
+		switch($meta['DATA_TYPE'])
+		{
+			case 'INT': case 'INTEGER': case 'SMALLINT':
+				$this->setColumnType($column, self::type_integer);
+				break;
+			case 'FLOAT': case 'NUMBER': case 'DOUBLE PRECISION':
+				$this->setColumnType($column, self::type_float);
+				break;
+			case 'DECIMAL': case 'DEC':
+				$this->setColumnType($column, self::type_float);
+				$this->setColumnNumberDecimals($column, $meta['SCALE']);
+				break;
+			case 'VARCHAR': case 'VARCHAR2': case 'CHAR':
+				$this->setColumnType($column, self::type_string);
+				$this->setColumnStringLength($column, $meta['LENGTH']);
+				break;
+			case 'CLOB': case 'LONG':
+				$this->setColumnType($column, self::type_text);
+				$this->setColumnLobType($column, 'ocilob');
+				$this->setColumnLobLoad($column, $this->_defaultLobLoad);
+				switch($meta['DATA_TYPE'])
+				{
+					case 'LONG':
+						$this->setColumnStringLength($column, 4294967296/2);
+						break;
+					case 'CLOB':
+						$this->setColumnStringLength($column, 4294967296);
+						break;
+				}
+				break;
+			case 'DATE': case 'DATETIME': case 'TIMESTAMP':
+				switch($meta['DATA_TYPE'])
+				{
+					case 'DATE':
+						$this->setColumnType($column, self::type_date);
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						break;
+					default:
+						$this->setColumnType($column, self::type_datetime);
+						$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
+				}
+					
+				break;
+			case 'BLOB':
+				$this->setColumnType($column, self::type_binary);
+				$this->setColumnLobType($column, 'ocilob');
+				$this->setColumnLobLoad($column, $this->_defaultLobLoad);
+				break;
+			default:
+				$this->setColumnType($column, self::type_unknown);
+				trigger_error("{$meta['DATA_TYPE']}: unsupported type for column $column");
 		}
 	}
 	
@@ -329,14 +456,13 @@ class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
 		$this->setColumnDisplay($column, true);
 		if($meta['DEFAULT'])
 		{
-			$this->setColumnMeta($column, 'default', $meta['DEFAULT']);
+			$this->setColumnDefault($column, $meta['DEFAULT']);
 		}
 		switch($meta['DATA_TYPE'])
 		{
 			default:
 				$this->setColumnType($column, self::type_unknown);
-				trigger_error("{$meta['DATA_TYPE']}: unsupported type");
+				trigger_error("{$meta['DATA_TYPE']}: unsupported type for column $column");
 		}
 	}
-	
 }

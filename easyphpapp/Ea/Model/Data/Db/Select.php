@@ -143,8 +143,6 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 		//$this->_ordered=true;
 	}
 	
-		
-	
 	protected function _analyzeDbStatementUnsupported()
 	{
 		trigger_error("Unsupported adapter for meta analyze");
@@ -164,7 +162,6 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 	{
 		$this->setColumnOrder($column, $i);
 		$this->setColumnLabel($column, $column);
-		$this->setColumnDisplay($column, true);
 		if(!isset($meta['native_type']))$meta['native_type']=null;
 		switch($meta['native_type'])
 		{
@@ -176,26 +173,26 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 				break;
 			case 'NEWDECIMAL':
 				$this->setColumnType($column, self::type_float);
-				$this->setColumnMeta($column, 'number', array('decimals' => $meta['precision']));
+				$this->setColumnNumberDecimals($column, $meta['precision']);
 				break;
 			case 'STRING': case 'VAR_STRING':
 				$this->setColumnType($column, self::type_string);
-				$this->setColumnMeta($column, 'string', array('length' => $meta['len']));
+				$this->setColumnStringLength($column, $meta['len']);
 				break;
 			case 'BLOB':
 				$this->setColumnType($column, self::type_text);
-				$this->setColumnMeta($column, 'string', array('length' => $meta['len']));
+				$this->setColumnStringLength($column, $meta['len']);
 				break;
 			case 'DATE': case 'DATETIME': case 'TIMESTAMP':
 				switch($meta['native_type'])
 				{
 					case 'DATE':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDateFormat, 'outformat' => $this->_defaultDbDateFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnMeta($column, 'date', array('format' => $this->_defaultDbDatetimeFormat, 'outformat' => $this->_defaultDbDatetimeFormat));
+						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
 				}
 					
 				break;
@@ -210,7 +207,6 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 	{
 		$this->setColumnOrder($column, $i);
 		$this->setColumnLabel($column, $column);
-		$this->setColumnDisplay($column, true);
 		if(!isset($meta['native_type']))$meta['native_type']=null;
 		switch($meta['native_type'])
 		{

@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.2-20081205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -22,17 +22,17 @@ class Ea_Model_Layout_Record_Adapter_Input_String extends Ea_Layout_Record_Adapt
 {
 	public function __construct($column, Ea_Model_Layout $model)
 	{
-		$config=$model->getMetaData($column, 'adapter', 'config');
+		$config=$model->getColumnAdapterConfig($column);
 		if((!isset($config['size'])&&(!isset($config['attributes']['size']))))
 		{
-			$config['attributes']['size']=$model->getMetaData($column, 'string', 'length');
+			$config['attributes']['size']=$model->getDataModel()->getColumnStringLength($column);
 		}
 		if((!isset($config['maxlength'])&&(!isset($config['attributes']['maxlength']))))
 		{
-			$config['attributes']['maxlength']=$model->getMetaData($column, 'string', 'length');
+			$config['attributes']['maxlength']=$model->getDataModel()->getColumnStringLength($column);
 		}
 		parent::__construct($column, $model->getBaseId(), $config);
-		//$this->_filter=array($model, 'filterRecordValue');
+		$this->_filter=array($model, 'filterRecordValue');
 	}	
 }
 

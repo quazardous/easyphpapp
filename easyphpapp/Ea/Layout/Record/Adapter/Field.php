@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081113
+ * @version     0.0.3.2-20081203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -43,14 +43,15 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 */
 	public function getValue($record)
 	{
-		if(is_array($record))
+		if(is_array($record)||$record instanceof ArrayAccess)
 		{
 			$value=$record[$this->_field];
 		}
-		else
+		else if(is_object($record))
 		{
 			$value=$record->{$this->_field};
 		}
+		else $value=null;
 		if($this->_filter) return call_user_func($this->_filter, $this->_field, $value);
 		return $value;
 	}

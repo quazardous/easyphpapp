@@ -19,33 +19,12 @@
  */
 abstract class Ea_Model_Abstract
 {
-	const type_string      = 'string';
-	const type_text        = 'text';
-	const type_integer     = 'integer';
-	const type_float       = 'float';
-	const type_date        = 'date';
-	const type_datetime    = 'datetime';
-	const type_boolean     = 'boolean';
-	const type_enum        = 'enum';
-	const type_stream      = 'stream';
-	const type_cstream     = 'cstream';
-	const type_binary      = 'binary';
-	const type_unknown     = 'unknown';
 	
 	/**
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
-	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum',
-	 *   	'date'          => array('format'=>'strptime() format to read from base', 'outformat'=>'strftime() format to read/write from base'),
-	 *      'boolean'       => array('value true'=>true, 'value false'=>false),
-	 *      'number'        => array('decimals'=>2, 'dec_point'=>',', 'thousands_sep'=>' '),
-	 *      'string'        => array('length'=>32), // for string or text
-	 *      'enum'          => array('value'=>'option', ...),
-	 *      'default'       => 'value'|array('type'=>'value|callback', 'value'=>'value', 'callback'=>'callback'),
-	 *      'mandatory'		=> true|false,
 	 *      'order'		    => $i, // display order
-	 *      'display'		=> true|false, // display column
 	 *      'label'		    => 'nice label',
 	 *   ),
 	 * )
@@ -67,35 +46,15 @@ abstract class Ea_Model_Abstract
 		return $this->_metadata[$name][$param][$part];
 	}
 	
-	public function getColumnType($name)
-	{
-		return $this->getMetaData($name, 'type');
-	}
-	
-	public function setColumnType($name, $type)
-	{
-		$this->setColumnMeta($name, 'type', $type);
-	}
-
 	public function getColumnOrder($name)
 	{
 		return $this->getMetaData($name, 'order');
 	}
 	
-	public function setColumnOrder($name, $type)
+	public function setColumnOrder($name, $index)
 	{
 		$this->_ordered=false;
-		$this->setColumnMeta($name, 'order', $type);
-	}
-
-	public function setColumnDisplay($name, $display)
-	{
-		$this->setColumnMeta($name, 'display', $display);
-	}
-	
-	public function getColumnDisplay($name)
-	{
-		return $this->getMetaData($name, 'display');
+		$this->setColumnMeta($name, 'order', $index);
 	}
 
 	public function setColumnLabel($name, $display)
@@ -107,25 +66,32 @@ abstract class Ea_Model_Abstract
 	{
 		return $this->getMetaData($name, 'label');
 	}
+
+	protected $_ordered=true;
+	protected $_columns=array();
 	
-	/**
-	 * Return the list of columns with given type.
-	 * 
-	 * @param string|array(string) $type
-	 * @return array
-	 */
-	public function getColumnsOfType($type)
+	public function getColumns()
 	{
-		if(!is_array($type)) $type=array($type);
-		$res=array();
-		foreach($this->getColumns() as $column)
+		return $this->_columns;
+	}
+
+	public function getOrderedColumns()
+	{
+		if(!$this->_ordered)
 		{
-			if(in_array($this->getColumnType($column),$type))
+			$tmp=array();
+			$n=count($this->_columns);
+			foreach($this->_columns as $i => $column)
 			{
-				$res[]=$column;
+				$order=$this->getColumnOrder($column);
+				if($order===null) $order=$n;
+				$tmp[$column]=$order+$i*1.0/$n;
 			}
+			asort($tmp);
+			$this->_columns=array_keys($tmp);
+			$this->_ordered=true;
 		}
-		return $res;
+		return $this->_columns;
 	}
 	
 	/**
@@ -168,33 +134,6 @@ abstract class Ea_Model_Abstract
 			if($value===null) unset($this->_metadata[$name][$param][$part]);
 			else $this->_metadata[$name][$param][$part]=$value;
 		}
-	}
-
-	protected $_ordered=true;
-	protected $_columns=array();
-	
-	public function getColumns()
-	{
-		return $this->_columns;
-	}
-
-	public function getOrderedColumns()
-	{
-		if(!$this->_ordered)
-		{
-			$tmp=array();
-			$n=count($this->_columns);
-			foreach($this->_columns as $i => $column)
-			{
-				$order=$this->getColumnOrder($column);
-				if($order===null) $order=$n;
-				$tmp[$column]=$order+$i*1.0/$n;
-			}
-			asort($tmp);
-			$this->_columns=array_keys($tmp);
-			$this->_ordered=true;
-		}
-		return $this->_columns;
 	}
 	
 }
