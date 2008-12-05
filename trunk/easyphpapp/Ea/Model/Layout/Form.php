@@ -37,10 +37,9 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Input_Default';
 	protected $_defaultRecordAdapterClassByType=array(
-		self::type_string => 'Ea_Model_Layout_Record_Adapter_Input_String',
-		self::type_text => 'Ea_Model_Layout_Record_Adapter_Input_Text',
-		self::type_cstream => 'Ea_Model_Layout_Record_Adapter_Input_Cstream',
-		self::type_enum   => 'Ea_Model_Layout_Record_Adapter_Input_Enum',
+		'string' => 'Ea_Model_Layout_Record_Adapter_Input_String',
+		'text'   => 'Ea_Model_Layout_Record_Adapter_Input_Text',
+		'enum'   => 'Ea_Model_Layout_Record_Adapter_Input_Enum',
 	);
 	
 }

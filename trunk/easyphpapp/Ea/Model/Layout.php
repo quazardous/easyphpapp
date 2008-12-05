@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081128
+ * @version     0.0.3.2-20081203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -33,6 +33,10 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 *   'column name'=>array(
 	 *      'adapter'		    => array('class'=>'Ea_Layout_Record_Adapter_Interface+Ea_Model_Layout_Record_Adapter_Interface', 'config'=>$congig_for_the_adapter),
 	 *      'header'		    => array('content'=>$content, 'adapter'=>'Ea_Layout_Record_Adapter_Interface'),
+	 *      'order'		        => $i, // display order
+	 *      'display'	    	=> true|false, // display column
+	 *      'label'		        => 'nice label',
+	 *   	'date'              => array('outformat'=>'strftime() format to read/write from base'),
 	 *   ),
 	 * )
 	 * 
@@ -52,9 +56,19 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->_dataModel=$model;
 	}
 	
+	/**
+	 * Get data model.
+	 * 
+	 * @var Ea_Model_Data_Abstract
+	 */
+	public function getDataModel()
+	{
+		return $this->_dataModel;
+	}
+	
 	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_String';
 	protected $_defaultRecordAdapterClassByType=array(
-		self::type_string => 'Ea_Model_Layout_Record_Adapter_String',
+		'string' => 'Ea_Model_Layout_Record_Adapter_String',
 	);
 	
 	protected function getDefaultRecordAdapterClassByType($type)
@@ -91,13 +105,79 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		
 	protected function _analyzeDataModel()
 	{
-		$this->_columns=array();
-		foreach($this->_dataModel->getOrderedColumns() as $column)
+		$this->_columns=$this->_dataModel->getOrderedColumns();
+		$i=0;
+		foreach($this->_columns as $column)
 		{
-			$this->_metadata[$column]=$this->_dataModel->getMetaData($column);
-			$this->_columns[]=$column;
+			$this->setColumnDisplay($column, true);
+			$this->setColumnOrder($column, $i);
+			$this->setColumnLabel($column, $this->_dataModel->getColumnLabel($column));
+			$this->setColumnDateFormat($column, $this->_dataModel->getColumnDateOutformat($column));
+			$i++;
 		}
 		$this->_ordered=true;
+	}
+
+	public function getColumnType($name)
+	{
+		return $this->_dataModel->getColumnType($name);
+	}
+
+	/**
+	 * Return the list of columns with given type.
+	 * 
+	 * @param string|array(string) $type
+	 * @return array
+	 */
+	public function getColumnsOfType($type)
+	{
+		return $this->_dataModel->getColumnsOfType($type);
+	}
+
+	public function setColumnAdapterInstance($name, $instance)
+	{
+		$this->setColumnMetaPart($name, 'adapter', 'instance', $instance);
+	}
+
+	public function getColumnAdapterInstance($name)
+	{
+		return $this->getMetaData($name, 'adapter', 'instance');
+	}
+	
+	public function setColumnAdapterClass($name, $class)
+	{
+		$this->setColumnMetaPart($name, 'adapter', 'class', $class);
+	}
+
+	public function getColumnAdapterClass($name)
+	{
+		return $this->getMetaData($name, 'adapter', 'class');
+	}
+
+	public function setColumnAdapterConfig($name, $config)
+	{
+		$this->setColumnMetaPart($name, 'adapter', 'config', $config);
+	}
+
+	public function getColumnAdapterConfig($name)
+	{
+		return $this->getMetaData($name, 'adapter', 'config');
+	}
+	
+	public function setColumnAdapter($name, $adapter)
+	{
+		if($adapter instanceof Ea_Model_Layout_Record_Adapter_Interface)
+		{
+			$this->setColumnAdapterInstance($name, $adapter);
+		}
+		else if(is_string($adapter))
+		{
+			$this->setColumnAdapterClass($name, $adapter);
+		}
+		else
+		{
+			throw new Ea_Model_Layout_Exception('do not know what to do');
+		}
 	}
 	
 	/**
@@ -121,6 +201,33 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $instance;
 	}
 	
+	public function setColumnDisplay($name, $display)
+	{
+		$this->setColumnMeta($name, 'display', $display);
+	}
+	
+	public function getColumnDisplay($name)
+	{
+		return $this->getMetaData($name, 'display');
+	}
+
+	/**
+	 * Set the output date format.
+	 * The db date format is set in the data model.
+	 * 
+	 * @param $name
+	 * @param $format
+	 */
+	public function setColumnDateFormat($name, $format)
+	{
+		$this->setColumnMetaPart($name, 'date', 'outformat', $format);
+	}
+	
+	public function getColumnDateFormat($name)
+	{
+		return $this->getMetaData($name, 'date', 'outformat');
+	}
+	
 	/**
 	 * Return the column header.
 	 * 
@@ -138,8 +245,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			return $adapter->getHeader($name, $this);
 		}
 		return $this->getColumnLabel($name);;
-		//TODO add some header adapter support
-	}
+	}	
 	
 	/**
 	 * Apply special filter on record values.
@@ -152,36 +258,26 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 */
 	public function filterRecordValue($column, $value)
 	{
-		$filter=$this->getMetaData($column, 'filter');
-		if($filter)
+		$value=$this->_dataModel->filterRecordValue($column, $value);
+		switch($this->getColumnType($column))
 		{
-			return call_user_func($filter, $value);
-		}
-		else
-		{
-			switch($this->getColumnType($column))
-			{
-				case self::type_date: case self::type_datetime:
-					if(!$value)return $value;
-					$format=$this->getMetaData($column, 'date', 'format');
-					$outformat=$this->getMetaData($column, 'date', 'outformat');
-					if($format==$outformat) return $value;
-					if(!($format&&$outformat)) return $value;
-					$d=strptime($value, $format);
-					if(!$d) return $value;
-					return strftime($outformat,
-						mktime(
-							$d['tm_hour'],
-							$d['tm_min'],
-							$d['tm_sec'],
-							$d['tm_mon']+1,
-							$d['tm_mday'],
-							$d['tm_year']));
-				case self::type_cstream:
-					if($value)return stream_get_contents($value);
-					return $value;
-				default: return $value;
-			}
+		case 'date': case 'datetime':
+				if(!$value)return $value;
+				$format=$this->_dataModel->getMetaData($column, 'date', 'format');
+				$outformat=$this->getMetaData($column, 'date', 'outformat');
+				if($format==$outformat) return $value;
+				if(!($format&&$outformat)) return $value;
+				$d=strptime($value, $format);
+				if(!$d) return $value;
+				return strftime($outformat,
+					mktime(
+						$d['tm_hour'],
+						$d['tm_min'],
+						$d['tm_sec'],
+						$d['tm_mon']+1,
+						$d['tm_mday'],
+						$d['tm_year']));
+			default: return $value;
 		}
 	}
 	

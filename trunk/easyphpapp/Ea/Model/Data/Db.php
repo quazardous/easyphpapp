@@ -27,47 +27,28 @@ abstract class Ea_Model_Data_Db extends Ea_Model_Data_Abstract
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
-	 *      'filter'		    => $callback,
+	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum|binary',
+	 *      ...
 	 *   ),
 	 * )
 	 * 
 	 * @var array
-	 * @see Ea_Model_Abstract::$_metadata
 	 */
-	//protected $_metadata=null;
+	//protected $_metadata=array();
 	
+	
+	protected $_defaultLobLoad=true;
 	protected $_defaultDbDateFormat='%Y-%m-%d';
 	protected $_defaultDbDatetimeFormat='%Y-%m-%d %H:%M:%S';
 	
-	/*
-	public function setColumnType($name, $type)
+	protected function initOracleDbDateFormat()
 	{
-		parent::setColumnType($name, $type);
-		switch($type)
-		{
-			case self::type_date:
-				if(!$this->getMetaData($name, 'date', 'format'))
-				{
-					$this->setColumnMetaPart($name, 'date', 'format', $this->_defaultDbDateFormat);
-				}
-				if(!$this->getMetaData($name, 'date', 'outformat'))
-				{
-					$this->setColumnMetaPart($name, 'date', 'outformat', $this->_defaultDbDateFormat);
-				}
-				break;
-			case self::type_datetime:
-				if(!$this->getMetaData($name, 'date', 'format'))
-				{
-					$this->setColumnMetaPart($name, 'date', 'format', $this->_defaultDbDatetimeFormat);
-				}
-				if(!$this->getMetaData($name, 'date', 'outformat'))
-				{
-					$this->setColumnMetaPart($name, 'date', 'outformat', $this->_defaultDbDatetimeFormat);
-				}
-				break;
-		}
+		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
+		$stmt=$this->_dbTable->getAdapter()->query($query);
+		$dbDateFormat=$stmt->fetchColumn(0);
+		$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
 	}
-	*/
 	
 	public static function default_date_now()
 	{
@@ -89,5 +70,41 @@ abstract class Ea_Model_Data_Db extends Ea_Model_Data_Abstract
 			)
 		);
 	}	
-	
+
+	/**
+	 * Apply special filter on record values.
+	 * 
+	 * @param string $column
+	 * @param string $value
+	 * @return string
+	 * 
+	 * @see Ea_Layout_Record_Adapter_Field::getValue()
+	 */
+	public function filterRecordValue($column, $value)
+	{
+		$filter=$this->getMetaData($column, 'filter');
+		if($filter)
+		{
+			return call_user_func($filter, $value);
+		}
+		else
+		{
+			switch($this->getColumnLobType($column))
+			{
+				case 'stream':
+					if(is_resource($value)&&$this->getColumnLobLoad($column))
+					{
+						return stream_get_contents($value);
+					}
+					return $value;
+				case 'ocilob':
+					if(is_a($value, 'OCI-Lob')&&$this->getColumnLobLoad($column))
+					{
+						return $value->load();
+					}
+					return $value;
+				default: return $value;
+			}
+		}
+	}
 }

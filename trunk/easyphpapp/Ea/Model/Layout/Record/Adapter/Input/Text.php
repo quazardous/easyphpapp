@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.0.3.2-20081205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -22,11 +22,11 @@ class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter
 {
 	public function __construct($column, Ea_Model_Layout $model)
 	{
-		$config=$model->getMetaData($column, 'adapter', 'config');
+		$config=$model->getColumnAdapterConfig($column);
 		$rows=null;
 		if((!isset($config['rows'])&&(!isset($config['attributes']['rows']))))
 		{
-			$rows=round(log($model->getMetaData($column, 'string', 'length'))/2);
+			$rows=round(log($model->getDataModel()->getColumnStringLength($column))/2);
 		}
 		$cols=null;
 		if((!isset($config['cols'])&&(!isset($config['attributes']['cols']))))
@@ -34,7 +34,7 @@ class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter
 			$cols=40;
 		}
 		parent::__construct($column, $rows, $cols, $model->getBaseId(), $config);
-		//$this->_filter=array($model, 'filterRecordValue');
+		$this->_filter=array($model, 'filterRecordValue');
 	}	
 }
 
