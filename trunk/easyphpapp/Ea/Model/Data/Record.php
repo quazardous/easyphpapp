@@ -12,14 +12,14 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Db.php';
+require_once 'Ea/Model/Data/Abstract.php';
 
 /**
  * Record Data model class. Can or caonnot be record from db table.
  * Create a data model from a simple record (uses Iterator key).
  * 
  */
-class Ea_Model_Data_Record extends Ea_Model_Data_Db
+class Ea_Model_Data_Record extends Ea_Model_Data_Abstract
 {
 	
 	/**
