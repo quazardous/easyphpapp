@@ -13,7 +13,7 @@
  * @filesource
  */
 
-require_once 'Ea/Model/Data/Db/Record.php';
+require_once 'Ea/Model/Data/Record.php';
 require_once 'Ea/Model/Layout.php';
 require_once 'Ea/Layout/Record/Table.php';
 require_once 'Ea/Model/Layout/Header/Adapter/Sort.php';
@@ -46,7 +46,7 @@ class Module_Index extends Ea_Module_Abstract
 		);
 		
 		// build the layout model
-		$model1=new Ea_Model_Layout(new Ea_Model_Data_Db_Record($records[0]));
+		$model1=new Ea_Model_Layout(new Ea_Model_Data_Record($records[0]));
 
 		// set the header sort adapter
 		$sortAdapter=new Ea_Model_Layout_Header_Adapter_Sort('sort', $this->getRouter()->getRoute());

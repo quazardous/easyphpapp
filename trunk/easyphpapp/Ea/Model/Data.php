@@ -12,9 +12,9 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Db/Table.php';
-require_once 'Ea/Model/Data/Db/Select.php';
-require_once 'Ea/Model/Data/Db/Record.php';
+require_once 'Ea/Model/Data/Table.php';
+require_once 'Ea/Model/Data/Select.php';
+require_once 'Ea/Model/Data/Record.php';
 require_once 'Zend/Db/Statement.php';
 require_once 'Zend/Db/Select.php';
 
@@ -40,15 +40,15 @@ class Ea_Model_Data
 		}
 		if($config instanceof Zend_Db_Select||$config instanceof Zend_Db_Statement||is_string($config))
 		{
-			return new Ea_Model_Data_Db_Select($config);
+			return new Ea_Model_Data_Select($config);
 		}
 		if($config instanceof Zend_Db_Table_Abstract)
 		{
-			return new Ea_Model_Data_Db_Table($config);
+			return new Ea_Model_Data_Table($config);
 		}
 		if($config instanceof Iterator||is_array($config))
 		{
-			return new Ea_Model_Data_Db_Record($config);
+			return new Ea_Model_Data_Record($config);
 		}
 		return null;
 	}

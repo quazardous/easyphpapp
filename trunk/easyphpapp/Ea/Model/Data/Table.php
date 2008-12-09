@@ -12,7 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Db/Table/Exception.php';
+require_once 'Ea/Model/Data/Table/Exception.php';
 require_once 'Ea/Model/Data/Db.php';
 require_once 'Zend/Db/Table/Abstract.php';
 require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
@@ -22,7 +22,7 @@ require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
  * Zend_Db_Table data object model.
  * 
  */
-class Ea_Model_Data_Db_Table extends Ea_Model_Data_Db
+class Ea_Model_Data_Table extends Ea_Model_Data_Db
 {
 
 	/**

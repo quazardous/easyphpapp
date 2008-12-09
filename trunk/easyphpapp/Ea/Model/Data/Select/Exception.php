@@ -13,12 +13,12 @@
  */
 
 /**
- * Exception class for Ea_Model_Data_Db_Table.
+ * Exception class for Ea_Model_Data_Select.
  * 
- * @see Ea_Model_Data_Db_Table
+ * @see Ea_Model_Data_Select
  */
 
-class Ea_Model_Data_Db_Table_Exception extends Exception
+class Ea_Model_Data_Select_Exception extends Exception
 {
 	
 }
