@@ -19,7 +19,7 @@
 require '../conf/config.php';
 
 // some field type are not supported...
-error_reporting((E_ALL|E_STRICT)^E_USER_NOTICE);
+// error_reporting((E_ALL|E_STRICT)^E_USER_NOTICE);
 
 require_once 'Zend/Db.php';
 

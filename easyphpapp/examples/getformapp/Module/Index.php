@@ -72,6 +72,8 @@ class Module_Index extends Ea_Module_Abstract
 		$form[$idText2]='foo';
 		// now you can use Ea_Router::getParam('text2') and get 'foo'...
 
+		$table->addRow();
+		
 		$idText3=$this->getInputId('text3');
 		$table->addHeader('text3');
 		$table->addCell(new Ea_Layout_Input_Text($idText3));

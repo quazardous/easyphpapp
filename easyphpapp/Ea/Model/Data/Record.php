@@ -19,7 +19,7 @@ require_once 'Ea/Model/Data/Db.php';
  * Create a data model from a simple record (uses Iterator key).
  * 
  */
-class Ea_Model_Data_Db_Record extends Ea_Model_Data_Db
+class Ea_Model_Data_Record extends Ea_Model_Data_Db
 {
 	
 	/**

@@ -12,7 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Db/Select/Exception.php';
+require_once 'Ea/Model/Data/Select/Exception.php';
 require_once 'Ea/Model/Data/Db.php';
 require_once 'Zend/Db/Adapter/Abstract.php';
 require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
@@ -26,7 +26,7 @@ require_once 'Zend/Db/Statement/Pdo.php';
  * Zend_Db_Table data object model.
  * 
  */
-class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
+class Ea_Model_Data_Select extends Ea_Model_Data_Db
 {
 
 	static protected $_defaultAdapter=null;
@@ -69,7 +69,7 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 		}
 		if((!$this->_statement)||$this->_statement->columnCount()==0)
 		{
-			throw new Ea_Model_Data_Db_Select_Exception('You must provide a select query');
+			throw new Ea_Model_Data_Select_Exception('You must provide a select query');
 		}
 		$this->_analyzeDbStatement();
 	}
@@ -86,7 +86,9 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 		}
 		else if($this->_statement->getAdapter() instanceof Zend_Db_Adapter_Pdo_Oci)
 		{
-			$this->_analyzeDbStatementPdoOci();
+			//$this->_analyzeDbStatementPdoOci();
+			// TODO : not supported by PDO_OCI : watch it
+			$this->_analyzeDbStatementUnsupported();
 		}
 		else
 		{
@@ -109,7 +111,7 @@ class Ea_Model_Data_Db_Select extends Ea_Model_Data_Db
 
 	protected function _analyzeDbStatementPdoOci()
 	{
-		throw new Ea_Model_Data_Db_Select_Exception('Sorry PDO_OCI does not support getColumnMeta()');
+		throw new Ea_Model_Data_Select_Exception('Sorry PDO_OCI does not support getColumnMeta()');
 		/*
 		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
 		$stmt=$this->_statement->getAdapter()->query($query);

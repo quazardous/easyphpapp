@@ -25,4 +25,13 @@ interface Ea_Layout_Record_Adapter_Interface
 	 * @return mixed
 	 */
 	function getContent($record, $i);
+
+	/**
+	 * This function must return field content from record.
+	 * 
+	 * @param array $record
+	 * @return string
+	 */
+	public function getValue($record);
+	
 }
