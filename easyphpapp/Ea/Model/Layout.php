@@ -164,6 +164,26 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->getMetaData($name, 'adapter', 'config');
 	}
 	
+	public function setColumnHeaderAdapter($name, $adapter)
+	{
+		$this->setColumnMetaPart($name, 'header', 'adapter', $adapter);
+	}
+
+	public function getColumnHeaderAdapter($name)
+	{
+		return $this->getMetaData($name, 'header', 'adapter');
+	}
+	
+	public function setColumnHeaderContent($name, $content)
+	{
+		$this->setColumnMetaPart($name, 'header', 'content', $content);
+	}
+
+	public function getColumnHeaderContent($name)
+	{
+		return $this->getMetaData($name, 'header', 'content');
+	}
+	
 	public function setColumnAdapter($name, $adapter)
 	{
 		if($adapter instanceof Ea_Model_Layout_Record_Adapter_Interface)
@@ -176,7 +196,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		}
 		else
 		{
-			throw new Ea_Model_Layout_Exception('do not know what to do');
+			throw new Ea_Model_Layout_Exception('No valid adapter');
 		}
 	}
 	

@@ -7,12 +7,14 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.0.3.2-20081209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Model/Abstract.php';
+require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
+require_once 'Zend/Db/Adapter/Pdo/Oci.php';
 
 /**
  * Data model class.
@@ -58,25 +60,6 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 */
 	//protected $_metadata=array();
 	
-	/**
-	 * Apply special filter on record values.
-	 * 
-	 * @param string $column
-	 * @param string $value
-	 * @return string
-	 * 
-	 * @see Ea_Layout_Record_Adapter_Field::getValue()
-	 */
-	public function filterRecordValue($column, $value)
-	{
-		$filter=$this->getMetaData($column, 'filter');
-		if($filter)
-		{
-			return call_user_func($filter, $value);
-		}
-		return $value;
-	}
-
 	public function getColumnType($name)
 	{
 		return $this->getMetaData($name, 'type');
@@ -189,4 +172,76 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		}
 		return $res;
 	}
+	
+	protected $_defaultLobLoad=true;
+	protected $_defaultDbDateFormat='%Y-%m-%d';
+	protected $_defaultDbDatetimeFormat='%Y-%m-%d %H:%M:%S';
+	
+	protected function initOracleDbDateFormat()
+	{
+		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
+		$stmt=$this->_dbTable->getAdapter()->query($query);
+		$dbDateFormat=$stmt->fetchColumn(0);
+		$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
+	}
+	
+	public static function default_date_now()
+	{
+		return time();
+	}
+
+	static protected function format_date_oracle_to_php($format)
+	{
+		return strtr($format,
+			array(
+				'YYYY' => '%Y',
+				'RR'   => '%y',
+				'DD'   => '%d',
+				'MON'  => '%b',
+				'MM'   => '%m',
+				'HH24' => '%H',
+				'MI'   => '%M',
+				'SS'   => '%S',
+			)
+		);
+	}	
+
+	/**
+	 * Apply special filter on record values.
+	 * 
+	 * @param string $column
+	 * @param string $value
+	 * @return string
+	 * 
+	 * @see Ea_Layout_Record_Adapter_Field::getValue()
+	 */
+	public function filterRecordValue($column, $value)
+	{
+		$filter=$this->getMetaData($column, 'filter');
+		if($filter)
+		{
+			return call_user_func($filter, $value);
+		}
+		else
+		{
+			switch($this->getColumnLobType($column))
+			{
+				case 'stream':
+					if(is_resource($value)&&$this->getColumnLobLoad($column))
+					{
+						return stream_get_contents($value);
+					}
+					return $value;
+				case 'ocilob':
+					if(is_a($value, 'OCI-Lob')&&$this->getColumnLobLoad($column))
+					{
+						return $value->load();
+					}
+					return $value;
+				default: return $value;
+			}
+		}
+	}
+	
 }

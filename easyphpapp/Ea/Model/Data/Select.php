@@ -13,7 +13,7 @@
  */
 
 require_once 'Ea/Model/Data/Select/Exception.php';
-require_once 'Ea/Model/Data/Db.php';
+require_once 'Ea/Model/Data/Abstract.php';
 require_once 'Zend/Db/Adapter/Abstract.php';
 require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
 require_once 'Zend/Db/Adapter/Pdo/Oci.php';
@@ -26,7 +26,7 @@ require_once 'Zend/Db/Statement/Pdo.php';
  * Zend_Db_Table data object model.
  * 
  */
-class Ea_Model_Data_Select extends Ea_Model_Data_Db
+class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 {
 
 	static protected $_defaultAdapter=null;
