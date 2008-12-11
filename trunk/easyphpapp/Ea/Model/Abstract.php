@@ -12,6 +12,8 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Xml/Element.php';
+
 /**
  * Model class.
  * The base class to represent model.
@@ -136,4 +138,46 @@ abstract class Ea_Model_Abstract
 		}
 	}
 	
+	/**
+	 * Load model definition from xml file.
+	 * 
+	 * @param $filename
+	 */
+	public function loadFromXmlFile($filename)
+	{
+		$xml=Ea_Xml_Element::load_file($filename);
+		$xml_columns=$xml->columns;
+		$i=count($this->_columns);
+		foreach($xml_columns->column as $xml_column)
+		{
+			$column=$xml_column['name']->toString();
+			if(!in_array($column, $this->_columns))
+			{
+				$this->_columns[]=$column;
+				$this->setColumnOrder($column, $i);
+				$this->setColumnLabel($column, $column);
+				$i++;				
+			}
+			foreach($xml_column->metadata as $xml_metadata)
+			{
+				$this->setColumnMetaFromXml($column, $xml_metadata);
+			}
+		}
+	}
+	
+	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
+	{
+		$words=explode('/',strtolower($xml_metadata['name']->toString()));
+		$f='set';
+		foreach($words as $word)
+		{
+			$f.=ucfirst($word);
+		}
+		if(method_exists($this, $f))
+		{
+			$this->$f($column, $xml_metadata->toString());
+			return true;
+		}
+		return false;
+	}
 }
