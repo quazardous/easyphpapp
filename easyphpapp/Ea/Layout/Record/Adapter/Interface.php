@@ -32,6 +32,7 @@ interface Ea_Layout_Record_Adapter_Interface
 	 * @param array $record
 	 * @return string
 	 */
-	public function getValue($record);
+	//public function getValue($record);
+	//TODO : think about it
 	
 }

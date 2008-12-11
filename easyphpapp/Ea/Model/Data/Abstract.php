@@ -111,6 +111,11 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	
 	public function setColumnLobLoad($name, $load)
 	{
+		if(is_string($load))
+		{
+			if($load=='true')$load=true;
+			else $load=false;
+		}
 		$this->setColumnMetaPart($name, 'lob', 'load', $load);
 	}
 	

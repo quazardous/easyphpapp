@@ -3,6 +3,8 @@ Improve Zend_Db pdo support in model :
 - select statement model support
 - support for PDO_OCI data in model
 - partial support for Oracle CLOB
+Add XML model support :
+- model can be load from xml files.
 
 *** 0.0.3.1-dumb ***
 Improve form support :

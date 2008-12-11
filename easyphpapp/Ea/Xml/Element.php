@@ -138,7 +138,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 		return parent::children(self::utf8_encode($ns), $is_prefix);
 	}
 
-	static protected recursive_utf8_unencode($string)
+	static protected function recursive_utf8_unencode($string)
 	{
 		if(is_array($string))
 		{
@@ -154,8 +154,6 @@ class Ea_Xml_Element extends SimpleXMLElement
 	
 	/**
 	 * Returns namespaces used in document
-	 * @link http://php.net/manual/en/function.simplexml-element-getNamespaces.php
-	 * @param recursive bool[optional]
 	 * @return array 
 	 */
 	public function getNamespaces($recursive = null)
@@ -166,8 +164,6 @@ class Ea_Xml_Element extends SimpleXMLElement
 
 	/**
 	 * Returns namespaces declared in document
-	 * @link http://php.net/manual/en/function.simplexml-element-getDocNamespaces.php
-	 * @param recursive bool[optional]
 	 * @return array 
 	 */
 	public function getDocNamespaces($recursive = null)
@@ -177,8 +173,6 @@ class Ea_Xml_Element extends SimpleXMLElement
 	
 	/**
 	 * Gets the name of the XML element
-	 * @link http://php.net/manual/en/function.simplexml-element-getName.php
-	 * @return string 
 	 */
 	public function getName()
 	{
@@ -187,10 +181,6 @@ class Ea_Xml_Element extends SimpleXMLElement
 	
 	/**
 	 * Adds a child element to the XML node
-	 * @link http://php.net/manual/en/function.simplexml-element-addChild.php
-	 * @param name string
-	 * @param value string[optional]
-	 * @param namespace string[optional]
 	 * @return Ea_Xml_Element 
 	 */
 	public function addChild($name, $value = null, $namespace = null)
@@ -198,13 +188,8 @@ class Ea_Xml_Element extends SimpleXMLElement
 		return parent::addChild( self::utf8_encode($name), self::utf8_encode($value), self::utf8_encode($namespace));
 	}
 	
-
 	/**
 	 * Adds an attribute to the SimpleXML element
-	 * @link http://php.net/manual/en/function.simplexml-element-addAttribute.php
-	 * @param name string
-	 * @param value string
-	 * @param namespace string[optional]
 	 * @return void 
 	 */
 	public function addAttribute($name, $value, $namespace=null)
@@ -216,16 +201,16 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 * Create node from string.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function simplexml_load_string($data, $options = null, string $ns = null, $is_prefix = false )
+	public static function load_string($data, $options = null, string $ns = null, $is_prefix = false )
 	{
-		return simplexml_load_string self::utf8_encode($data), self::$_class, $options, self::utf8_encode($ns), $is_prefix);
+		return simplexml_load_string(self::utf8_encode($data), self::$_class, $options, self::utf8_encode($ns), $is_prefix);
 	}
 
 	/**
 	 * Create node from file.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function simplexml_load_file($filename, $options = null, string $ns = null, $is_prefix = false )
+	public static function load_file($filename, $options = null, string $ns = null, $is_prefix = false )
 	{
 		return simplexml_load_file(self::utf8_encode($filename), self::$_class, $options, self::utf8_encode($ns), $is_prefix);
 	}
@@ -234,7 +219,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 * Create node from Dom.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function simplexml_import_dom(DOMNode $node)
+	public static function import_dom(DOMNode $node)
 	{
 		return simplexml_import_dom($node, self::$_class);
 	}
