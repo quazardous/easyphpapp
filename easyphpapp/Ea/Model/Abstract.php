@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081128
+ * @version     0.0.3.3-20081211
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -145,7 +145,11 @@ abstract class Ea_Model_Abstract
 	 */
 	public function loadFromXmlFile($filename)
 	{
-		$xml=Ea_Xml_Element::load_file($filename);
+		$this->loadFromXml(Ea_Xml_Element::load_file($filename));
+	}
+	
+	protected function loadFromXml(Ea_Xml_Element $xml)
+	{
 		$xml_columns=$xml->columns;
 		$i=count($this->_columns);
 		foreach($xml_columns->column as $xml_column)
@@ -158,23 +162,30 @@ abstract class Ea_Model_Abstract
 				$this->setColumnLabel($column, $column);
 				$i++;				
 			}
-			foreach($xml_column->metadata as $xml_metadata)
-			{
-				$this->setColumnMetaFromXml($column, $xml_metadata);
-			}
+			
+			$this->loadColumnMetaFromXml($column, $xml_column);
+		}
+	}
+
+	protected function loadColumnMetaFromXml($column, Ea_Xml_Element $xml_column)
+	{
+		foreach($xml_column->metadata as $xml_metadata)
+		{
+			$this->setColumnMetaFromXml($column, $xml_metadata);
 		}
 	}
 	
 	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
 	{
 		$words=explode('/',strtolower($xml_metadata['name']->toString()));
-		$f='set';
+		$f='setColumn';
 		foreach($words as $word)
 		{
 			$f.=ucfirst($word);
 		}
 		if(method_exists($this, $f))
 		{
+			
 			$this->$f($column, $xml_metadata->toString());
 			return true;
 		}

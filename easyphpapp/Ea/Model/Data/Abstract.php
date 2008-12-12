@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081209
+ * @version     0.0.3.2-20081212
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -111,11 +111,6 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	
 	public function setColumnLobLoad($name, $load)
 	{
-		if(is_string($load))
-		{
-			if($load=='true')$load=true;
-			else $load=false;
-		}
 		$this->setColumnMetaPart($name, 'lob', 'load', $load);
 	}
 	
@@ -246,6 +241,32 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 					return $value;
 				default: return $value;
 			}
+		}
+	}
+
+	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
+	{
+		switch(strtolower($xml_metadata['name']->toString()))
+		{
+			case 'lob/load':
+				$this->setColumnLobLoad($column, strtolower($xml_metadata->toString())=='true'?true:false);
+			break;
+			case 'enum':
+				$options=array();
+				foreach($xml_metadata->option as $xml_option)
+				{
+					if(isset($xml_option['value']))
+					{
+						$options[$xml_option['value']->toString()]=$xml_option->toString();
+					}
+					else
+					{
+						$options[$xml_option->toString()]=$xml_option->toString();
+					}
+				}
+				$this->setColumnEnum($column, $options);
+			break;
+			default: parent::setColumnMetaFromXml($column, $xml_metadata);
 		}
 	}
 	
