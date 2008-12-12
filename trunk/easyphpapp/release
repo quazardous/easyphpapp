@@ -1,3 +1,6 @@
+*** 0.0.3.3-dumb ***
+Basic batch support
+
 *** 0.0.3.2-dumb ***
 Improve Zend_Db pdo support in model :
 - select statement model support

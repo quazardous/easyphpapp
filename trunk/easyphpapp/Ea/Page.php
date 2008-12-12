@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.7.20081023
+ * @version     0.0.3.3-20081211
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -15,6 +15,7 @@
 require_once 'Ea/Page/Interface.php';
 require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Module/Abstract.php';
+require_once 'Ea/Layout/Script.php';
 
 /**
  * Page class.
@@ -71,6 +72,13 @@ class Ea_Page implements Ea_Page_Interface
 	 * @var array(string)
 	 */
 	protected $_styles=array();
+	
+	/**
+	 * Contains scripts.
+	 * 
+	 * @var array(string)
+	 */
+	protected $_scripts=array();
 	
 	/**
 	 * If true, the page is render only once, even if render() is called many times.
@@ -211,7 +219,18 @@ class Ea_Page implements Ea_Page_Interface
 	{
 		array_push($this->_styles, array('href'=>$href, 'media'=>$media));
 	}
-			
+
+	/**
+	 * Add a script.
+	 * 
+	 * @param string $href
+	 * @param string $media default is 'all'
+	 */
+	public function addScript($src, $script=null, $type='text/javascript')
+	{
+		array_push($this->_scripts, new Ea_Layout_Script($src, $script, $type));
+	}
+	
 	/**
 	 * Render the page.
 	 * 
@@ -229,6 +248,11 @@ class Ea_Page implements Ea_Page_Interface
 		{
 			?><link type="text/css" href="<?php echo $this->escape($style['media']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
 <?php
+		}
+		foreach($this->_scripts as $script)
+		{
+			$script->preRender();
+			$script->render();
 		}
 		if($this->_title)
 		{

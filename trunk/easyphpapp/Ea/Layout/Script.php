@@ -5,22 +5,21 @@
  * 
  * @category    EasyPhpApp
  * @package     Layout
- * @subpackage  Form
+ * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.0.2.5.20081020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Input/Abstract.php';
-
+require_once 'Ea/Layout/Single.php';
 
 /**
  * Textarea input layout class.
  */
-class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
+class Ea_Layout_Script extends Ea_Layout_Single
 {
-	protected $_tag='textarea';
+	protected $_tag='script';
 
 	/**
 	 * Ea_Layout_Input_Abstract constructor.
@@ -31,15 +30,24 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 	 * 
 	 * @see $_id
 	 */
-	public function __construct($id, $rows=null, $cols=null, $value=null, $config=null)
+	public function __construct($src, $script, $type='text/javascript', $config=null)
 	{
-		parent::__construct($id, $value, $config);
-		$this->setId($id);
-		$this->setValue($value);
-		if($rows) $this->setAttribute('rows', $rows);
-		if($cols) $this->setAttribute('cols', $cols);
-	}
+		parent::__construct(null, $config);
+		$this->setScript($script);
+		if($src)$this->setAttribute('src', $src);
+		$this->setAttribute('type', $type);
+	} 
 	
+	protected $_script=null;
+	public function setScript($script)
+	{
+		$this->_script=$script;
+	}
+	public function getScript()
+	{
+		return $this->_script;
+	}
+		
 	public function render()
 	{
 		echo '<';
@@ -47,7 +55,7 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 		$this->renderAttributes();
 		echo '>';
 
-		echo $this->escape($this->getValue());
+		echo $this->escape($this->getScript());
 
 		echo '</';
 		echo $this->_tag;

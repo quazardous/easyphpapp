@@ -7,13 +7,13 @@
  * @package     examples
  * @subpackage  modelapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1.20081114
+ * @version     0.0.3.2-20081209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
  */
 
-// This app will demonstrate data model support
+// This app will demonstrate data model support from XML
 
 // don't forget to set your include path and db config
 require '../conf/config.php';
