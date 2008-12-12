@@ -20,7 +20,7 @@ require_once 'Ea/Batch/Abstract.php';
  */
 class Batch_Test extends Ea_Batch_Abstract
 {
-	protected $_batch='*unknown*';
+	protected $_batch='test';
 	
 	protected $_params=array(
 		 'param1'=>array(
