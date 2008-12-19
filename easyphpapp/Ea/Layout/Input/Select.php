@@ -35,6 +35,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	{
 		parent::__construct($id, $value, $config);
 		if(is_array($value)) $this->isMultiple(true);
+		$this->blockAttribute('value', true);
 		$this->_options=$options;
 	}
 
@@ -103,12 +104,12 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 			}
 			else
 			{
-				if(in_array($value, $this->_value, true))
+				if(in_array($value, $this->_value))
 				{
 					$new=array();
 					foreach($this->_value as $val)
 					{
-						if($val!==$value) $new[]=$val;
+						if($val!=$value) $new[]=$val;
 					}
 					$this->_value=$new;
 				}
@@ -125,14 +126,13 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	{
 		if($this->isMultiple())
 		{
-			return in_array($value, $this->_value, true);
+			return in_array($value, $this->_value);
 		}
 		else
 		{
-			return $this->_value===$value;
+			return $this->_value==$value;
 		}
 	}
-	
 	
 	/**
 	 * Select is multiple.
@@ -204,6 +204,21 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 			default: return parent::getAttribute($name);
 		}
 	}
+
+	/**
+	 * Return the input name.
+	 * For multiple select name must finish with [].
+	 *
+	 * @return string
+	 * 
+	 * @see $_id
+	 */
+	public function getName()
+	{
+		$name=parent::getName();
+		if($this->isMultiple()) $name.='[]';
+		return $name;
+	}
 	
 	public function preRender()
 	{
@@ -211,7 +226,10 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 		/*
 		 * Display the reserved attributes...
 		 */
-		if($this->isMultiple()) $this->_setAttribute('multiple', 'multiple');
+		if($this->isMultiple())
+		{
+			$this->_setAttribute('multiple', 'multiple');
+		}
 	}
 	
 	public function __sleep()

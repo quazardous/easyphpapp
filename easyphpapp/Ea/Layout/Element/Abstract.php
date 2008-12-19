@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.0.3.3-20081219
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -102,6 +102,41 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	protected $_attributes=array();
 
 	/**
+	 * Children class can block some attributes.
+	 * 
+	 * @var array
+	 */
+	protected $_blockedAttributes=array();
+	
+	protected function blockAttribute($name, $block=true)
+	{
+		if($block)
+		{
+			if(!in_array($name, $this->_blockedAttributes))
+			{
+				$this->_blockedAttributes[]=$name;
+			}
+		}
+		else
+		{
+			if(in_array($name, $this->_blockedAttributes))
+			{
+				$new=array();
+				foreach($this->_blockedAttributes as $attr)
+				{
+					if($attr!=$name) $new[]=$attr;
+				}
+				$this->_blockedAttributes=$new;
+			}
+		}
+	}
+	
+	protected function isBlockedAttribute($name)
+	{
+		return in_array($name, $this->_blockedAttributes);
+	}
+	
+	/**
 	 * Set attributes from an associative array.
 	 *
 	 * @param array(string=>string) $attributes
@@ -139,6 +174,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	final protected function _setAttribute($name, $value)
 	{
 		$name=strtolower($name);
+		//if(in_array($name, $this->_blockedAttributes)) return;
 		$this->_attributes[$name]=$value;
 	}
 
@@ -192,7 +228,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	{
 		foreach($this->_attributes as $name=>$value)
 		{
-			if($value!==null)
+			if($value!==null&&(!$this->isBlockedAttribute($name)))
 			{
 				echo ' '.$name.'="'.$this->escape($value).'"';
 			}
