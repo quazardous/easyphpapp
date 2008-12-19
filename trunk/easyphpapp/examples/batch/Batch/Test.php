@@ -35,5 +35,9 @@ class Batch_Test extends Ea_Batch_Abstract
 	{
 		echo "Hello World\n";
 		echo "param1=".$this->getParam('param1')."\n";
+		
+		// your stuff
+		// you can stop the bacth with $this->stop(9, "why ?")
+		// the code will be returned by run().
 	}
 }

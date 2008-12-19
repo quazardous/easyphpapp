@@ -12,6 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Layout/Table/Exception.php';
 require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Layout/Table/Row.php';
 require_once 'Ea/Layout/Table/Cell.php';

@@ -34,3 +34,4 @@ else
 }
 
 exit($batch->run());
+// run returns 0 or the code passed to stop().
