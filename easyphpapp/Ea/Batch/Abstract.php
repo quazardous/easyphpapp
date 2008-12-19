@@ -56,20 +56,42 @@ abstract class Ea_Batch_Abstract
 		{
 			if(is_array($value))
 			{
+				$option='';
+				$nop=0;
+				if(isset($value['shortop']))
+				{
+					$option.=" | -{$value['shortop']}";
+					$nop++;
+				}
+				if(isset($value['longop']))
+				{
+					$option.=" | --{$value['longop']}";
+					$nop++;
+				}
+				$option=trim($option,'| ');
+				if($nop>1) $option="( {$option} )";
 				if(isset($value['boolean'])&&$value['boolean'])
 				{
 					$value['value']=$value['value']?'true':'false';
 				}
-				$value=$value['value'];		
+				else
+				{
+					if($option) $option.=' <value>';
+				}
+				if($option) $option=" {$option} ";
+				$this->log(" {$param}{$option}: {$value['value']}");	
 			}
-			$this->log(" - {$param}: {$value}");
+			else
+			{
+				$this->log(" {$param}: {$value}");
+			}
 		}
 		
 		try
 		{
 			$this->start();
 		}
-		catch(Batch_Exception $e)
+		catch(Ea_Batch_Exception $e)
 		{
 			if($e->getCode()==Ea_Batch_Exception::stop)
 			{
@@ -194,8 +216,18 @@ abstract class Ea_Batch_Abstract
 	{
 		$shortops='';
 		$longops=array();
+		$revopts=array();
 		foreach($this->_params as $name=>$value)
 		{
+			if(isset($value['shortop']))
+			{
+				$revopts[$value['shortop']]=$name;
+			}
+			if(isset($value['longop']))
+			{
+				$revopts[$value['longop']]=$name;
+			}
+			
 			if(isset($value['boolean'])&&$value['boolean'])
 			{
 				if(isset($value['shortop']))
@@ -229,6 +261,12 @@ abstract class Ea_Batch_Abstract
 					$longops[]=$value['longop'].':';
 				}
 			}
+		}
+		if(count($longops))	$options=getopt($shortops, $longops);
+		else $options=getopt($shortops);
+		foreach($options as $op=>$val)
+		{
+			$this->setParam($revopts[$op], $val);
 		}
 	}
 	

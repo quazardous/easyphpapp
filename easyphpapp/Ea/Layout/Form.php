@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.0.3.3-20081219
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -592,7 +592,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if(!isset($this->getSession()->forms[$this->getId()])) return null;
 		$input=self::array_get_from_id($this->getSession()->forms[$this->getId()], $id);
-		return $input->getValue();
+		//TODO think about it
+		if($input instanceof Ea_Layout_Input_Abstract) return $input->getValue();
+		return null;
 	}
 	
 	protected $_post=null;
