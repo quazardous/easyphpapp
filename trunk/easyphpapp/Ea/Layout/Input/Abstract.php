@@ -293,7 +293,29 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	{
 		return (string)$this->getValue();
 	}
-	
+
+	/**
+	 * Used to easily access input value directly from the form array.
+	 * 
+	 * Example :
+	 * <code>
+	 * <?php
+	 *  $form=new Ea_Layout_Form('form');
+	 *  $form->add(new Ea_Layout_Input_Text('login'));
+	 * 
+	 *  $form['login']='john';
+	 *  
+	 * 	echo "value: {$form['login']}";
+	 * ?>
+	 * </code>
+	 * @see Ea_Layout_Form
+	 *
+	 * @return array
+	 */
+	public function __toArray()
+	{
+		return (array)$this->getValue();
+	}
 	
 	/**
 	 * Set the value from $_POST.

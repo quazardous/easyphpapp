@@ -49,6 +49,10 @@ class Module_Index extends Ea_Module_Abstract
 			// do you form stuff
 			$_SESSION['text1']=(string)$form['text1'];
 			$_SESSION['select1']=(string)$form['select1'];
+			$_SESSION['select2']=(string)$form['select2'];
+			// little hack Ea_Layout_Input_Select::__toString() can return array of values ;p
+			var_dump($_SESSION['select2']);
+			die();
 			$_SESSION['textarea1']=(string)$form['textarea1'];
 			$_SESSION['radio1']=$form['radio1']->getValue();
 			
@@ -99,6 +103,21 @@ class Module_Index extends Ea_Module_Abstract
 			unset($_SESSION['select1']);
 		}
 
+		$table->addRow();
+		$table->addHeader('multi select');
+		$table->addCell($input=new Ea_Layout_Input_Select('select2', array(1=>'one', 2=>'two', 3=>'three', 4=>'four', 5=>'five')));
+		$input->rememberValue();
+		$input->setMultiple(true, 3);
+		if(isset($_SESSION['select2']))
+		{
+			$cell=$table->addCell();
+			foreach($_SESSION['select2'] as $value)
+			{
+				$cell->add($value.', ');
+			}
+			unset($_SESSION['select2']);
+		}
+		
 		$table->addRow();
 		$table->addHeader('textarea');
 		$table->addCell($input=new Ea_Layout_Input_Textarea('textarea1', 5, 20));
