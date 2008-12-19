@@ -49,10 +49,8 @@ class Module_Index extends Ea_Module_Abstract
 			// do you form stuff
 			$_SESSION['text1']=(string)$form['text1'];
 			$_SESSION['select1']=(string)$form['select1'];
-			$_SESSION['select2']=(string)$form['select2'];
-			// little hack Ea_Layout_Input_Select::__toString() can return array of values ;p
-			var_dump($_SESSION['select2']);
-			die();
+			$_SESSION['select2']=$form['select2']->getValue();
+			// no __toArray() MM :( so if you don't use store don't use ->getValue()...
 			$_SESSION['textarea1']=(string)$form['textarea1'];
 			$_SESSION['radio1']=$form['radio1']->getValue();
 			
@@ -108,6 +106,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addCell($input=new Ea_Layout_Input_Select('select2', array(1=>'one', 2=>'two', 3=>'three', 4=>'four', 5=>'five')));
 		$input->rememberValue();
 		$input->setMultiple(true, 3);
+		// in fact the input will have 'select2[]' as name since it's multiple
 		if(isset($_SESSION['select2']))
 		{
 			$cell=$table->addCell();
