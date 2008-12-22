@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081219
+ * @version     0.0.3.3-20081222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -142,6 +142,14 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	protected $_multiple=false;
 	
 	/**
+	 * Manage input name for multiple PHP support.
+	 * If true and multiple, add [] to the name attribute.
+	 * 
+	 * @var boolean
+	 */
+	protected $_magicName=true;
+	
+	/**
 	 * Set checked.
 	 * 
 	 * @param boolean $checked
@@ -178,6 +186,22 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 		return $this->_multiple;
 	}
 
+	/**
+	 * Set magic name support.
+	 * @see $_magicName
+	 * 
+	 * @param $magic
+	 */
+	public function setMagicName($magic)
+	{
+		$this->_magicName=$magic;
+	}
+	
+	public function isMagicName()
+	{
+		return $this->_magicName;
+	}
+	
 	public function setAttribute($name, $value)
 	{
 		$name=strtolower($name);
@@ -216,7 +240,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	public function getName()
 	{
 		$name=parent::getName();
-		if($this->isMultiple()) $name.='[]';
+		if($this->isMultiple()&&$this->isMagicName()) $name.='[]';
 		return $name;
 	}
 	
