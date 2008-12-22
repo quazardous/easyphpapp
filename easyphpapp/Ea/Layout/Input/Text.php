@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.3.3-20081222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -20,5 +20,12 @@ require_once 'Ea/Layout/Input/Abstract.php';
 class Ea_Layout_Input_Text extends Ea_Layout_Input_Abstract
 {
 	protected $_type='text';
+	
+	public function __construct($id, $value=null, $size=null, $maxlength=null, $config=null)
+	{
+		parent::__construct($id, $value, $config);
+		if($size!==null) $this->setAttribute('size', $size);
+		if($maxlength!==null) $this->setAttribute('maxlength', $maxlength);
+	}
 }
 ?>
