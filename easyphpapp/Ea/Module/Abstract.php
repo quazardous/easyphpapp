@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.0.3.3-20090109
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -191,7 +191,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function render()
 	{
-		if($this->_renderPage) $this->_page->render();
+		if($this->_renderPage) $this->getPage()->render();
 	}
 	
 	/**

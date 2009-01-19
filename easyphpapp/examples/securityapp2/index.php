@@ -16,6 +16,7 @@
 // This app will demonstrate the auth and acl capability of the security layer.
 // Auth is only responsible to allow general access to a known user.
 // ACL is responsible to grant access to modules and actions.
+// This is an "authenticate from get" version...
 
 // don't forget to set your include path
 require '../conf/config.php';
