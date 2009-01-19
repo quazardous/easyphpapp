@@ -1,0 +1,6 @@
+securityapp2 is a quick/dirty variation of securityapp with authentication against basic get data...
+You could use this to authenticate method with some secutity md5 key ie...
+
+securityapp2/?login=john&password=doe
+
+securityapp2/?login=aero&password=smith

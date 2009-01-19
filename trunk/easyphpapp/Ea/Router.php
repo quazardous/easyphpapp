@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.0.3.3-20090119
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -645,8 +645,10 @@ class Ea_Router
 	protected function _security($render=true)
 	{
 		if(!$this->_security) return;
+		// user is connected
 		if($this->isConnectedUser())
 		{
+			// test is user is allowed
 			if(!$this->isAllowed())
 			{
 				$this->_execute($this->_securityModule, 'deny', 'security');
@@ -655,6 +657,7 @@ class Ea_Router
 		}
 		else
 		{
+			// no user connected
 			$c=$this->getModuleClassName($this->_securityModule);
 			Zend_Loader::loadClass($c);
 			$module=new $c($this);
@@ -663,16 +666,26 @@ class Ea_Router
 				throw new Ea_Router_Exception("{$c} does not extend Ea_Module_Abstract or implements Ea_Module_Security_Interface");
 			}
 			$module->init();
+			// test I have user information
 			if($user=$module->getSecurityUser())
 			{
+				// I have user information
 				$this->getSecurity()->authenticate($user);
 				$module->complete();
 				$this->executeCallbacks();
+				
+				// default behavior is getSecurityUser() follow by a redirect (ie POST submit => PRG)
 				$this->applyRequestedRedirect();
-				if($render&&$this->_renderModule) $module->render();
-				die();
+
+				// if we are here : no redirect => we must handle a basic deny
+				if((!$this->isConnectedUser())||(!$this->isAllowed()))
+				{
+					$this->_execute($this->_securityModule, 'deny', 'security');
+					die();
+				}
 			}
 			else {
+				// I have no user information : challenge an user
 				//FIXME : call init just once.
 				$this->_execute($this->_securityModule, 'challenge', 'security');
 				die();
@@ -748,16 +761,18 @@ class Ea_Router
 	}
 	
 	/**
-	 * Test if user is allowed to trigger targeted module and action.
+	 * Test if user is allowed to trigger targeted or given module and action.
 	 * @see Ea_Security::isAllowed()
 	 * 
 	 * @return boolean
 	 */
-	public function isAllowed()
+	public function isAllowed($action=null, $module=null)
 	{
+		if(!$action)$action=$this->_targetAction;
+		if(!$module)$module=$this->_targetModule;
 		// if no router level ACL return true
 		if(!$this->_useRouterAcl) return true;
-		return $this->getSecurity()->isAllowed("module::{$this->_targetModule}", "action::{$this->_targetAction}");
+		return $this->getSecurity()->isAllowed("module::{$module}", "action::{$action}");
 	}
 	
 	/**
