@@ -1,6 +1,8 @@
 *** 0.0.3.3-dumb ***
-Basic batch support
-Multiple select support
+Basic batch support.
+Multiple select support.
+Improve security layer :
+- fix minor bug.
 
 *** 0.0.3.2-dumb ***
 Improve Zend_Db pdo support in model :
