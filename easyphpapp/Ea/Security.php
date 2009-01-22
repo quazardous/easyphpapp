@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.0.3.3-20090122
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -61,6 +61,7 @@ class Ea_Security
 	protected function __construct()
 	{
 		$this->_auth=Zend_Auth::getInstance();
+		$this->addRole('public');
 	}
 	
 	/**
@@ -457,10 +458,21 @@ class Ea_Security
     {
     	// if no rules always allowed...
 		if(!$this->_acl) return true;
-		$roles=$this->getConnectedUserRoles();
-		// if no role always deny...
-		if($roles===null) return false;
+		
+		$roles=null;
+		if($this->isConnectedUser())
+		{
+			$roles=$this->getConnectedUserRoles();
+		}
+		if($roles===null) $roles=array();
 		if(!is_array($roles)) $roles=array($roles);
+		
+		// always add meta role public
+		if(!in_array('public', $roles))
+		{
+			$roles[]='public';
+		}
+		
 		$allowed=false;
 		//TODO : add user test
 		// allowed if one of the user's role is allowed

@@ -2,6 +2,7 @@
 Basic batch support.
 Multiple select support.
 Improve security layer :
+- add public role.
 - fix minor bug.
 
 *** 0.0.3.2-dumb ***
