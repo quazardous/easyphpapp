@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081211
+ * @version     0.0.3.3-20090122
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -228,7 +228,8 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	public function addScript($src, $script=null, $type='text/javascript')
 	{
-		array_push($this->_scripts, new Ea_Layout_Script($src, $script, $type));
+		array_push($this->_scripts, $layout=new Ea_Layout_Script($src, $script, $type));
+		$layout->setPage($this);
 	}
 	
 	/**
@@ -246,7 +247,7 @@ class Ea_Page implements Ea_Page_Interface
 <?php
 		foreach($this->_styles as $style)
 		{
-			?><link type="text/css" href="<?php echo $this->escape($style['media']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
+			?><link type="text/css" href="<?php echo $this->escape($style['href']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
 <?php
 		}
 		foreach($this->_scripts as $script)
