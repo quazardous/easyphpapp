@@ -644,20 +644,15 @@ class Ea_Router
 	 */
 	protected function _security($render=true)
 	{
+		// no security
 		if(!$this->_security) return;
-		// user is connected
-		if($this->isConnectedUser())
+		
+		// user is allowed (maybe public)
+		if($this->isAllowed()) return;
+
+		// not allowed, maybe no user connected
+		if(!$this->isConnectedUser())
 		{
-			// test is user is allowed
-			if(!$this->isAllowed())
-			{
-				$this->_execute($this->_securityModule, 'deny', 'security');
-				die();
-			}
-		}
-		else
-		{
-			// no user connected
 			$c=$this->getModuleClassName($this->_securityModule);
 			Zend_Loader::loadClass($c);
 			$module=new $c($this);
@@ -676,21 +671,23 @@ class Ea_Router
 				
 				// default behavior is getSecurityUser() follow by a redirect (ie POST submit => PRG)
 				$this->applyRequestedRedirect();
-
-				// if we are here : no redirect => we must handle a basic deny
-				if((!$this->isConnectedUser())||(!$this->isAllowed()))
-				{
-					$this->_execute($this->_securityModule, 'deny', 'security');
-					die();
-				}
 			}
-			else {
-				// I have no user information : challenge an user
+			else
+			{
+				// I have no user information : challenge for an user
 				//FIXME : call init just once.
 				$this->_execute($this->_securityModule, 'challenge', 'security');
 				die();
 			}
 		}
+		
+		// cannot let the pass if not allowed ;p
+		if(!$this->isAllowed())
+		{
+			$this->_execute($this->_securityModule, 'deny', 'security');
+			die();
+		}
+
 	}
 	
 	/**
