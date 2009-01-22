@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.0.3.3-20090122
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -164,6 +164,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function setId($id)
 	{
+		// TODO : set id only once
 		if(!is_array($id)) $id=self::get_id_from_name($id);
 		if(count($id)<1)
 		{
@@ -310,6 +311,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		 * Display the reserved attributes...
 		 */
 		$this->_setAttribute('name', $this->getName());
+		$this->_setAttribute('id', $this->getName());
 		$this->_setAttribute('value', $this->getValue());
 		$this->_setAttribute('type', $this->getType());
 	}
