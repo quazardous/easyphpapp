@@ -31,7 +31,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->setTitle('Public stuff');
 		
 		// add the text 'Hello <user>' to the page
-		$this->getPage()->add('Hello'.($this->getRouter()->getSecurity()->isConnectedUser()?' '.$this->getRouter()->getSecurity()->getConnectedUserLogin():'').', your are in public stuff.');
+		$this->getPage()->add('Hello'.($this->getRouter()->isConnectedUser()?' '.$this->getRouter()->getSecurity()->getConnectedUserLogin():'').', your are in public stuff.');
 
 		// by the way, how to add non escaped code
 		$this->getPage()->add(array('text'=>'<br/>', 'escape'=>false));
@@ -49,7 +49,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// add a link to the 'logout' action
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'logout'), 'Logout'));
+		if($this->getRouter()->isConnectedUser()) $this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'logout'), 'Logout'));
 		
 		// router will call render
 	}
