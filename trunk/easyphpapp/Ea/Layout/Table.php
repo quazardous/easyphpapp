@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -91,10 +91,7 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 */
 	public function addCell($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Cell')
 	{
-		if(!$this->_currentRow)
-		{
-			throw new Ea_Layout_Table_Exception("no current row");
-		}
+		if(!$this->_currentRow) $this->addRow();
 		return $this->_currentRow->addCell($content, $config, $append, $class);
 	}
 
@@ -109,10 +106,7 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 */
 	public function addHeader($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Header')
 	{
-		if(!$this->_currentRow)
-		{
-			throw new Ea_Layout_Table_Exception("no current row");
-		}
+		if(!$this->_currentRow) $this->addRow();
 		return $this->_currentRow->addHeader($content, $append, $config, $class);
 	}
 }
