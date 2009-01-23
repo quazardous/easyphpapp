@@ -479,9 +479,14 @@ class Ea_Security
 		}
 		
 		$allowed=false;
-		//TODO : add user test
+
 		// allowed if one of the user's role is allowed
-		foreach($roles as $roleId) $allowed=$allowed||$this->_acl->isAllowed($roleId, $resourceId, $privilegeId);
+		foreach($roles as $roleId)
+		{
+			$this->addRole($roleId);
+			$this->addResource($resourceId);
+			$allowed=$allowed||$this->_acl->isAllowed($roleId, $resourceId, $privilegeId);
+		}
 		return $allowed;
 	}
 }
