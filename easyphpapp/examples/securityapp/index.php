@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  securityapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090122
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -40,6 +40,8 @@ $security->addRole('admin', 'user');
 // says that 'public' can access module 'index', action 'index'
 // 'public' is a meta role for "all people"
 $router->allow('public', 'index', 'index');
+
+// you can use 'anonymous' meta role to target unconnected acces
 
 // says that 'user' can access all actions of module 'index'
 $router->allow('user', 'index');

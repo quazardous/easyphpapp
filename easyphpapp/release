@@ -1,3 +1,7 @@
+*** 0.3.4-snow ***
+Improve security layer :
+- add anonymous role.
+
 *** 0.0.3.3-dumb ***
 Basic batch support.
 Multiple select support.

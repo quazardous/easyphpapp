@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090122
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -61,6 +61,7 @@ class Ea_Security
 	protected function __construct()
 	{
 		$this->_auth=Zend_Auth::getInstance();
+		$this->addRole('anonymous');
 		$this->addRole('public');
 	}
 	
@@ -463,6 +464,10 @@ class Ea_Security
 		if($this->isConnectedUser())
 		{
 			$roles=$this->getConnectedUserRoles();
+		}
+		else
+		{
+			$roles='anonymous';
 		}
 		if($roles===null) $roles=array();
 		if(!is_array($roles)) $roles=array($roles);
