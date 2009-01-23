@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -130,16 +130,16 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	
 	protected $_autoIdCol=0;
 		
-	protected $_displayHeaderRow=false;
+	protected $_displayHeader=false;
 	
 	/**
 	 * Toggle header row display.
 	 * 
 	 * @param boolean $display
 	 */
-	public function displayHeaderRow($display=true)
+	public function displayHeader($display=true)
 	{
-		$this->_displayHeaderRow=$display;
+		$this->_displayHeader=$display;
 	}
 	
 	/**
@@ -165,7 +165,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		}
 		$this->_columns[$idCol]=array('record'=>array('adapter'=>$column, 'config'=>$recordConfig, 'class'=>$recordClass), 'header'=>array('content'=>$content, 'config'=>$headerConfig, 'class'=>$headerClass));
 		
-		if($content) $this->displayHeaderRow(true);
+		if($content) $this->displayHeader(true);
 		
 		return $idCol;
 	}
@@ -281,7 +281,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_populated=true;
 		if($this->_orientation==self::orientation_vertical)
 		{
-			if($this->_displayHeaderRow)
+			if($this->_displayHeader)
 			{
 				$this->addRow($headerConfig, true, $headerRowClass);
 				foreach($this->_columns as $column)
@@ -305,7 +305,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 			foreach($this->_columns as $column)
 			{
 				$this->addRow($headerConfig, true, $headerRowClass);
-				$this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
+				if($this->_displayHeader) $this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
 				$i=0;
 				foreach($this->_records as $record)
 				{
