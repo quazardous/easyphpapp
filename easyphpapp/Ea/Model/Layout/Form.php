@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081201
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -35,11 +35,11 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		return $this->_baseId;
 	}
 	
-	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_Input_Default';
-	protected $_defaultRecordAdapterClassByType=array(
-		'string' => 'Ea_Model_Layout_Record_Adapter_Input_String',
-		'text'   => 'Ea_Model_Layout_Record_Adapter_Input_Text',
-		'enum'   => 'Ea_Model_Layout_Record_Adapter_Input_Enum',
+	protected $_defaultRecordAdapterName = 'Input_Default';
+	protected $_defaultRecordAdapterNameByType=array(
+		'string' => 'Input_String',
+		'text'   => 'Input_Text',
+		'enum'   => 'Input_Enum',
 	);
 	
 }

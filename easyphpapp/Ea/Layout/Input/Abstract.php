@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090122
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -83,7 +83,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 * 
 	 * @see $_id
 	 */
-	public function __construct($id, $value=null, $config=null)
+	public function __construct($id=null, $value=null, $config=null)
 	{
 		parent::__construct(null, $config);
 		$this->setId($id);
@@ -164,6 +164,11 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function setId($id)
 	{
+		if(!$id)
+		{
+			$this->_id=null;
+			return;
+		}
 		// TODO : set id only once
 		if(!is_array($id)) $id=self::get_id_from_name($id);
 		if(count($id)<1)

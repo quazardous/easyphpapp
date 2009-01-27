@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081211
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -185,10 +185,28 @@ abstract class Ea_Model_Abstract
 		}
 		if(method_exists($this, $f))
 		{
-			
-			$this->$f($column, $xml_metadata->toString());
+			$this->$f($column, $this->readXmlValue($xml_metadata));
 			return true;
 		}
 		return false;
+	}
+	
+	protected function readXmlValue(Ea_Xml_Element $xml_value)
+	{
+		if(isset($xml_value->array))
+		{
+			$arr=array();
+			if(isset($xml_value->array->item))
+			{
+				foreach($xml_value->array->item as $xml_item)
+				{
+					$value=$this->readXmlValue($xml_item);
+					if(isset($xml_item['index'])) $arr[$xml_item['index']->toString()]=$value;
+					else $arr[]=$value;
+				}
+			}
+			return $arr;
+		}
+		return $xml_value->toString();
 	}
 }

@@ -189,13 +189,13 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['record']=array('adapter'=>$column, 'config'=>$config, 'class'=>$class);
 	}
 
-	public function seColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $column)
+	public function seColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $adapter)
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
 			throw new Ea_Layout_Record_Table_Exception("$idCol : unknown column");
 		}
-		$this->_columns[$idCol]['record']['adapter']=$column;
+		$this->_columns[$idCol]['record']['adapter']=$adapter;
 	}
 	
 	public function seColumnConfig($idCol, $config)

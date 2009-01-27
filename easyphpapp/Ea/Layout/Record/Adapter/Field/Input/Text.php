@@ -28,7 +28,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Text extends Ea_Layout_Record_Adapter
 	 */
 	public function getContent($record, $i)
 	{
-		return new Ea_Layout_Input_Text($this->getId($i), $this->getValue($record), $this->_config);
+		return new Ea_Layout_Input_Text($this->getId($i), $this->getValue($record), null, null, $this->_config);
 	}
 }
 

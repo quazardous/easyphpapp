@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090119
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -493,6 +493,15 @@ class Ea_Router
 		if(isset($_GET[$module][$name]))
 		{
 			return $_GET[$module][$name];
+		}
+		return null;
+	}
+	
+	public function getRawParam($name)
+	{
+		if(isset($_GET[$name]))
+		{
+			return $_GET[$name];
 		}
 		return null;
 	}

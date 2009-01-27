@@ -271,6 +271,19 @@ abstract class Ea_Module_Abstract
 	}
 
 	/**
+	 * Return raw param from URL.
+	 * 
+	 * @param string $name
+	 * @return string|numeric|null
+	 */
+	public function getRawParam($name, $default=null)
+	{
+		$value=$this->getRouter()->getRawParam($name);
+		if($value===null) return $default;
+		return $value;
+	}
+	
+	/**
 	 * Get input id for GET form to feet with route params.
 	 * 
 	 * @param mixed $param

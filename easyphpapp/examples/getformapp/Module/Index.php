@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081113
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -41,9 +41,7 @@ class Module_Index extends Ea_Module_Abstract
 	public function actionIndex()
 	{
 		// declare new form
-		$form=new Ea_Layout_Form('form1');
-		
-		$form->setMethod('get');
+		$form=new Ea_Layout_Form('form1', 'get');
 		// the goal of GET form is to produce an url from a form.
 		
 		$form->add($table=new Ea_Layout_Table);

@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081219
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -70,9 +70,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * 
 	 * @uses 
 	 */
-	public function __construct($id, $config=null)
+	public function __construct($id, $method='post', $config=null)
 	{
-		$this->setMethod('post');
+		$this->setMethod($method);
 		parent::__construct(null, $config);
 		$this->setId($id);
 		if(is_array($config))
@@ -124,10 +124,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function addInput(Ea_Layout_Input_Abstract $input)
 	{
 		$input->setForm($this);
-		$this->setArrayInputAt($input->getId(), $input);
-		if($this->_rememberAllInputsValues)
+		$id=$input->getId();
+		if($id)
 		{
-			$input->rememberValue();
+			$this->setArrayInputAt($id, $input);
+			// cannot remeber if no id
+			if($this->_rememberAllInputsValues)
+			{
+				$input->rememberValue();
+			}
 		}
 		if($input instanceof Ea_Layout_Input_File)
 		{
@@ -249,7 +254,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		$this->_action=$route;
 	}
-
+	
 	/**
 	 * Return action.
 	 * @see $_action
@@ -408,6 +413,16 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}	
 	
 	/**
+	 * Are we using magic..
+	 * 
+	 * @return boolean
+	 */
+	public function isMagic()
+	{
+		return $this->_useMagic;
+	}
+	
+	/**
 	 * To know if magic() was called.
 	 * 
 	 * @var boolean
@@ -421,7 +436,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	protected function magic()
 	{
-		if(!$this->_useMagic) return;
+		if(!$this->isMagic()) return;
 		
 		if(!$this->_magic)
 		{
