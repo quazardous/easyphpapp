@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -31,7 +31,7 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 	 * 
 	 * @see $_id
 	 */
-	public function __construct($id, $rows=null, $cols=null, $value=null, $config=null)
+	public function __construct($id=null, $rows=null, $cols=null, $value=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
 		$this->setId($id);

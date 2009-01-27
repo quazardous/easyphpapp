@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081212
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -244,6 +244,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		}
 	}
 
+	/*
 	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
 	{
 		switch(strtolower($xml_metadata['name']->toString()))
@@ -269,5 +270,6 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 			default: parent::setColumnMetaFromXml($column, $xml_metadata);
 		}
 	}
+	*/
 	
 }

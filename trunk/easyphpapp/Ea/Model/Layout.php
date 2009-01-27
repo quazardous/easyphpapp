@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081203
+ * @version     0.3.4-20090123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -31,7 +31,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
-	 *      'adapter'		    => array('class'=>'Ea_Layout_Record_Adapter_Interface+Ea_Model_Layout_Record_Adapter_Interface', 'config'=>$congig_for_the_adapter),
+	 *      'adapter'		    => array('name'=>'name to add to prefix', 'config'=>$congig_for_the_adapter),
 	 *      'header'		    => array('content'=>$content, 'adapter'=>'Ea_Layout_Record_Adapter_Interface'),
 	 *      'order'		        => $i, // display order
 	 *      'display'	    	=> true|false, // display column
@@ -66,15 +66,21 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_dataModel;
 	}
 	
-	protected $_defaultRecordAdapterClass = 'Ea_Model_Layout_Record_Adapter_String';
-	protected $_defaultRecordAdapterClassByType=array(
-		'string' => 'Ea_Model_Layout_Record_Adapter_String',
+	protected $_recordAdapterPrefix='Ea_Model_Layout_Record_Adapter';
+	protected $_defaultRecordAdapterName = 'String';
+	protected $_defaultRecordAdapterNameByType=array(
+		'string' => 'String',
 	);
 	
-	protected function getDefaultRecordAdapterClassByType($type)
+	protected function getDefaultRecordAdapterNameByType($type)
 	{
-		if(array_key_exists($type, $this->_defaultRecordAdapterClassByType)) return $this->_defaultRecordAdapterClassByType[$type];
-		return $this->_defaultRecordAdapterClass;
+		if(array_key_exists($type, $this->_defaultRecordAdapterNameByType)) return $this->_defaultRecordAdapterNameByType[$type];
+		return $this->_defaultRecordAdapterName;
+	}
+	
+	protected function getAdapterClassFromName($name)
+	{
+		return $this->_recordAdapterPrefix.'_'.ucfirst($name);
 	}
 	
 	/**
@@ -144,14 +150,14 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->getMetaData($name, 'adapter', 'instance');
 	}
 	
-	public function setColumnAdapterClass($name, $class)
+	public function setColumnAdapterName($name, $class)
 	{
-		$this->setColumnMetaPart($name, 'adapter', 'class', $class);
+		$this->setColumnMetaPart($name, 'adapter', 'name', $class);
 	}
 
-	public function getColumnAdapterClass($name)
+	public function getColumnAdapterName($name)
 	{
-		return $this->getMetaData($name, 'adapter', 'class');
+		return $this->getMetaData($name, 'adapter', 'name');
 	}
 
 	public function setColumnAdapterConfig($name, $config)
@@ -206,18 +212,19 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * @param $name column
 	 * @return Ea_Layout_Record_Adapter_Interface
 	 */
-	public function getColumnAdapter($name)
+	public function getColumnAdapter($column)
 	{
-		$obj=$this->getMetaData($name, 'adapter', 'instance');
+		$obj=$this->getColumnAdapterInstance($column);
 		if($obj) return $obj;
-		$class=$this->getMetaData($name, 'adapter', 'class');
-		if(!$class)
+		$name=$this->getColumnAdapterName($column);
+		if(!$name)
 		{
-			$class=$this->getDefaultRecordAdapterClassByType($this->getColumnType($name));
+			$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column));
 		}
+		$class=$this->getAdapterClassFromName($name);
 		Zend_Loader::loadClass($class);
-		$instance=new $class($name, $this);
-		$this->setColumnMetaPart($name, 'adapter', 'instance', $instance);
+		$instance=new $class($column, $this);
+		$this->setColumnAdapterInstance($column, $instance);
 		return $instance;
 	}
 	

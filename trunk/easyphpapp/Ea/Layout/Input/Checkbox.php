@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081021
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -30,7 +30,7 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	 * @param array $config
 	 * 
 	 */
-	public function __construct($id, $checked=null, $value='X', $config=null)
+	public function __construct($id=null, $checked=null, $value='X', $config=null)
 	{
 		parent::__construct($id, $value, $config);
 		if($checked!==null)$this->setChecked($checked);

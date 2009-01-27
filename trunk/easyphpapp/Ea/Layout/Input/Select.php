@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081222
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -31,7 +31,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	 * 
 	 * @see $_id
 	 */
-	public function __construct($id, array $options=array(), $value=null, $config=null)
+	public function __construct($id=null, array $options=array(), $value=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
 		if(is_array($value)) $this->isMultiple(true);
