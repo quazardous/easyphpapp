@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090122
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -254,6 +254,7 @@ class Ea_Page implements Ea_Page_Interface
 		{
 			$script->preRender();
 			$script->render();
+			$script->postRender();
 		}
 		if($this->_title)
 		{
@@ -263,6 +264,7 @@ class Ea_Page implements Ea_Page_Interface
 		?></head><?php
 		$this->_top->preRender();
 		$this->_top->render();
+		$this->_top->postRender();
 		?>
 </html><?php
 		$this->_rendered=true;

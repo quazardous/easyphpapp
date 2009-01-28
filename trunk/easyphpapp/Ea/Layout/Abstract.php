@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.7.20081023
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -156,5 +156,15 @@ abstract class Ea_Layout_Abstract
 	 * 
 	 */
 	abstract public function render();
+	
+	/**
+	 * Post render completion stuff.
+	 * It's highly recommended that postRender() call parent::postRender().
+	 */
+	public function postRender()
+	{
+		
+	}
+	
 }
 ?>

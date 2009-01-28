@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081219
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -32,7 +32,7 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		// we will use session to display our inputs
 		// do not use session_start()
-		Zend_Session::start();
+		// Zend_Session::start();
 		
 		// set the page title
 		$this->getPage()->setTitle('Advanced form');
@@ -145,10 +145,10 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// add the form to the page
 		$this->getPage()->add($form);
-		
-		// store the form structure
-		// store() is mandatory if you want to use $input->rememberValue()
-		$form->store();
+
+		// Will store the form structure at postRender()
+		//$form->useStore();
+		// it's already triggerd by rememberValue();
 		
 		// router will call render
 	}

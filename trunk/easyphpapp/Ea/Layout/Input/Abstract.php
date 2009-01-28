@@ -333,6 +333,10 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
      */
     public function rememberValue()
     {
+    	if($this->getForm())
+    	{
+    		$this->getForm()->useStore();
+    	}
     	if($this->_value===null)
     	{
     		$this->setValue($this->getForm()->getValueFromSession($this->getId()));
