@@ -640,7 +640,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				//testing magic input
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
-				$stored=$this->tryRestore();
+				$stored=$this->restore();
 				if(count($this->_items)==0)
 				{
 					// special not initialized mode
@@ -825,6 +825,28 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return $this->_session;
 	}
 	
+	protected $_useStore=false;
+	
+	/**
+	 * Tells if form must store its structure at postRender().
+	 * 
+	 * @param boolean $use
+	 */
+	public function useStore($use=true)
+	{
+		$this->_useStore=$use;
+	}
+	
+	/**
+	 * Tells if form must store its structure at postRender().
+	 * 
+	 * @return boolean
+	 */
+	public function isStore()
+	{
+		return $this->_useStore;
+	}
+	
  	/**
  	 * Store the structure using session.
  	 * This can be usefull to remember inputs values, etc...
@@ -841,7 +863,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	 * 
  	 * @return boolean
  	 */
- 	public function tryRestore()
+ 	public function restore()
  	{
  		if(!isset($this->getSession()->forms[$this->getId()])) return false;
 		$this->_items=$this->getSession()->forms[$this->getId()];
@@ -879,6 +901,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
      */
     public function rememberAllInputsValues($remember=true)
     {
+    	if($remember) $this->useStore();
     	$this->_rememberAllInputsValues=$remember;
     }
     
@@ -910,5 +933,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     }
     
 	
+    public function postRender()
+    {
+    	parent::postRender();
+    	if($this->isStore())
+    	{
+    		$this->store();
+    	}
+    }
     
 }

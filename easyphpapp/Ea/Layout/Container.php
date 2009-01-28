@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.3.20081015
+ * @version     0.3.4-20090127
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -98,6 +98,7 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 		{
 			$layout->preRender();
 			$layout->render();
+			$layout->postRender();
 		}
 		$this->close();
 	}

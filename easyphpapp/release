@@ -2,6 +2,8 @@
 Change version numbering.
 Improve security layer :
 - add anonymous role.
+Improve layer model :
+- add postRender() method.
 
 *** 0.0.3.3-dumb ***
 Basic batch support.
