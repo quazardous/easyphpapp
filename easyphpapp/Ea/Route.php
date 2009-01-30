@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.3.20081016
+ * @version     0.3.4-20090128
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -58,6 +58,13 @@ class Ea_Route
 	 */
 	protected $_otherParams=array();
 
+	/**
+	 * Raw params to put in the query part.
+	 * 
+	 * @var array(string=>array))
+	 */
+	protected $_rawParams=array();
+	
 	/**
 	 * Fragement is what is behind th #.
 	 * 
@@ -175,7 +182,7 @@ class Ea_Route
 	{
 		if($module)
 		{
-			$modul=Ea_Router::standardize($module);
+			$module=Ea_Router::standardize($module);
 		}
 		else
 		{
@@ -324,6 +331,40 @@ class Ea_Route
 		{
 			$this->_params[$name]=$value;
 		}
+	}
+	
+	/**
+	 * Add a raw param (no module).
+	 * 
+	 * @param string $name
+	 * @param string $value
+	 */
+	public function setRawParam($name, $value)
+	{
+		$this->_url=null;
+		$this->_rawParams[$name]=$value;
+	}
+	
+	/**
+	 * Get a raw param.
+	 * 
+	 * @param string $name
+	 * @return string
+	 */
+	public function getRawParam($name)
+	{
+		if(array_key_exists($name, $this->_rawParams)) return $this->_rawParams[$name];
+		return null;
+	}
+	
+	/**
+	 * Get all raw params.
+	 * 
+	 * @return array
+	 */
+	public function getRawParams()
+	{
+		return $this->_rawParams;
 	}
 	
 }

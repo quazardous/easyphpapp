@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.4-20090130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -188,7 +188,7 @@ class Ea_Router
 	protected function _analyze()
 	{
 		// if post router will redirect before render()
-		if($this->isPost()) $this->requestRedirect();
+		if($this->isPost()) $this->requestRedirectAfterPost();
 		$infos=parse_url($_SERVER['REQUEST_URI']);
 		if(preg_match('|/$|', $infos['path']))
 		{
@@ -255,6 +255,14 @@ class Ea_Router
 				if(!array_key_exists($mod, $get)) $get[$mod]=array();
 				$get[$mod][$name]=$value;
 			}
+		}
+		foreach($route->getRawParams() as $name => $value)
+		{
+			if($name==$this->_moduleParamName||$name==$this->_actionParamName)
+			{
+				throw new Ea_Router_Exception("{$name} invalid raw param name");
+			}
+			$get[$name]=$value;
 		}
 		return $get;
 	}
@@ -885,15 +893,16 @@ class Ea_Router
 	 * @see call_user_func()
 	 * @uses $_callbackQueues
 	 * 
-	 * @param string $queue
 	 * @param callback $callback as defined for call_user_func()
+	 * @param string $queue
 	 * @param numeric $priority
 	 * @param string $mode 'append', 'replace' or 'exclusive'. 'exclusive' will throw an exception if 2 exclusive callbacks are put in the same queue.
 	 * @param $exit the queue is a terminal queue, exit() will be called after. Callbacks of a terminal queue take a boolean parameter to tell if they can exit by them selve or not.
 	 */
-	public function addCallback($queue, $callback, $priority=null, $mode='append', $exit=false)
+	public function addCallback($callback, $queue=null, $priority=null, $mode='append', $exit=false)
 	{
 		if($priority===null) $priority=self::callbackPriority_default;
+		if(!$queue) $queue='default';
 		if(!array_key_exists($queue, $this->_callbackQueues))
 		{
 			$this->_callbackQueues[$queue]=array('priority'=>$priority, 'exit'=>$exit, 'callbacks'=>array());
@@ -971,6 +980,8 @@ class Ea_Router
 	 */
 	const redirectPriority_last = 1000;
 
+	const redirectPriority_post =  900;
+	
 	/**
 	 * The redirect priority.
 	 * @see requestRedirect()
@@ -988,7 +999,7 @@ class Ea_Router
 	protected $_requestedRedirectRoute=null;
 	
 	/**
-	 * Request a redirect to the given route befor render.
+	 * Request a redirect to the given route before render.
 	 * This redirect will happen after the callbacks.
 	 * 
 	 * @param Ea_Route $route null means current URL
@@ -1005,6 +1016,29 @@ class Ea_Router
 	}
 	
 	/**
+	 * Request a redirect to the given route before render after post.
+	 * This redirect will happen after the callbacks.
+	 * @see requestRedirect()
+	 * 
+	 * @param Ea_Route $route null means current URL
+	 */
+	public function requestRedirectAfterPost($route=null)
+	{
+		$this->requestRedirect($route, self::redirectPriority_post);
+	}
+	
+	/**
+	 * Get requested redirect
+	 * 
+	 * @return string|Ea_Route
+	 */
+	public function getRequestedRedirect()
+	{
+		if(!$this->_requestedRedirectRoute) $this->_requestedRedirectRoute=$this->getRoute();
+		return $this->_requestedRedirectRoute;
+	}
+	
+	/**
 	 * Apply requested redirect if any.
 	 * @see requestRedirect()
 	 * 
@@ -1012,8 +1046,7 @@ class Ea_Router
 	protected function applyRequestedRedirect()
 	{
 		if($this->_requestedRedirectPriority===false) return;
-		if(!$this->_requestedRedirectRoute) $this->_requestedRedirectRoute=$this->getRoute();
-		$this->redirect($this->_requestedRedirectRoute);
+		$this->redirect($this->getRequestedRedirect());
 	}
 }
 ?>
