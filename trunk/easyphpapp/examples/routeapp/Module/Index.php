@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  routeapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.3.4-20090128
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -69,7 +69,9 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// add a link to the current module with lots of params
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(array('one'=>1, 'two'=>2)), 'params !'));
+		$route=$this->getRouter()->getRoute(array('one'=>1, 'two'=>2));
+		$route->setRawParam('foo', 'bar');
+		$this->getPage()->add(new Ea_Layout_Link($route, 'params !'));
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// router will call render
@@ -94,7 +96,9 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 
 		// add a link to the current module with lots of params
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(array('one'=>1, 'two'=>2)), 'params !'));
+		$route=$this->getRouter()->getRoute(array('one'=>1, 'two'=>2));
+		$route->setRawParam('foo', 'bar');
+		$this->getPage()->add(new Ea_Layout_Link($route, 'params !'));
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// router will call render

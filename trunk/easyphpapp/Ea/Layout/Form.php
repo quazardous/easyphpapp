@@ -938,6 +938,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     	parent::postRender();
     	if($this->isStore())
     	{
+    		//TODO : not optimum because we must start the session manualy
     		$this->store();
     	}
     }

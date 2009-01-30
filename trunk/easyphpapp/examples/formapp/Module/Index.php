@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.3.4-20090130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -20,6 +20,7 @@ require_once 'Ea/Layout/Input/Textarea.php';
 require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
 require_once 'Ea/Layout/Input/Radio.php';
+require_once 'Ea/Layout/Input/Checkbox.php';
 require_once 'Ea/Layout/Table.php';
 
 /**
@@ -51,6 +52,7 @@ class Module_Index extends Ea_Module_Abstract
 			$_SESSION['select1']=$form['select1'];
 			$_SESSION['textarea1']=$form['textarea1'];
 			$_SESSION['radio1']=$form['radio1'];
+			$_SESSION['checkbox1']=$form['checkbox1'];
 			
 			// NB : this is the optimistic way to use form data.
 			// You draw the form at display time and af submit time you don't and call catchInput().
@@ -107,6 +109,17 @@ class Module_Index extends Ea_Module_Abstract
 			$table->addCell($_SESSION['radio1']);
 			// clean up
 			unset($_SESSION['radio1']);
+		}
+
+		$table->addRow();
+		$table->addHeader('checkbox');
+		$table->addCell($toto=new Ea_Layout_Input_Checkbox('checkbox1'));
+		// if session, it means we hit send last time...
+		if(isset($_SESSION['checkbox1']))
+		{
+			$table->addCell($_SESSION['checkbox1']);
+			// clean up
+			unset($_SESSION['checkbox1']);
 		}
 
 		$table->addRow();

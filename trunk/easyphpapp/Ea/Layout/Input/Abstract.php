@@ -75,6 +75,28 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	protected $_value=null;
 
 	/**
+	 * Is the input disabled.
+	 * 
+	 * @var boolean
+	 */
+	protected $_disabled=false; 
+	
+	/**
+	 * Disable the input.
+	 * 
+	 * @param boolean $disable
+	 */
+	public function setDisabled($disabled)
+	{
+		$this->_disabled=$disabled;
+	}
+	
+	public function getDisabled()
+	{
+		return $this->_disabled;
+	}
+	
+	/**
 	 * Ea_Layout_Input_Abstract constructor.
 	 *
 	 * @param string|array(string) $id the id of the input
@@ -94,6 +116,10 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			{
 				$this->rememberValue();
 			}
+			if(array_key_exists('disabled', $config))
+			{
+				$this->setDisabled($config['disabled']);
+			}
 		}
 		
 	}
@@ -108,6 +134,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			 */
 			case 'type': $this->setType($value); break;
 			case 'value': $this->setValue($value); break;
+			case 'disabled': $this->setDisabled($value=='disabled'); break;
 			case 'name': case 'id':
 				throw new Ea_Layout_Input_Exception("$name: forbidden attribute for input");
 				break;
@@ -128,6 +155,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			case 'value': return $this->getValue();
 			case 'name': return $this->getName();
 			case 'id': return $this->getId();
+			case 'disabled': return $this->getDisabled();
 			default: return parent::getAttribute($name);
 		}
 	}
@@ -319,6 +347,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->_setAttribute('id', $this->getName());
 		$this->_setAttribute('value', $this->getValue());
 		$this->_setAttribute('type', $this->getType());
+		$this->_setAttribute('disabled', $this->getDisabled()?'disabled':null);
 	}
 	
 	public function __sleep()
