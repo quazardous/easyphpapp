@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.4-20090204
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -77,6 +77,14 @@ abstract class Ea_Model_Abstract
 		return $this->_columns;
 	}
 
+	/**
+	 * Reset the list of columns.
+	 */
+	public function resetColumns()
+	{
+		$this->_columns=array();
+	} 
+	
 	public function getOrderedColumns()
 	{
 		if(!$this->_ordered)
@@ -160,11 +168,21 @@ abstract class Ea_Model_Abstract
 				$this->_columns[]=$column;
 				$this->setColumnOrder($column, $i);
 				$this->setColumnLabel($column, $column);
+				$this->onLoadNewColumn($column);
 				$i++;				
 			}
-			
+			$this->onLoadColumn($column);
 			$this->loadColumnMetaFromXml($column, $xml_column);
 		}
+	}
+	
+	protected function onLoadNewColumn($column)
+	{
+	}
+
+	protected function onLoadColumn($column)
+	{
+
 	}
 
 	protected function loadColumnMetaFromXml($column, Ea_Xml_Element $xml_column)

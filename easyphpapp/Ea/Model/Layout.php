@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.3.4-20090204
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -108,7 +108,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		}
 		$this->_analyzeDataModel();
 	}
-		
+	
 	protected function _analyzeDataModel()
 	{
 		$this->_columns=$this->_dataModel->getOrderedColumns();
@@ -124,6 +124,11 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->_ordered=true;
 	}
 
+	protected function onLoadColumn($column)
+	{
+		$this->setColumnDisplay($column, true);
+	}
+	
 	public function getColumnType($name)
 	{
 		return $this->_dataModel->getColumnType($name);

@@ -61,7 +61,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 	 * Enter description here...
 	 * 
 	 * @param string $field of record
-	 * @param Ea_Layout_Abstract|string $label 
+	 * @param Ea_Layout_Record_Adapter_Interface|Ea_Layout_Abstract|string $label 
 	 * @param Ea_Route|string $url_or_route base url or route
 	 * @param string|array $param of param in the url, can be an associative array with 'param' and 'type' ('param', 'raw', 'action', 'module').
 	 */
