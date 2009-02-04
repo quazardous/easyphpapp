@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090130
+ * @version     0.3.4-20090202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -17,6 +17,7 @@ require_once 'Ea/Route.php';
 require_once 'Ea/Page.php';
 require_once 'Ea/Module/Abstract.php';
 require_once 'Zend/Loader.php';
+require_once 'Zend/Session/Namespace.php';
 
 /**
  * Router class.
@@ -821,13 +822,42 @@ class Ea_Router
 	 * 
 	 * @param string $name
 	 * @param mixed $value by ref
+	 * @param store in session
 	 */
-	public function setRegister($name, &$value)
+	public function setRegister($name, $value, $store=false)
 	{
+		if($store)
+		{
+			if(!isset($this->getSession()->registers))
+			{
+				$this->getSession()->registers=array();
+			}
+			$this->getSession()->registers[$name]=$value;
+		}
 		if($value===null&&array_key_exists($name, $this->_registers)) unset($this->_registers[$name]);
-		else $this->_registers[$name]=&$value;
+		else $this->_registers[$name]=$value;
 	}
 
+	/**
+	 * Session for router.
+	 * 
+	 * @var Zend_Session_Namespace
+	 */
+	protected $_session=null;
+	
+	protected $_namespace=__CLASS__;
+	
+	/**
+	 * Return session.
+	 * 
+	 * @return Zend_Session_Namespace
+	 */
+	public function getSession()
+	{
+		if(!$this->_session) $this->_session=new Zend_Session_Namespace($this->_namespace);
+		return $this->_session;
+	}
+	
 	/**
 	 * Get a register.
 	 * @see $_registers.
@@ -835,8 +865,9 @@ class Ea_Router
 	 * @param $name
 	 * @return mixed by ref
 	 */
-	public function &getRegister($name)
+	public function getRegister($name)
 	{
+		if(isset($this->getSession()->registers[$name])) return $this->getSession()->registers[$name];
 		if(array_key_exists($name, $this->_registers)) return $this->_registers[$name];
 		return null;
 	}

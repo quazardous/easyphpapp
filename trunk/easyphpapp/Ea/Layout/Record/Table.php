@@ -7,14 +7,14 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.3.4-20090204
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Table.php';
 require_once 'Ea/Layout/Record/Adapter/Interface.php';
-
+require_once 'Ea/Layout/Record/Config/Modifier/Interface.php';
 require_once 'Ea/Model/Layout.php';
 
 /**
@@ -262,6 +262,32 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	}
 	
 	/**
+	 * Callback called to modify the row config depending on record.
+	 * $config=callback($record, $i, $config)
+	 * 
+	 * @var Ea_Layout_Record_Config_Modifier_Interface
+	 */
+	protected $_recordConfigRowModifier=null;
+	
+	public function setRecordConfigRowModifier($modifier)
+	{
+		$this->_recordConfigRowModifier=$modifier;	
+	}
+
+	/**
+	 * Callback called to modify the cell config depending on record.
+	 * $config=callback($record, $i, $column, $config)
+	 * 
+	 * @var Ea_Layout_Record_Config_Modifier_Interface
+	 */
+	protected $_recordConfigCellModifier=null;
+	
+	public function setRecordConfigCellModifier($modifier)
+	{
+		$this->_recordConfigCellModifier=$modifier;	
+	}
+	
+	/**
 	 * To know if table was populated.
 	 * @var boolean
 	 */
@@ -292,9 +318,26 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 			$i=0;
 			foreach($this->_records as $record)
 			{
-				$this->addRow($recordConfig, true, $recordRowClass);
-				foreach($this->_columns as $column)
+				if($this->_recordConfigRowModifier)
 				{
+					$config=$this->_recordConfigRowModifier->modify($recordConfig, $record, $i);
+				}
+				else
+				{
+					$config=$recordConfig;
+				}
+				$this->addRow($config, true, $recordRowClass);
+				foreach($this->_columns as $colName=>$column)
+				{
+					
+					if($this->_recordConfigCellModifier)
+					{
+						$config=$this->_recordConfigCellModifier->modify($column['record']['config'], $record, $i, $colName);
+					}
+					else
+					{
+						$config=$column['record']['config'];
+					}
 					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
 				}
 				$i++;

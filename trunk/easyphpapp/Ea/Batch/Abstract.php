@@ -7,7 +7,7 @@
  * @package     Batch
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081211
+ * @version     0.3.4-20090202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -79,7 +79,18 @@ abstract class Ea_Batch_Abstract
 					if($option) $option.=' <value>';
 				}
 				if($option) $option=" {$option} ";
-				$this->log(" {$param}{$option}: {$value['value']}");	
+				if(is_object($value['value']))
+				{
+					$this->log(" {$param}{$option}: (object: ".get_class($value['value']).")");
+				}
+				else if(is_array($value['value']))
+				{
+					$this->log(" {$param}{$option}: (array)");
+				}
+				else
+				{
+					$this->log(" {$param}{$option}: {$value['value']}");
+				}
 			}
 			else
 			{

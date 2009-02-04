@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20090109
+ * @version     0.3.4-20090202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -225,18 +225,18 @@ abstract class Ea_Module_Abstract
 	 * 
 	 * @param mixed $name
 	 * @param $value
+	 * @param $store use session to store this param
 	 */
-	public function setRegister($name, &$value)
+	public function setRegister($name, $value, $store=false)
 	{
-		if($this->getRouter()) $this->getRouter()->setRegister($name, $value);
+		if($this->getRouter()) $this->getRouter()->setRegister($name, $value, $store);
 	}
 	
-
 	/**
 	 * @param $name
 	 * @return mixed
 	 */
-	public function &getRegister($name)
+	public function getRegister($name)
 	{
 		if($this->getRouter()) return $this->getRouter()->getRegister($name);
 		return null;
