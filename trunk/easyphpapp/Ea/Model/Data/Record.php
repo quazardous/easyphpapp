@@ -78,8 +78,8 @@ class Ea_Model_Data_Record extends Ea_Model_Data_Abstract
 			$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
 			$stmt=$this->_adapter->query($query);
 			$dbDateFormat=$stmt->fetchColumn(0);
-			$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
-			$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
+			$this->_defaultDateDbformat=self::format_date_oracle_to_php($dbDateFormat);
+			$this->_defaultDatetimeDbformat=self::format_date_oracle_to_php($dbDateFormat);
 		}
 		$this->_columns=array();
 		$i=0;
@@ -98,19 +98,19 @@ class Ea_Model_Data_Record extends Ea_Model_Data_Abstract
 		$this->setColumnLabel($column, $column);
 		if(is_string($value))
 		{
-			$arrd=strptime($value, $this->_defaultDbDatetimeFormat);
+			$arrd=strptime($value, $this->_defaultDatetimeDbformat);
 			if($arrd)
 			{
 				$this->setColumnType($column, self::type_datetime);
-				$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
+				$this->setColumnDateDbformat($column, $this->_defaultDatetimeDbformat);
 			}
 			else
 			{
-				$arrd=strptime($value, $this->_defaultDbDateFormat);
+				$arrd=strptime($value, $this->_defaultDateDbformat);
 				if($arrd)
 				{
 					$this->setColumnType($column, self::type_date);
-					$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+					$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 				}
 				else
 				{

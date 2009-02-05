@@ -116,8 +116,8 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
 		$stmt=$this->_statement->getAdapter()->query($query);
 		$dbDateFormat=$stmt->fetchColumn(0);
-		$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
-		$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDateDbformat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDatetimeDbformat=self::format_date_oracle_to_php($dbDateFormat);
 		$n=$this->_statement->columnCount();
 		
 		$row=$this->_statement->fetch(Zend_Db::FETCH_ASSOC);
@@ -190,11 +190,11 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 				{
 					case 'DATE':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 				}
 					
 				break;

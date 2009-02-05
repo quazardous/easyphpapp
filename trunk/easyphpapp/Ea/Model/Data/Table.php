@@ -293,11 +293,11 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 				{
 					case 'date':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 				}
 				if($meta['DEFAULT']=='CURRENT_TIMESTAMP')
 				{
@@ -369,11 +369,11 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 				{
 					case 'DATE':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDatetimeDbformat);
 				}
 					
 				break;
@@ -430,11 +430,11 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 				{
 					case 'DATE':
 						$this->setColumnType($column, self::type_date);
-						$this->setColumnDateFormat($column, $this->_defaultDbDateFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateFormat($column, $this->_defaultDbDatetimeFormat);
+						$this->setColumnDateDbformat($column, $this->_defaultDatetimeDbformat);
 				}
 					
 				break;
