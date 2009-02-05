@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.4-20090205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -70,9 +70,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * 
 	 * @uses 
 	 */
-	public function __construct($id, $method='post', $config=null)
+	public function __construct($id, $method='post', $action=null, $config=null)
 	{
 		$this->setMethod($method);
+		$this->setAction($action);
 		parent::__construct(null, $config);
 		$this->setId($id);
 		if(is_array($config))

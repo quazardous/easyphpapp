@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090204
+ * @version     0.3.4-20090205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -36,7 +36,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 *      'order'		        => $i, // display order
 	 *      'display'	    	=> true|false, // display column
 	 *      'label'		        => 'nice label',
-	 *   	'date'              => array('outformat'=>'strftime() format to read/write from base'),
+	 *   	'date'              => array('format'=>'strftime() format to read/write from base'),
 	 *   ),
 	 * )
 	 * 
@@ -118,7 +118,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			$this->setColumnDisplay($column, true);
 			$this->setColumnOrder($column, $i);
 			$this->setColumnLabel($column, $this->_dataModel->getColumnLabel($column));
-			$this->setColumnDateFormat($column, $this->_dataModel->getColumnDateOutformat($column));
+			$this->setColumnDateFormat($column, $this->_dataModel->getColumnDateFormat($column));
 			$i++;
 		}
 		$this->_ordered=true;
@@ -252,12 +252,12 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 */
 	public function setColumnDateFormat($name, $format)
 	{
-		$this->setColumnMetaPart($name, 'date', 'outformat', $format);
+		$this->setColumnMetaPart($name, 'date', 'format', $format);
 	}
 	
 	public function getColumnDateFormat($name)
 	{
-		return $this->getMetaData($name, 'date', 'outformat');
+		return $this->getMetaData($name, 'date', 'format');
 	}
 	
 	/**
@@ -291,17 +291,22 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	public function filterRecordValue($column, $value)
 	{
 		$value=$this->_dataModel->filterRecordValue($column, $value);
-		switch($this->getColumnType($column))
+		switch($type=$this->getColumnType($column))
 		{
-		case 'date': case 'datetime':
+			case 'date': case 'datetime':
 				if(!$value)return $value;
-				$format=$this->_dataModel->getMetaData($column, 'date', 'format');
-				$outformat=$this->getMetaData($column, 'date', 'outformat');
-				if($format==$outformat) return $value;
-				if(!($format&&$outformat)) return $value;
-				$d=strptime($value, $format);
+				$dbformat=$this->_dataModel->getColumnDateDbformat($column);
+				if(!$dbformat)
+				{
+					if($type=='date') $dbformat=$this->_dataModel->getDefaultDateDbformat();
+					else $dbformat=$this->_dataModel->getDefaultDatetimeDbformat();
+				}
+				$format=$this->getColumnDateFormat($column);
+				if($dbformat==$format) return $value;
+				if(!($dbformat&&$format)) return $value;
+				$d=strptime($value, $dbformat);
 				if(!$d) return $value;
-				return strftime($outformat,
+				return strftime($format,
 					mktime(
 						$d['tm_hour'],
 						$d['tm_min'],

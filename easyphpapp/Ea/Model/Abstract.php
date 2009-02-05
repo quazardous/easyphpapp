@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090204
+ * @version     0.3.4-20090205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -158,6 +158,16 @@ abstract class Ea_Model_Abstract
 	
 	protected function loadFromXml(Ea_Xml_Element $xml)
 	{
+		if(isset($xml->common))
+		{
+			if(isset($xml->common->default))
+			{
+				foreach($xml->common->default as $xml_default)
+				{
+					$this->setDefaultFromXml($xml_default);
+				}
+			}
+		}
 		$xml_columns=$xml->columns;
 		$i=count($this->_columns);
 		foreach($xml_columns->column as $xml_column)
@@ -192,6 +202,23 @@ abstract class Ea_Model_Abstract
 			$this->setColumnMetaFromXml($column, $xml_metadata);
 		}
 	}
+	
+	protected function setDefaultFromXml(Ea_Xml_Element $xml_default)
+	{
+		$words=explode('/',strtolower($xml_default['name']->toString()));
+		$f='setDefault';
+		foreach($words as $word)
+		{
+			$f.=ucfirst($word);
+		}
+		if(method_exists($this, $f))
+		{
+			$this->$f($this->readXmlValue($xml_default));
+			return true;
+		}
+		return false;
+	}
+	
 	
 	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
 	{

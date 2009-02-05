@@ -40,7 +40,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 * array(
 	 *   'column name'=>array(
 	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum|binary',
-	 *   	'date'          => array('format'=>'strptime() format to read from base', 'outformat'=>'strftime() format to read/write from base'),
+	 *   	'date'          => array('dbformat'=>'strptime() format to read from base', 'format'=>'strftime() format to read/write from base'),
 	 *      'boolean'       => array('value true'=>true, 'value false'=>false),
 	 *      'number'        => array('decimals'=>2, 'dec_point'=>',', 'thousands_sep'=>' '),
 	 *      'string'        => array('length'=>32), // for string or text
@@ -136,21 +136,21 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		$this->setColumnMeta($name, 'enum', $enum);
 	}
 
-	public function setColumnDateFormat($name, $format, $outformat=null)
+	public function setColumnDateDbformat($name, $dbformat, $format=null)
 	{
-		if($outformat===null) $outformat=$format;
+		if($format===null) $format=$dbformat;
+		$this->setColumnMetaPart($name, 'date', 'dbformat', $dbformat);
 		$this->setColumnMetaPart($name, 'date', 'format', $format);
-		$this->setColumnMetaPart($name, 'date', 'outformat', $outformat);
 	}
+
+	public function getColumnDateDbformat($name)
+	{
+		return $this->getMetaData($name, 'date', 'dbformat');
+	} 
 
 	public function getColumnDateFormat($name)
 	{
 		return $this->getMetaData($name, 'date', 'format');
-	} 
-
-	public function getColumnDateOutformat($name)
-	{
-		return $this->getMetaData($name, 'date', 'outformat');
 	} 
 	
 	/**
@@ -174,17 +174,40 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	}
 	
 	protected $_defaultLobLoad=true;
-	protected $_defaultDbDateFormat='%Y-%m-%d';
-	protected $_defaultDbDatetimeFormat='%Y-%m-%d %H:%M:%S';
+	protected $_defaultDateDbformat='%Y-%m-%d';
+	protected $_defaultDatetimeDbformat='%Y-%m-%d %H:%M:%S';
 	
+	// TODO : qu'est ça fout là ?
 	protected function initOracleDbDateFormat()
 	{
 		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
 		$stmt=$this->_dbTable->getAdapter()->query($query);
 		$dbDateFormat=$stmt->fetchColumn(0);
-		$this->_defaultDbDateFormat=self::format_date_oracle_to_php($dbDateFormat);
-		$this->_defaultDbDatetimeFormat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDateDbformat=self::format_date_oracle_to_php($dbDateFormat);
+		$this->_defaultDatetimeDbformat=self::format_date_oracle_to_php($dbDateFormat);
 	}
+	
+	public function setDefaultDateDbformat($format)
+	{
+		$this->_defaultDateDbformat=$format;
+	}
+	
+	public function setDefaultDatetimeDbformat($format)
+	{
+		$this->_defaultDatetimeDbformat=$format;
+	}
+	
+	public function getDefaultDateDbformat()
+	{
+		return $this->_defaultDateDbformat;
+	}
+	
+	public function getDefaultDatetimeDbformat()
+	{
+		return $this->_defaultDatetimeDbformat;
+	}
+	
+	
 	
 	public static function default_date_now()
 	{
