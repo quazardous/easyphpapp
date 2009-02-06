@@ -31,10 +31,6 @@ class Module_Index extends Ea_Module_Abstract
 {
 	public function init()
 	{
-		// we will use session to display our inputs
-		// do not use session_start()
-		Zend_Session::start();		
-		
 		// set the page title
 		$this->getPage()->setTitle('Simple form');
 	}

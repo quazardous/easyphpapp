@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090202
+ * @version     0.3.5-20090205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -824,18 +824,24 @@ class Ea_Router
 	 * @param mixed $value by ref
 	 * @param store in session
 	 */
-	public function setRegister($name, $value, $store=false)
+	public function setRegister($name, $value, $store=null)
 	{
+		if(array_key_exists($name, $this->_registers)&&$store===null)
+		{
+			//rember that its stored value
+			$store=$this->_registers[$name]['store'];
+		}
+		$this->_registers[$name]['value']=$value;
+		$this->_registers[$name]['store']=$store;
 		if($store)
 		{
+			Zend_Session::start();
 			if(!isset($this->getSession()->registers))
 			{
 				$this->getSession()->registers=array();
 			}
 			$this->getSession()->registers[$name]=$value;
 		}
-		if($value===null&&array_key_exists($name, $this->_registers)) unset($this->_registers[$name]);
-		else $this->_registers[$name]=$value;
 	}
 
 	/**
@@ -867,9 +873,26 @@ class Ea_Router
 	 */
 	public function getRegister($name)
 	{
-		if(isset($this->getSession()->registers[$name])) return $this->getSession()->registers[$name];
-		if(array_key_exists($name, $this->_registers)) return $this->_registers[$name];
+		Zend_Session::start();
+		if(isset($this->getSession()->registers[$name]))
+		{
+			$this->_registers[$name]['store']=true;
+			return $this->getSession()->registers[$name];
+		}
+		if(array_key_exists($name, $this->_registers))
+		{
+			if(isset($this->_registers[$name]['value']))return $this->_registers[$name]['value'];
+		}
 		return null;
+	}
+	
+	public function unstoreRegister($name)
+	{
+		if(isset($this->getSession()->registers[$name]))
+		{
+			$this->_registers[$name]['store']=false;
+			unset($this->getSession()->registers[$name]);
+		}
 	}
 	
 	/**

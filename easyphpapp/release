@@ -1,9 +1,16 @@
+*** 0.3.5-snow ***
+Improve form support :
+- redesign of file upload methods.
+- fix session bugs on Ea_Layout_Form::store()
+
 *** 0.3.4-snow ***
 Change version numbering.
 Improve security layer :
 - add anonymous role.
 Improve layer model :
 - add postRender() method.
+Improve record table :
+- add row modifier.
 
 *** 0.0.3.3-dumb ***
 Basic batch support.

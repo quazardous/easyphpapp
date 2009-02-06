@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090205
+ * @version     0.3.5-20090206
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -71,6 +71,30 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	protected $_defaultRecordAdapterNameByType=array(
 		'string' => 'String',
 	);
+
+	protected $_defaultDateFormat='%Y-%m-%d';
+	protected $_defaultDatetimeFormat='%Y-%m-%d %H:%M:%S';
+
+	public function setDefaultDateFormat($format)
+	{
+		$this->_defaultDateFormat=$format;
+	}
+	
+	public function setDefaultDatetimeFormat($format)
+	{
+		$this->_defaultDatetimeFormat=$format;
+	}
+	
+	public function getDefaultDateFormat()
+	{
+		return $this->_defaultDateFormat;
+	}
+	
+	public function getDefaultDatetimeFormat()
+	{
+		return $this->_defaultDatetimeFormat;
+	}
+	
 	
 	protected function getDefaultRecordAdapterNameByType($type)
 	{
@@ -302,6 +326,11 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 					else $dbformat=$this->_dataModel->getDefaultDatetimeDbformat();
 				}
 				$format=$this->getColumnDateFormat($column);
+				if(!$format)
+				{
+					if($type=='date') $format=$this->getDefaultDateFormat();
+					else $format=$this->getDefaultDatetimeFormat();
+				}
 				if($dbformat==$format) return $value;
 				if(!($dbformat&&$format)) return $value;
 				$d=strptime($value, $dbformat);

@@ -221,6 +221,7 @@ abstract class Ea_Module_Abstract
 	
 	/**
 	 * Set a new register. Registers are application scope variables.
+	 * They can be store in session.
 	 * @uses getRouter()
 	 * 
 	 * @param mixed $name
@@ -232,6 +233,11 @@ abstract class Ea_Module_Abstract
 		if($this->getRouter()) $this->getRouter()->setRegister($name, $value, $store);
 	}
 	
+	public function __set($name, $value)
+	{
+		$this->setRegister($name, $value);
+	}
+	
 	/**
 	 * @param $name
 	 * @return mixed
@@ -240,6 +246,11 @@ abstract class Ea_Module_Abstract
 	{
 		if($this->getRouter()) return $this->getRouter()->getRegister($name);
 		return null;
+	}
+	
+	public function __get($name)
+	{
+		return $this->getRegister($name);
 	}
 	
 	/**

@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.5-20090206
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -30,10 +30,6 @@ class Module_Index extends Ea_Module_Abstract
 {
 	public function init()
 	{
-		// we will use session to display our inputs
-		// do not use session_start()
-		Zend_Session::start();
-		
 		// set the page title
 		$this->getPage()->setTitle('Advanced form');
 	}
@@ -46,26 +42,34 @@ class Module_Index extends Ea_Module_Abstract
 		// catch if some datas were send
 		if($form->catchInput())
 		{
-			// do you form stuff
-			$_SESSION['text1']=(string)$form['text1'];
-			$_SESSION['select1']=(string)$form['select1'];
-			$_SESSION['select2']=$form['select2']->getValue();
-			// no __toArray() MM :( so if you don't use store don't use ->getValue()...
-			$_SESSION['textarea1']=(string)$form['textarea1'];
-			$_SESSION['radio1']=$form['radio1']->getValue();
-			
-			// There is two ways to use forms.
-
-			// The optimistic way :
-			// You draw the form at display time and af submit time you don't and call catchInput().
-			// In this case $form[] will just map $_POST[].
-			// The "pessimistic" way :
-			// If you draw the form (or store the structure with ->store()) at submit time, $form[] will access each input and get the correspondng value from $_POST.
-			// $form[] will return the input layout, it's why we cast with string to get the value.
-
-			// This example demonstrate the "pessimistic" way.
-			// Using this way, you can use $iput->rememberValue() to automatically get the submitted data and display id (if no value set).
-			
+			try
+			{
+				// do you form stuff
+				$_SESSION['text1']=(string)$form['text1'];
+				$_SESSION['select1']=(string)$form['select1'];
+				$_SESSION['select2']=$form['select2']->getValue();
+				// no __toArray() MM :( so if you don't use store don't use ->getValue()...
+				$_SESSION['textarea1']=(string)$form['textarea1'];
+				$_SESSION['radio1']=$form['radio1']->getValue();
+				
+				// There is two ways to use forms.
+	
+				// The optimistic way :
+				// You draw the form at display time and af submit time you don't and call catchInput().
+				// In this case $form[] will just map $_POST[].
+				// The "pessimistic" way :
+				// If you draw the form (or store the structure with ->store()) at submit time, $form[] will access each input and get the correspondng value from $_POST.
+				// $form[] will return the input layout, it's why we cast with string to get the value.
+	
+				// This example demonstrate the "pessimistic" way.
+				// Using this way, you can use $input->rememberValue() to automatically get the submitted data and display id (if no value set).
+			}
+			catch(Exception $e)
+			{
+				// there is a side effect :
+				// because we store the form structure at render time, if session is broken (ie. clear cookie) before the submit, inputs will be no more available as objects...
+				// so adding a try catch is a good idea
+			}
 			// nothing else to do, router will redirect to current URL
 			return;
 		}
@@ -147,7 +151,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add($form);
 
 		// Will store the form structure at postRender()
-		//$form->useStore();
+		// $form->useStore();
 		// it's already triggerd by rememberValue();
 		
 		// router will call render

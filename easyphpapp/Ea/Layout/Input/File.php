@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.3.5-20090206
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -23,14 +23,26 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	protected $_type='file';
 	
 	/**
-	 * Return the 
+	 * Return the reordered file id for $_FILES array.
 	 * 
 	 * @param $field
-	 * @return unknown_type
+	 * @return array
 	 */
-	protected function getFileId($field)
+/*	protected function getFileId($field)
 	{
 		$id=$this->getId();
+		if(count($id)==1)
+		{
+			array_push($id, $field);
+			return $id;
+		}
+		$ret=array($id[0], $field);
+		$ret=array_merge($ret, array_slice($id, 1));
+		return $ret;
+	}
+*/	
+	public static function get_reordered_field_id($id, $field)
+	{
 		if(count($id)==1)
 		{
 			array_push($id, $field);
@@ -48,8 +60,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileName()
 	{
-		if(!isset($_FILES)) return null;
-		return Ea_Layout_Form::array_get_from_id($_FILES, $this->getFileId('name'));
+		return $this->getForm()->getUploadedFileName($this->getId());
 	}
 
 	/**
@@ -59,8 +70,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileType()
 	{
-		if(!isset($_FILES)) return null;
-		return Ea_Layout_Form::array_get_from_id($_FILES, $this->getFileId('type'));
+		return $this->getForm()->getUploadedFileType($this->getId());
 	}
 
 	/**
@@ -70,8 +80,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileTmpName()
 	{
-		if(!isset($_FILES)) return null;
-		return Ea_Layout_Form::array_get_from_id($_FILES, $this->getFileId('tmp_name'));
+		return $this->getForm()->getUploadedFileTmpName($this->getId());
 	}
 
 	/**
@@ -81,8 +90,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileSize()
 	{
-		if(!isset($_FILES)) return null;
-		return Ea_Layout_Form::array_get_from_id($_FILES, $this->getFileId('size'));
+		return $this->getForm()->getUploadedFileSize($this->getId());
 	}
 
 	/**
@@ -92,8 +100,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileError()
 	{
-		if(!isset($_FILES)) return null;
-		return Ea_Layout_Form::array_get_from_id($_FILES, $this->getFileId('error'));
+		return $this->getForm()->getUploadedFileError($this->getId());
 	}
 	
 	/**
@@ -103,8 +110,7 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function isUploadedFile()
 	{
-		if(!isset($_FILES)) return false;
-		return is_uploaded_file($this->getFileTmpName());
+		return $this->getForm()->isUploadedFile($this->getId());
 	}
 
 	/**
@@ -114,20 +120,21 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function moveUploadedFile($destination)
 	{
-		if(!isset($_FILES)) return false;
-		return move_uploaded_file($this->getFileTmpName(), $destination);
+		return $this->getForm()->moveUploadedFile($this->getId(), $destination);
 	}
 
 	/**
 	 * Get file contents.
 	 * @see file_get_contents
 	 * 
-	 * @return boolean
+	 * @param $maxlen
+	 * @param $offset
+	 * @param $flags
+	 * @return string
 	 */
 	public function getFileContents($maxlen=null, $offset=null, $flags=null)
 	{
-		if(!isset($_FILES)) return null;
-		return file_get_contents($this->getFileTmpName(), $flags, null, $offset, $maxlen);
+		return $this->getForm()->getUploadedFileContents($this->getId(), $maxlen, $offset, $flags);
 	}
 	
 	public function getValue()
