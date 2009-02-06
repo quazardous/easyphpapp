@@ -158,31 +158,30 @@ abstract class Ea_Model_Abstract
 	
 	protected function loadFromXml(Ea_Xml_Element $xml)
 	{
-		if(isset($xml->common))
+		if(isset($xml->common->param))
 		{
-			if(isset($xml->common->default))
+			foreach($xml->common->param as $xml_param)
 			{
-				foreach($xml->common->default as $xml_default)
-				{
-					$this->setDefaultFromXml($xml_default);
-				}
+				$this->setParamFromXml($xml_param);
 			}
 		}
-		$xml_columns=$xml->columns;
-		$i=count($this->_columns);
-		foreach($xml_columns->column as $xml_column)
+		if(isset($xml->columns->column))
 		{
-			$column=$xml_column['name']->toString();
-			if(!in_array($column, $this->_columns))
+			$i=count($this->_columns);
+			foreach($xml->columns->column as $xml_column)
 			{
-				$this->_columns[]=$column;
-				$this->setColumnOrder($column, $i);
-				$this->setColumnLabel($column, $column);
-				$this->onLoadNewColumn($column);
-				$i++;				
+				$column=$xml_column['name']->toString();
+				if(!in_array($column, $this->_columns))
+				{
+					$this->_columns[]=$column;
+					$this->setColumnOrder($column, $i);
+					$this->setColumnLabel($column, $column);
+					$this->onLoadNewColumn($column);
+					$i++;				
+				}
+				$this->onLoadColumn($column);
+				$this->loadColumnMetaFromXml($column, $xml_column);
 			}
-			$this->onLoadColumn($column);
-			$this->loadColumnMetaFromXml($column, $xml_column);
 		}
 	}
 	
@@ -202,32 +201,31 @@ abstract class Ea_Model_Abstract
 			$this->setColumnMetaFromXml($column, $xml_metadata);
 		}
 	}
-	
-	protected function setDefaultFromXml(Ea_Xml_Element $xml_default)
+
+	static protected function get_function_name_from_name($prefix, $name)
 	{
-		$words=explode('/',strtolower($xml_default['name']->toString()));
-		$f='setDefault';
+		$words=explode('/',eregi_replace('[^0-9a-z_]','/',strtolower($name)));
 		foreach($words as $word)
 		{
-			$f.=ucfirst($word);
+			if($word)$prefix.=ucfirst($word);
 		}
+		return $prefix;
+	}
+	
+	protected function setParamFromXml(Ea_Xml_Element $xml_param)
+	{
+		$f=self::get_function_name_from_name('set', $xml_param['name']->toString());
 		if(method_exists($this, $f))
 		{
-			$this->$f($this->readXmlValue($xml_default));
+			$this->$f($this->readXmlValue($xml_param));
 			return true;
 		}
 		return false;
 	}
 	
-	
 	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
 	{
-		$words=explode('/',strtolower($xml_metadata['name']->toString()));
-		$f='setColumn';
-		foreach($words as $word)
-		{
-			$f.=ucfirst($word);
-		}
+		$f=self::get_function_name_from_name('setColumn', $xml_metadata['name']->toString());
 		if(method_exists($this, $f))
 		{
 			$this->$f($column, $this->readXmlValue($xml_metadata));

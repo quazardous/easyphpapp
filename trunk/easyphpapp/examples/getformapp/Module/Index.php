@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.5-20090206
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -30,10 +30,6 @@ class Module_Index extends Ea_Module_Abstract
 {
 	public function init()
 	{
-		// we will use session to display our inputs
-		// do not use session_start()
-		Zend_Session::start();		
-		
 		// set the page title
 		$this->getPage()->setTitle('GET form');
 	}

@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090204
+ * @version     0.3.5-20090206
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -265,26 +265,26 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * Callback called to modify the row config depending on record.
 	 * $config=callback($record, $i, $config)
 	 * 
-	 * @var Ea_Layout_Record_Config_Modifier_Interface
+	 * @var array(Ea_Layout_Record_Config_Modifier_Interface)
 	 */
-	protected $_recordConfigRowModifier=null;
+	protected $_recordConfigRowModifier=array();
 	
-	public function setRecordConfigRowModifier($modifier)
+	public function addRecordConfigRowModifier($modifier)
 	{
-		$this->_recordConfigRowModifier=$modifier;	
+		$this->_recordConfigRowModifier[]=$modifier;	
 	}
 
 	/**
 	 * Callback called to modify the cell config depending on record.
 	 * $config=callback($record, $i, $column, $config)
 	 * 
-	 * @var Ea_Layout_Record_Config_Modifier_Interface
+	 * @var array(Ea_Layout_Record_Config_Modifier_Interface)
 	 */
-	protected $_recordConfigCellModifier=null;
+	protected $_recordConfigCellModifier=array();
 	
-	public function setRecordConfigCellModifier($modifier)
+	public function addRecordConfigCellModifier($modifier)
 	{
-		$this->_recordConfigCellModifier=$modifier;	
+		$this->_recordConfigCellModifier[]=$modifier;	
 	}
 	
 	/**
@@ -318,25 +318,18 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 			$i=0;
 			foreach($this->_records as $record)
 			{
-				if($this->_recordConfigRowModifier)
+				$config=$recordConfig;
+				foreach($this->_recordConfigRowModifier as $modifier)
 				{
-					$config=$this->_recordConfigRowModifier->modify($recordConfig, $record, $i);
-				}
-				else
-				{
-					$config=$recordConfig;
+					$config=$modifier->modify($config, $record, $i);
 				}
 				$this->addRow($config, true, $recordRowClass);
 				foreach($this->_columns as $colName=>$column)
 				{
-					
-					if($this->_recordConfigCellModifier)
+					$config=$column['record']['config'];
+					foreach($this->_recordConfigCellModifier as $modifier)
 					{
-						$config=$this->_recordConfigCellModifier->modify($column['record']['config'], $record, $i, $colName);
-					}
-					else
-					{
-						$config=$column['record']['config'];
+						$config=$modifier->modify($config, $record, $i, $colName);
 					}
 					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
 				}
