@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  securityapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -20,9 +20,8 @@
 // don't forget to set your include path
 require '../conf/config.php';
 
-
 require_once 'Ea/Router.php';
-$router=Ea_Router::singleton();
+$router=Ea_Router::singleton('securityapp');
 
 // set the module class prefix, so with Zend_Loader style, we search the class in 'Module/' directory.
 // you are responsible to configure your include path so that it can be aware of that directory

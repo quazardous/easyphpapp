@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090206
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -153,9 +153,9 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->setColumnDisplay($column, true);
 	}
 	
-	public function getColumnType($name)
+	public function getColumnType($column)
 	{
-		return $this->_dataModel->getColumnType($name);
+		return $this->_dataModel->getColumnType($column);
 	}
 
 	/**
@@ -169,65 +169,75 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_dataModel->getColumnsOfType($type);
 	}
 
-	public function setColumnAdapterInstance($name, $instance)
+	public function setColumnAdapterInstance($column, $instance)
 	{
-		$this->setColumnMetaPart($name, 'adapter', 'instance', $instance);
+		$this->setColumnMetaPart($column, 'adapter', 'instance', $instance);
 	}
 
-	public function getColumnAdapterInstance($name)
+	public function getColumnAdapterInstance($column)
 	{
-		return $this->getMetaData($name, 'adapter', 'instance');
+		return $this->getMetaData($column, 'adapter', 'instance');
 	}
 	
-	public function setColumnAdapterName($name, $class)
+	public function setColumnAdapterName($column, $name)
 	{
-		$this->setColumnMetaPart($name, 'adapter', 'name', $class);
+		$this->setColumnMetaPart($column, 'adapter', 'name', $name);
 	}
 
-	public function getColumnAdapterName($name)
+	public function getColumnAdapterName($column)
 	{
-		return $this->getMetaData($name, 'adapter', 'name');
+		return $this->getMetaData($column, 'adapter', 'name');
 	}
 
-	public function setColumnAdapterConfig($name, $config)
+	public function setColumnAdapterClass($column, $class)
 	{
-		$this->setColumnMetaPart($name, 'adapter', 'config', $config);
+		$this->setColumnMetaPart($column, 'adapter', 'class', $class);
 	}
 
-	public function getColumnAdapterConfig($name)
+	public function getColumnAdapterClass($column)
 	{
-		return $this->getMetaData($name, 'adapter', 'config');
+		return $this->getMetaData($column, 'adapter', 'class');
+	}
+
+	public function setColumnAdapterConfig($column, $config)
+	{
+		$this->setColumnMetaPart($column, 'adapter', 'config', $config);
+	}
+
+	public function getColumnAdapterConfig($column)
+	{
+		return $this->getMetaData($column, 'adapter', 'config');
 	}
 	
-	public function setColumnHeaderAdapter($name, $adapter)
+	public function setColumnHeaderAdapter($column, $adapter)
 	{
-		$this->setColumnMetaPart($name, 'header', 'adapter', $adapter);
+		$this->setColumnMetaPart($column, 'header', 'adapter', $adapter);
 	}
 
-	public function getColumnHeaderAdapter($name)
+	public function getColumnHeaderAdapter($column)
 	{
-		return $this->getMetaData($name, 'header', 'adapter');
+		return $this->getMetaData($column, 'header', 'adapter');
 	}
 	
-	public function setColumnHeaderContent($name, $content)
+	public function setColumnHeaderContent($column, $content)
 	{
-		$this->setColumnMetaPart($name, 'header', 'content', $content);
+		$this->setColumnMetaPart($column, 'header', 'content', $content);
 	}
 
-	public function getColumnHeaderContent($name)
+	public function getColumnHeaderContent($column)
 	{
-		return $this->getMetaData($name, 'header', 'content');
+		return $this->getMetaData($column, 'header', 'content');
 	}
 	
-	public function setColumnAdapter($name, $adapter)
+	public function setColumnAdapter($column, $adapter)
 	{
 		if($adapter instanceof Ea_Model_Layout_Record_Adapter_Interface)
 		{
-			$this->setColumnAdapterInstance($name, $adapter);
+			$this->setColumnAdapterInstance($column, $adapter);
 		}
 		else if(is_string($adapter))
 		{
-			$this->setColumnAdapterClass($name, $adapter);
+			$this->setColumnAdapterClass($column, $adapter);
 		}
 		else
 		{
@@ -245,26 +255,30 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	{
 		$obj=$this->getColumnAdapterInstance($column);
 		if($obj) return $obj;
-		$name=$this->getColumnAdapterName($column);
-		if(!$name)
+		$class=$this->getColumnAdapterClass($column);
+		if(!$class)
 		{
-			$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column));
+			$name=$this->getColumnAdapterName($column);
+			if(!$name)
+			{
+				$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column));
+			}
+			$class=$this->getAdapterClassFromName($name);
 		}
-		$class=$this->getAdapterClassFromName($name);
 		Zend_Loader::loadClass($class);
 		$instance=new $class($column, $this);
 		$this->setColumnAdapterInstance($column, $instance);
 		return $instance;
 	}
 	
-	public function setColumnDisplay($name, $display)
+	public function setColumnDisplay($column, $display)
 	{
-		$this->setColumnMeta($name, 'display', $display);
+		$this->setColumnMeta($column, 'display', $display);
 	}
 	
-	public function getColumnDisplay($name)
+	public function getColumnDisplay($column)
 	{
-		return $this->getMetaData($name, 'display');
+		return $this->getMetaData($column, 'display');
 	}
 
 	/**
@@ -274,14 +288,14 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * @param $name
 	 * @param $format
 	 */
-	public function setColumnDateFormat($name, $format)
+	public function setColumnDateFormat($column, $format)
 	{
-		$this->setColumnMetaPart($name, 'date', 'format', $format);
+		$this->setColumnMetaPart($column, 'date', 'format', $format);
 	}
 	
-	public function getColumnDateFormat($name)
+	public function getColumnDateFormat($column)
 	{
-		return $this->getMetaData($name, 'date', 'format');
+		return $this->getMetaData($column, 'date', 'format');
 	}
 	
 	/**
@@ -290,17 +304,17 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * @param $name column
 	 * @return mixed
 	 */
-	public function getColumnHeader($name)
+	public function getColumnHeader($column)
 	{
 		// try to get some user content
-		$content=$this->getMetaData($name, 'header', 'content');
+		$content=$this->getColumnHeaderContent($column);
 		if($content) return $content;
-		$adapter=$this->getMetaData($name, 'header', 'adapter');
+		$adapter=$this->getColumnHeaderAdapter($column);
 		if($adapter instanceof Ea_Model_Layout_Header_Adapter_Interface)
 		{
-			return $adapter->getHeader($name, $this);
+			return $adapter->getHeader($column, $this);
 		}
-		return $this->getColumnLabel($name);;
+		return $this->getColumnLabel($column);;
 	}	
 	
 	/**
@@ -318,6 +332,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		switch($type=$this->getColumnType($column))
 		{
 			case 'date': case 'datetime':
+				//TODO : format data vs layout....
 				if(!$value)return $value;
 				$dbformat=$this->_dataModel->getColumnDateDbformat($column);
 				if(!$dbformat)

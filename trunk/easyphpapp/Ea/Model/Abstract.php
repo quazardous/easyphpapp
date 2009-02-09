@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090205
+ * @version     0.3.4-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -35,17 +35,17 @@ abstract class Ea_Model_Abstract
 	 */
 	protected $_metadata=array();
 	
-	public function	getMetaData($name, $param=null, $part=null)
+	public function	getMetaData($column, $param=null, $part=null)
 	{
 		if(!is_array($this->_metadata)) return null;
-		if(!array_key_exists($name, $this->_metadata)) return null;
-		if($param===null) return $this->_metadata[$name];
-		if(!is_array($this->_metadata[$name])) return null;
-		if(!array_key_exists($param, $this->_metadata[$name])) return null;
-		if($part===null) return $this->_metadata[$name][$param];
-		if(!is_array($this->_metadata[$name][$param])) return null;
-		if(!array_key_exists($part, $this->_metadata[$name][$param])) return null;
-		return $this->_metadata[$name][$param][$part];
+		if(!array_key_exists($column, $this->_metadata)) return null;
+		if($param===null) return $this->_metadata[$column];
+		if(!is_array($this->_metadata[$column])) return null;
+		if(!array_key_exists($param, $this->_metadata[$column])) return null;
+		if($part===null) return $this->_metadata[$column][$param];
+		if(!is_array($this->_metadata[$column][$param])) return null;
+		if(!array_key_exists($part, $this->_metadata[$column][$param])) return null;
+		return $this->_metadata[$column][$param][$part];
 	}
 	
 	public function getColumnOrder($name)

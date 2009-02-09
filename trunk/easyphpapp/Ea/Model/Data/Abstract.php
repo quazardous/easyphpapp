@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -60,97 +60,97 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 */
 	//protected $_metadata=array();
 	
-	public function getColumnType($name)
+	public function getColumnType($column)
 	{
-		return $this->getMetaData($name, 'type');
+		return $this->getMetaData($column, 'type');
 	}
 	
-	public function setColumnType($name, $type)
+	public function setColumnType($column, $type)
 	{
-		$this->setColumnMeta($name, 'type', $type);
+		$this->setColumnMeta($column, 'type', $type);
 	}
 
-	public function getColumnStringLength($name)
+	public function getColumnStringLength($column)
 	{
-		$length=$this->getMetaData($name, 'string', 'length');
+		$length=$this->getMetaData($column, 'string', 'length');
 		if(!$length) $length=32;
 		return $length;
 	}
 	
-	public function setColumnStringLength($name, $length)
+	public function setColumnStringLength($column, $length)
 	{
-		$this->setColumnMetaPart($name, 'string', 'length', $length);
+		$this->setColumnMetaPart($column, 'string', 'length', $length);
 	}
 
-	public function getColumnLobType($name)
+	public function getColumnLobType($column)
 	{
-		return $this->getMetaData($name, 'lob','type');
+		return $this->getMetaData($column, 'lob','type');
 	}
 	
-	public function setColumnLobType($name, $type)
+	public function setColumnLobType($column, $type)
 	{
-		$this->setColumnMetaPart($name, 'lob', 'type', $type);
+		$this->setColumnMetaPart($column, 'lob', 'type', $type);
 	}
 
-	public function getColumnLobLength($name)
+	public function getColumnLobLength($column)
 	{
 		$length=$this->getMetaData($name, 'lob', 'length');
 		if(!$length) $length=32;
 		return $length;
 	}
 	
-	public function setColumnLobLength($name, $length)
+	public function setColumnLobLength($column, $length)
 	{
-		$this->setColumnMetaPart($name, 'lob', 'length', $length);
+		$this->setColumnMetaPart($column, 'lob', 'length', $length);
 	}
 		
-	public function getColumnLobLoad($name)
+	public function getColumnLobLoad($column)
 	{
-		return $this->getMetaData($name, 'lob','load');
+		return $this->getMetaData($column, 'lob','load');
 	}
 	
-	public function setColumnLobLoad($name, $load)
+	public function setColumnLobLoad($column, $load)
 	{
-		$this->setColumnMetaPart($name, 'lob', 'load', $load);
+		$this->setColumnMetaPart($column, 'lob', 'load', $load);
 	}
 	
-	public function getColumnNumberDecimals($name)
+	public function getColumnNumberDecimals($column)
 	{
-		return $this->getMetaData($name, 'number', 'decimals');
+		return $this->getMetaData($column, 'number', 'decimals');
 	}
 	
-	public function setColumnNumberDecimals($name, $decimals)
+	public function setColumnNumberDecimals($column, $decimals)
 	{
-		$this->setColumnMetaPart($name, 'number', 'decimals', $decimals);
+		$this->setColumnMetaPart($column, 'number', 'decimals', $decimals);
 	}
 
-	public function getColumnEnum($name)
+	public function getColumnEnum($column)
 	{
-		$enum=$this->getMetaData($name, 'enum');
+		$enum=$this->getMetaData($column, 'enum');
 		if(!$enum)$enum=array();
 		return $enum;
 	}
 	
-	public function setColumnEnum($name, $enum)
+	public function setColumnEnum($column, $enum)
 	{
-		$this->setColumnMeta($name, 'enum', $enum);
+		$this->setColumnMeta($column, 'enum', $enum);
 	}
 
-	public function setColumnDateDbformat($name, $dbformat, $format=null)
+	public function setColumnDateDbformat($column, $dbformat, $format=null)
 	{
 		if($format===null) $format=$dbformat;
-		$this->setColumnMetaPart($name, 'date', 'dbformat', $dbformat);
-		$this->setColumnMetaPart($name, 'date', 'format', $format);
+		$this->setColumnMetaPart($column, 'date', 'dbformat', $dbformat);
+		$this->setColumnMetaPart($column, 'date', 'format', $format);
 	}
 
-	public function getColumnDateDbformat($name)
+	public function getColumnDateDbformat($column)
 	{
-		return $this->getMetaData($name, 'date', 'dbformat');
+		return $this->getMetaData($column, 'date', 'dbformat');
 	} 
 
-	public function getColumnDateFormat($name)
+	public function getColumnDateFormat($column)
 	{
-		return $this->getMetaData($name, 'date', 'format');
+		return $this->getMetaData($column, 'date', 'format');
 	} 
 	
 	/**

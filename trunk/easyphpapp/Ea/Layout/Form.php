@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090206
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -642,7 +642,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				//testing magic input
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
-				$stored=$this->restore();
+				if($this->isStore()) $this->restore();
 				if(count($this->_items)==0)
 				{
 					// special not initialized mode
@@ -652,7 +652,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				}
 				$this->recursiveWalk(array($this, 'parseInput'));
 				// store new values
-				if($stored) $this->store();
+				if($this->isStore()) $this->store();
 				return true;
 				break;
 			default:
@@ -822,7 +822,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if(!$this->_session)
 		{
-			$this->_session=new Zend_Session_Namespace($this->_sessionNamespace);
+			$page=$this->getPage();
+			if($page instanceof Ea_Page)
+			{
+				$this->_session=new Zend_Session_Namespace($this->getPage()->getRouter()->getAppName().'.forms');
+			}
+			else
+			{
+				$this->_session=new Zend_Session_Namespace($this->_sessionNamespace);
+			}
 		}
 		return $this->_session;
 	}
@@ -834,7 +842,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * 
 	 * @param boolean $use
 	 */
-	public function useStore($use=true)
+	protected function useStore($use=true)
 	{
 		Zend_Session::start();
 		$this->_useStore=$use;
@@ -848,6 +856,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function isStore()
 	{
 		return $this->_useStore;
+	}
+	
+	public function assertStore()
+	{
+		if(!$this->isStore())
+		{
+			throw new Ea_Layout_Form_Exception('No storage define : use Ea_Module_Abstract::registerForm()');
+		}
 	}
 	
  	/**
@@ -904,9 +920,22 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
      */
     public function rememberAllInputsValues($remember=true)
     {
-    	if($remember) $this->useStore();
+    	if($remember) $this->assertStore();
     	$this->_rememberAllInputsValues=$remember;
     }
+
+	/**
+	 * Link the form to the module (and the router).
+	 * Mandatory to use session mechanisms in the app namespace.
+	 * 
+	 * @param Ea_Module_Abstract $module
+	 * @param boolean $useStore
+	 */
+	public function storage(Ea_Module_Abstract $module, $useStore=true)
+	{
+		$this->setPage($module->getPage());
+		if($useStore) $this->useStore();
+	}
     
     /**
      * File upload support.

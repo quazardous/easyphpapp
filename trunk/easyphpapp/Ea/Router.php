@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Router
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090205
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -160,25 +160,41 @@ class Ea_Router
 	/**
 	 * Return singleton instance of router.
 	 *
+	 * @param $appName internal name used for session namespace.
 	 * @return Ea_Router
 	 */
-	public static function singleton()
+	public static function singleton($appName=null)
 	{
 		if(!self::$_singleton)
 		{
-			self::$_singleton=new self();
+			if(!$appName)
+			{
+				throw new Ea_Router_Exception("No app name given for first call to singleton()");
+			}
+			self::$_singleton=new self($appName);
 		}
 		return self::$_singleton;
 	}
 	
 	/**
 	 * Router constructor.
-	 * Does nothing but is protected.
 	 * 
 	 */
-	protected function __construct()
+	protected function __construct($appName)
 	{
-
+		$this->_appName=$appName;
+	}
+	
+	/**
+	 * Internal name used for session namespace.
+	 * 
+	 * @var string
+	 */
+	protected $_appName=null;
+	
+	public function getAppName()
+	{
+		return $this->_appName;
 	}
 	
 	/**
@@ -622,6 +638,7 @@ class Ea_Router
 	{
 		$this->_securityModule=self::standardize($module);
 		$this->_security=$security;
+		$security->setSessionNamespace($this->getAppName().'.security');
 	}
 	
 	/**

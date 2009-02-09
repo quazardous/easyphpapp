@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081203
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -94,24 +94,24 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 		$this->_dbTable=$dbTable;
 	}
 
-	public function getColumnDefault($name)
+	public function getColumnDefault($column)
 	{
-		return $this->getMetaData($name, 'default');
+		return $this->getMetaData($column, 'default');
 	}
 	
-	public function setColumnDefault($name, $default)
+	public function setColumnDefault($column, $default)
 	{
-		$this->setColumnMeta($name, 'default', $default);
+		$this->setColumnMeta($column, 'default', $default);
 	}
 
-	public function getColumnMandatory($name)
+	public function getColumnMandatory($column)
 	{
-		return $this->getMetaData($name, 'mandatory');
+		return $this->getMetaData($column, 'mandatory');
 	}
 	
-	public function setColumnMandatory($name, $mandatory)
+	public function setColumnMandatory($column, $mandatory)
 	{
-		$this->setColumnMeta($name, 'mandatory', $mandatory);
+		$this->setColumnMeta($column, 'mandatory', $mandatory);
 	}
 	
 	/**

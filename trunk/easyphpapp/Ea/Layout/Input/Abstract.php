@@ -364,7 +364,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
     {
     	if($this->getForm())
     	{
-    		$this->getForm()->useStore();
+    		$this->getForm()->assertStore();
     	}
     	if($this->_value===null)
     	{
