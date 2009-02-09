@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090206
+ * @version     0.3.5-20090209
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -41,7 +41,24 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * @var array(record)
 	 */
 	protected $_records=array();
+	
+	/**
+	 * Table is multi records by default.
+	 * 
+	 * @var boolean
+	 */
+	protected $_multiple=true; 
 
+	public function setMultiple($multiple=true)
+	{
+		$this->_multiple=$multiple;
+	}
+	
+	public function isMultiple()
+	{
+		return $this->_multiple;
+	}
+	
 	/**
 	 * Table layout constructor.
 	 * 
@@ -91,6 +108,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	public function setRecords($records)
 	{
+		$this->setMultiple(true);
 		if(!$this->_orientation) $this->setOrientation(self::orientation_vertical);
 		if($records===null)$records=array();
 		if(!(is_array($records)||($records instanceof Iterator)))
@@ -107,6 +125,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 */
 	public function setRecord($record)
 	{
+		$this->setMultiple(false);
 		if(!$this->_orientation) $this->setOrientation(self::orientation_horizontal);
 		$this->_records=array($record);
 	}
@@ -305,6 +324,11 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	public function populate($headerConfig=null, $recordConfig=null, $headerRowClass='Ea_Layout_Table_Row', $recordRowClass='Ea_Layout_Table_Row')
 	{
 		$this->_populated=true;
+		if(!$this->_orientation)
+		{
+			if($this->isMultiple()) $this->_orientation=self::orientation_vertical;
+			else $this->_orientation=self::orientation_horizontal;
+		}
 		if($this->_orientation==self::orientation_vertical)
 		{
 			if($this->_displayHeader)
@@ -315,7 +339,8 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 					$this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
 				}
 			}
-			$i=0;
+			if($this->isMultiple()) $i=0;
+			else $i=null;
 			foreach($this->_records as $record)
 			{
 				$config=$recordConfig;
@@ -333,20 +358,27 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 					}
 					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
 				}
-				$i++;
+				if($this->isMultiple()) $i++;
 			}
 		}
 		else
 		{
-			foreach($this->_columns as $column)
+			foreach($this->_columns as $colName=>$column)
 			{
 				$this->addRow($headerConfig, true, $headerRowClass);
 				if($this->_displayHeader) $this->addCell($column['header']['content'], $column['header']['config'], true, $column['header']['class']);
-				$i=0;
+				
+				if($this->isMultiple()) $i=0;
+				else $i=null;
 				foreach($this->_records as $record)
 				{
-					$this->addCell($column['record']['adapter']->getContent($record, $i), $column['record']['config'], true, $column['record']['class']);
-					$i++;
+					$config=$column['record']['config'];
+					foreach($this->_recordConfigCellModifier as $modifier)
+					{
+						$config=$modifier->modify($config, $record, $i, $colName);
+					}
+					$this->addCell($column['record']['adapter']->getContent($record, $i), $config, true, $column['record']['class']);
+					if($this->isMultiple()) $i++;
 				}
 			}
 		}

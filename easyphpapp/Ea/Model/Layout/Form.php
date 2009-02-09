@@ -23,6 +23,24 @@ require_once 'Ea/Layout/Input/Abstract.php';
 class Ea_Model_Layout_Form extends Ea_Model_Layout
 {
 
+	/**
+	 * If given, name of the column usable to get the index of the inputs names.
+	 * @see Ea_Layout_Record_Adapter_Field_Input_Abstract::getIndex()
+	 * 
+	 * @var string
+	 */
+	protected $_recordIndexColumn=null;
+	
+	public function setRecordIndexColumn($column)
+	{
+		$this->_recordIndexColumn=$column;
+	}
+	
+	public function getRecordIndexColumn()
+	{
+		return $this->_recordIndexColumn;
+	}
+	
 	protected $_baseId=null;
 	
 	public function setBaseId($baseId)

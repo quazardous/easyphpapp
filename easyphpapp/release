@@ -1,7 +1,11 @@
 *** 0.3.5-snow ***
 Improve form support :
 - redesign of file upload methods.
+- add better support for input's name in record table.
 - fix session bugs on Ea_Layout_Form::store()
+Improve router :
+- add app name for session namespaces.
+- all sessions are in app namespace.
 
 *** 0.3.4-snow ***
 Change version numbering.

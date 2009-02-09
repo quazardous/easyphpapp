@@ -19,7 +19,7 @@ require_once 'Ea/Layout/Record/Adapter/Interface.php';
  */
 class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interface
 {
-	protected $_field;
+	protected $_field=null;
 	
 	/**
 	 * If defined, callback used in getValue().
@@ -30,29 +30,31 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 */
 	protected $_filter=null;
 	
-	public function __construct($field)
+	public function __construct($column)
 	{
-		$this->_field=$field;
+		$this->_field=$column;
 	}
 
 	/**
 	 * This function must return field content from record.
 	 * 
 	 * @param array $record
+	 * @param string $field if not given, uses $this->_field.
 	 * @return string
 	 */
-	public function getValue($record)
+	public function getValue($record, $field=null)
 	{
+		if(!$field) $field=$this->_field;
 		if(is_array($record)||$record instanceof ArrayAccess)
 		{
-			$value=$record[$this->_field];
+			$value=$record[$field];
 		}
 		else if(is_object($record))
 		{
-			$value=$record->{$this->_field};
+			$value=$record->$field;
 		}
 		else $value=null;
-		if($this->_filter) return call_user_func($this->_filter, $this->_field, $value);
+		if($this->_filter) return call_user_func($this->_filter, $field, $value);
 		return $value;
 	}
 	

@@ -35,6 +35,10 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		// declare new form
 		$form=new Ea_Layout_Form('form3');
+
+		// register the form in the storage namespace of the module.
+		// mandatory to use inputs object access.
+		$form->storage($this);
 		
 		// catch if some datas were send
 		if($form->catchInput())
@@ -82,10 +86,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// add the form to the page
 		$this->add($form);
-
-		// needed to retrieve input objets
-		$form->useStore();
-		
+	
 		// router will call render
 	}
 }
