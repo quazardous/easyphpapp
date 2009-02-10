@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @version     0.3.6-20090210
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -41,7 +41,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 *   'column name'=>array(
 	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum|binary',
 	 *   	'date'          => array('dbformat'=>'strptime() format to read from base', 'format'=>'strftime() format to read/write from base'),
-	 *      'boolean'       => array('value true'=>true, 'value false'=>false),
+	 *      'boolean'       => array('value'=>'value for true'),
 	 *      'number'        => array('decimals'=>2, 'dec_point'=>',', 'thousands_sep'=>' '),
 	 *      'string'        => array('length'=>32), // for string or text
 	 *      'lob'		    => array( //for text and binary
@@ -60,36 +60,11 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 */
 	//protected $_metadata=array();
 	
-	public function getColumnType($column)
-	{
-		return $this->getMetaData($column, 'type');
-	}
-	
-	public function setColumnType($column, $type)
-	{
-		$this->setColumnMeta($column, 'type', $type);
-	}
-
 	public function getColumnStringLength($column)
 	{
 		$length=$this->getMetaData($column, 'string', 'length');
 		if(!$length) $length=32;
 		return $length;
-	}
-	
-	public function setColumnStringLength($column, $length)
-	{
-		$this->setColumnMetaPart($column, 'string', 'length', $length);
-	}
-
-	public function getColumnLobType($column)
-	{
-		return $this->getMetaData($column, 'lob','type');
-	}
-	
-	public function setColumnLobType($column, $type)
-	{
-		$this->setColumnMetaPart($column, 'lob', 'type', $type);
 	}
 
 	public function getColumnLobLength($column)
@@ -99,31 +74,6 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		return $length;
 	}
 	
-	public function setColumnLobLength($column, $length)
-	{
-		$this->setColumnMetaPart($column, 'lob', 'length', $length);
-	}
-		
-	public function getColumnLobLoad($column)
-	{
-		return $this->getMetaData($column, 'lob','load');
-	}
-	
-	public function setColumnLobLoad($column, $load)
-	{
-		$this->setColumnMetaPart($column, 'lob', 'load', $load);
-	}
-	
-	public function getColumnNumberDecimals($column)
-	{
-		return $this->getMetaData($column, 'number', 'decimals');
-	}
-	
-	public function setColumnNumberDecimals($column, $decimals)
-	{
-		$this->setColumnMetaPart($column, 'number', 'decimals', $decimals);
-	}
-
 	public function getColumnEnum($column)
 	{
 		$enum=$this->getMetaData($column, 'enum');
@@ -131,27 +81,12 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		return $enum;
 	}
 	
-	public function setColumnEnum($column, $enum)
-	{
-		$this->setColumnMeta($column, 'enum', $enum);
-	}
-
 	public function setColumnDateDbformat($column, $dbformat, $format=null)
 	{
 		if($format===null) $format=$dbformat;
 		$this->setColumnMetaPart($column, 'date', 'dbformat', $dbformat);
 		$this->setColumnMetaPart($column, 'date', 'format', $format);
 	}
-
-	public function getColumnDateDbformat($column)
-	{
-		return $this->getMetaData($column, 'date', 'dbformat');
-	} 
-
-	public function getColumnDateFormat($column)
-	{
-		return $this->getMetaData($column, 'date', 'format');
-	} 
 	
 	/**
 	 * Return the list of columns with given type.

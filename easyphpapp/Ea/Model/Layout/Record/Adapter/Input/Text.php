@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @version     0.3.6-20090210
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -37,7 +37,7 @@ class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter
 		$rows=null;
 		if((!isset($config['rows'])&&(!isset($config['attributes']['rows']))))
 		{
-			$rows=round(log($model->getDataModel()->getColumnStringLength($column))/2);
+			$rows=round(log($model->getColumnStringLength($column))/2);
 		}
 		$cols=null;
 		if((!isset($config['cols'])&&(!isset($config['attributes']['cols']))))

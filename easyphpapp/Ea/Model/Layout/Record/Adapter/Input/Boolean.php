@@ -12,14 +12,14 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Record/Adapter/Field/Input/Text.php';
+require_once 'Ea/Layout/Record/Adapter/Field/Input/Checkbox.php';
 require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
 require_once 'Ea/Model/Layout/Form.php';
 
 /**
  * Text input for column.
  */
-class Ea_Model_Layout_Record_Adapter_Input_Default extends Ea_Layout_Record_Adapter_Field_Input_Text implements Ea_Model_Layout_Record_Adapter_Interface
+class Ea_Model_Layout_Record_Adapter_Input_Boolean extends Ea_Layout_Record_Adapter_Field_Input_Checkbox implements Ea_Model_Layout_Record_Adapter_Interface
 {
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ class Ea_Model_Layout_Record_Adapter_Input_Default extends Ea_Layout_Record_Adap
 		{
 			throw new Ea_Model_Layout_Exception('Must be an Ea_Model_Layout_Form');
 		}
-		parent::__construct($column, $model->getBaseId(), $model->getRecordIndexColumn(), $model->getColumnAdapterConfig($column));
+		parent::__construct($column, $model->getColumnBooleanValue($column), $model->getBaseId(), $model->getRecordIndexColumn(), $model->getColumnAdapterConfig($column));
 		$this->_filter=array($model, 'filterRecordValue');
 	}	
 }

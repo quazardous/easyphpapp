@@ -93,26 +93,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	{
 		$this->_dbTable=$dbTable;
 	}
-
-	public function getColumnDefault($column)
-	{
-		return $this->getMetaData($column, 'default');
-	}
-	
-	public function setColumnDefault($column, $default)
-	{
-		$this->setColumnMeta($column, 'default', $default);
-	}
-
-	public function getColumnMandatory($column)
-	{
-		return $this->getMetaData($column, 'mandatory');
-	}
-	
-	public function setColumnMandatory($column, $mandatory)
-	{
-		$this->setColumnMeta($column, 'mandatory', $mandatory);
-	}
 	
 	/**
 	 * Constructor.
