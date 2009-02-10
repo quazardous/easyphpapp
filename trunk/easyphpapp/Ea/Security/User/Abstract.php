@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.3.6-20090210
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -46,8 +46,8 @@ abstract class Ea_Security_User_Abstract
 	 */
 	public function getRoles()
 	{
-		// default is no role
-		return array();
+		// default : role is user login.
+		return $this->getLogin();
 	}
 
 	/**

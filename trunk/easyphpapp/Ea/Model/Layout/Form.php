@@ -58,6 +58,7 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		'string' => 'Input_String',
 		'text'   => 'Input_Text',
 		'enum'   => 'Input_Enum',
+		'boolean'   => 'Input_Boolean',
 	);
 	
 }

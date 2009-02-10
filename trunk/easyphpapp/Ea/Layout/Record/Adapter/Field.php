@@ -45,11 +45,11 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	public function getValue($record, $field=null)
 	{
 		if(!$field) $field=$this->_field;
-		if(is_array($record)||$record instanceof ArrayAccess)
+		if((is_array($record)||$record instanceof ArrayAccess)&&isset($record[$field]))
 		{
 			$value=$record[$field];
 		}
-		else if(is_object($record))
+		else if(is_object($record)&&isset($record->$field))
 		{
 			$value=$record->$field;
 		}

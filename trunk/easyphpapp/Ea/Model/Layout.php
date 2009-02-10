@@ -95,7 +95,6 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_defaultDatetimeFormat;
 	}
 	
-	
 	protected function getDefaultRecordAdapterNameByType($type)
 	{
 		if(array_key_exists($type, $this->_defaultRecordAdapterNameByType)) return $this->_defaultRecordAdapterNameByType[$type];
@@ -152,11 +151,6 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	{
 		$this->setColumnDisplay($column, true);
 	}
-	
-	public function getColumnType($column)
-	{
-		return $this->_dataModel->getColumnType($column);
-	}
 
 	/**
 	 * Return the list of columns with given type.
@@ -167,66 +161,6 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	public function getColumnsOfType($type)
 	{
 		return $this->_dataModel->getColumnsOfType($type);
-	}
-
-	public function setColumnAdapterInstance($column, $instance)
-	{
-		$this->setColumnMetaPart($column, 'adapter', 'instance', $instance);
-	}
-
-	public function getColumnAdapterInstance($column)
-	{
-		return $this->getMetaData($column, 'adapter', 'instance');
-	}
-	
-	public function setColumnAdapterName($column, $name)
-	{
-		$this->setColumnMetaPart($column, 'adapter', 'name', $name);
-	}
-
-	public function getColumnAdapterName($column)
-	{
-		return $this->getMetaData($column, 'adapter', 'name');
-	}
-
-	public function setColumnAdapterClass($column, $class)
-	{
-		$this->setColumnMetaPart($column, 'adapter', 'class', $class);
-	}
-
-	public function getColumnAdapterClass($column)
-	{
-		return $this->getMetaData($column, 'adapter', 'class');
-	}
-
-	public function setColumnAdapterConfig($column, $config)
-	{
-		$this->setColumnMetaPart($column, 'adapter', 'config', $config);
-	}
-
-	public function getColumnAdapterConfig($column)
-	{
-		return $this->getMetaData($column, 'adapter', 'config');
-	}
-	
-	public function setColumnHeaderAdapter($column, $adapter)
-	{
-		$this->setColumnMetaPart($column, 'header', 'adapter', $adapter);
-	}
-
-	public function getColumnHeaderAdapter($column)
-	{
-		return $this->getMetaData($column, 'header', 'adapter');
-	}
-	
-	public function setColumnHeaderContent($column, $content)
-	{
-		$this->setColumnMetaPart($column, 'header', 'content', $content);
-	}
-
-	public function getColumnHeaderContent($column)
-	{
-		return $this->getMetaData($column, 'header', 'content');
 	}
 	
 	public function setColumnAdapter($column, $adapter)
@@ -270,34 +204,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$this->setColumnAdapterInstance($column, $instance);
 		return $instance;
 	}
-	
-	public function setColumnDisplay($column, $display)
-	{
-		$this->setColumnMeta($column, 'display', $display);
-	}
-	
-	public function getColumnDisplay($column)
-	{
-		return $this->getMetaData($column, 'display');
-	}
-
-	/**
-	 * Set the output date format.
-	 * The db date format is set in the data model.
-	 * 
-	 * @param $name
-	 * @param $format
-	 */
-	public function setColumnDateFormat($column, $format)
-	{
-		$this->setColumnMetaPart($column, 'date', 'format', $format);
-	}
-	
-	public function getColumnDateFormat($column)
-	{
-		return $this->getMetaData($column, 'date', 'format');
-	}
-	
+		
 	/**
 	 * Return the column header.
 	 * 
@@ -334,7 +241,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			case 'date': case 'datetime':
 				//TODO : format data vs layout....
 				if(!$value)return $value;
-				$dbformat=$this->_dataModel->getColumnDateDbformat($column);
+				$dbformat=$this->getColumnDateDbformat($column);
 				if(!$dbformat)
 				{
 					if($type=='date') $dbformat=$this->_dataModel->getDefaultDateDbformat();
@@ -361,6 +268,19 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			default: return $value;
 		}
 	}
+
+	public function __call($name, $arguments)
+	{
+		if(strpos($name, 'getColumn')===0)
+		{
+			// if meta cannot be found in layout model try to get it from data model.
+			$value=parent::__call($name, $arguments);
+			if($value===null) $value=call_user_func_array(array($this->getDataModel(), $name), $arguments);
+			return $value;
+		}
+		return parent::__call($name, $arguments);
+	}
+	
 	
 }
 ?>

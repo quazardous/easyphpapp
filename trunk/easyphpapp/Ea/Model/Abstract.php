@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090209
+ * @version     0.3.6-20090210
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -47,26 +47,11 @@ abstract class Ea_Model_Abstract
 		if(!array_key_exists($part, $this->_metadata[$column][$param])) return null;
 		return $this->_metadata[$column][$param][$part];
 	}
-	
-	public function getColumnOrder($name)
-	{
-		return $this->getMetaData($name, 'order');
-	}
-	
+		
 	public function setColumnOrder($name, $index)
 	{
 		$this->_ordered=false;
 		$this->setColumnMeta($name, 'order', $index);
-	}
-
-	public function setColumnLabel($name, $display)
-	{
-		$this->setColumnMeta($name, 'label', $display);
-	}
-	
-	public function getColumnLabel($name)
-	{
-		return $this->getMetaData($name, 'label');
 	}
 
 	protected $_ordered=true;
@@ -211,6 +196,67 @@ abstract class Ea_Model_Abstract
 		}
 		return $prefix;
 	}
+
+	static protected function get_id_from_name($name)
+	{
+		$words=explode('/',eregi_replace('[^0-9a-z_]','/',strtolower($name)));
+		$id=array();
+		foreach($words as $word)
+		{
+			if($word)$id[]=strtolower($word);
+		}
+		return $id;
+	}
+
+	static public function array_get_from_id(&$array, $id)
+	{
+		$arr=&$array;
+		$i=0;
+		foreach($id as $pid)
+		{
+			// can't be null part of id
+			if($pid===null) return null;
+			if(!isset($arr[$pid])) return null;
+			if(($i+1)==count($id)) return $arr[$pid];
+			$arr=&$arr[$pid];
+			$i++;
+		}
+	}
+
+	static public function array_set_from_id(&$array, $id, $value)
+	{
+		$arr=&$array;
+		$i=0;
+		foreach($id as $pid)
+		{
+			// can't be null part of id
+			if(($i+1)==count($id))
+			{
+				if($pid===null)$arr[]=$value;
+				else $arr[$pid]=$value;
+				return;
+			}
+			if($pid===null) throw new Exception('incorrect input id');
+			if(!isset($arr[$pid]))
+			{
+				$arr[$pid]=array();
+			}
+			$arr=&$arr[$pid];
+			$i++;
+		}
+	}
+	
+	protected function setColumnMetaFromId($id, $column, $value)
+	{
+		if(!isset($this->_metadata[$column])) $this->_metadata[$column]=array();
+		self::array_set_from_id($this->_metadata[$column], $id, $value);
+	}
+
+	protected function getColumnMetaFromId($id, $column)
+	{
+		if(!isset($this->_metadata[$column])) return null;
+		return self::array_get_from_id($this->_metadata[$column], $id);
+	}
 	
 	protected function setParamFromXml(Ea_Xml_Element $xml_param)
 	{
@@ -226,12 +272,66 @@ abstract class Ea_Model_Abstract
 	protected function setColumnMetaFromXml($column, Ea_Xml_Element $xml_metadata)
 	{
 		$f=self::get_function_name_from_name('setColumn', $xml_metadata['name']->toString());
-		if(method_exists($this, $f))
+		$this->$f($column, $this->readXmlValue($xml_metadata));
+/*		if(method_exists($this, $f))
 		{
-			$this->$f($column, $this->readXmlValue($xml_metadata));
-			return true;
+			// special set
+			$this->$f($column, $value);
 		}
-		return false;
+		else
+		{
+			// basic set
+			$id=self::get_id_from_name('setColumn', $xml_metadata['name']->toString());
+			$this->setColumnMetaFromId($id, $value);
+		}
+*/	}
+	
+	protected static function get_id_from_function_name($name)
+	{
+		$id=array();
+		$i=0;
+		$l=strlen($name);
+		$word=false;
+		while(true)
+		{
+			$addWord=false;
+			if($i>=$l)
+			{
+				$addWord=true;
+			}
+			else if(ord($name{$i})>=ord('A')&&ord($name{$i})<=ord('Z'))
+			{
+				$addWord=true;
+			}
+			if($addWord)
+			{
+				if($word)
+				{
+					$id[]=strtolower($word);
+					$word='';
+				}
+			}
+			if($i>=$l) break;
+			$word.=$name{$i};
+			$i++;
+		}
+		return $id;
+	}
+		
+	public function __call($name, $arguments)
+	{
+		if(strpos($name, 'setColumn')===0)
+		{
+			$id=self::get_id_from_function_name(substr($name, strlen('setColumn')));
+			$this->setColumnMetaFromId($id, $arguments[0], $arguments[1]);
+			return;
+		}
+		if(strpos($name, 'getColumn')===0)
+		{
+			
+			$id=self::get_id_from_function_name(substr($name, strlen('getColumn')));
+			return $this->getColumnMetaFromId($id, $arguments[0]);
+		}
 	}
 	
 	protected function readXmlValue(Ea_Xml_Element $xml_value)
