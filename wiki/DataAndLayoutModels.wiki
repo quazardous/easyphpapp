@@ -34,7 +34,9 @@ here is the xml describing the datas :
 }}}
 
 here is the code :
-it's building an html table to display a set of records...
+it's building an html table to display a set of records.
+the table will have 3 columns with the columns names as headers.
+after you can add as many records you want ;p
 {{{
 ...
                 
