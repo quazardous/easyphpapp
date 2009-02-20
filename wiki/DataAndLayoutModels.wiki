@@ -1,0 +1,63 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+Explain how easyPhpApp can help you produce data form and data grid from Xml definitions.
+
+
+= Details =
+
+In ea there are objects to describe data model (ie a databse table) and there are object to describe the way data has to be displayed (table of rows or form).
+
+Those objects can load there definition from Xml files, so ea let you paint forms or grids (html table) directly from an xml definition.
+
+Let's take a look to the code of the [http://code.google.com/p/easyphpapp/source/browse/trunk/easyphpapp/examples/xmlmodelapp/ xmlmodelapp] example :
+
+here is the xml describing the datas :
+{{{
+...
+<?xml version="1.0" encoding="UTF-8"?>
+<ea_model>
+        <columns>
+                <column name="name">
+                        <metadata name="type">string</metadata>
+                        <metadata name="label">Name</metadata>
+                </column>
+                <column name="gender">
+                        <metadata name="type">string</metadata>
+                </column>
+                <column name="age">
+                        <metadata name="type">integer</metadata>
+                </column>
+        </columns>
+</ea_model>
+...
+}}}
+
+here is the code :
+it's building an html table to display a set of records...
+{{{
+...
+                
+                // build the layout model
+                $model1=new Ea_Model_Layout(new Ea_Model_Data_Xml('model/myrecord.xml'));
+                
+                // define a table layout
+                $table1=new Ea_Layout_Record_Table;
+
+                // construct columns from model
+                $table1->applyModel($model1);
+
+                $records=array(
+                        array('name'=>'David', 'age'=>31, 'gender'=>'M'),
+                        array('name'=>'Alice', 'age'=>25, 'gender'=>'F'),
+                        array('name'=>'John',  'age'=>45, 'gender'=>'M'),
+                        array('name'=>'Mia',   'age'=>21, 'gender'=>'F'),
+                );
+                                
+                // add some record to display
+                $table1->setRecords($records);
+                
+...
+}}}
+
+the same data model can be used to display a different layout model (ie a form)...
