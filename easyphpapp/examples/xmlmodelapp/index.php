@@ -18,10 +18,9 @@
 // don't forget to set your include path and db config
 require '../conf/config.php';
 
+require_once 'Ea/Router.php';
 // instance of router
 $router=Ea_Router::singleton('xmlmodelapp');
-
-require_once 'Ea/Router.php';
 
 // set the module class prefix, so with Zend_Loader style, we search the class in 'Module/' directory.
 // you are responsible to configure your include path so that it can be aware of that directory
