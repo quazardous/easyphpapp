@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090210
+ * @version     0.3.6-20090223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -246,10 +246,23 @@ abstract class Ea_Model_Abstract
 		}
 	}
 	
-	protected function setColumnMetaFromId($id, $column, $value)
+	/**
+	 * Set column meta from meta id (from xml).
+	 * 
+	 * @param $id id for meta
+	 * @param string|array(string) $columns column or list of columns, '*' for all columns
+	 * @param $value
+	 */
+	protected function setColumnMetaFromId($id, $columns, $value)
 	{
-		if(!isset($this->_metadata[$column])) $this->_metadata[$column]=array();
-		self::array_set_from_id($this->_metadata[$column], $id, $value);
+		if($columns=='*') $columns=$this->getColumns();
+		else if(!is_array($columns)) $columns=array($columns);
+		if(!is_array($this->_metadata)) $this->_metadata=array();
+		foreach($columns as $column)
+		{
+			if(!isset($this->_metadata[$column])) $this->_metadata[$column]=array();
+			self::array_set_from_id($this->_metadata[$column], $id, $value);
+		}
 	}
 
 	protected function getColumnMetaFromId($id, $column)

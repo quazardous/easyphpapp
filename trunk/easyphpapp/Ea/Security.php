@@ -7,7 +7,7 @@
  * @package     Router
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.3.6-20090219
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -248,7 +248,10 @@ class Ea_Security
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
-		if(array_key_exists($name, $identity['attributes'])) return $identity['attributes'][$name];
+		if(array_key_exists($name, $identity['attributes']))
+		{
+			return $identity['attributes'][$name];
+		}
 		return null;
 	}
 	
