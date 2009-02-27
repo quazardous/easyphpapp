@@ -26,6 +26,7 @@ abstract class Ea_Model_Abstract
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
+	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum|binary',
 	 *      'order'		    => $i, // display order
 	 *      'label'		    => 'nice label',
 	 *   ),
@@ -48,12 +49,19 @@ abstract class Ea_Model_Abstract
 		return $this->_metadata[$column][$param][$part];
 	}
 		
-	public function setColumnOrder($name, $index)
+	public function setColumnOrder($column, $index)
 	{
 		$this->_ordered=false;
-		$this->setColumnMeta($name, 'order', $index);
+		$this->setColumnMeta($column, 'order', $index);
 	}
 
+	public function getColumnLabel($column)
+	{
+		$label=$this->getMetaData($column, 'label');
+		if($label) return $label;
+		return $column;
+	}
+	
 	protected $_ordered=true;
 	protected $_columns=array();
 	
@@ -62,6 +70,26 @@ abstract class Ea_Model_Abstract
 		return $this->_columns;
 	}
 
+	/**
+	 * Return the list of columns with given type.
+	 * 
+	 * @param string|array(string) $type
+	 * @return array
+	 */
+	public function getColumnsOfType($type)
+	{
+		if(!is_array($type)) $type=array($type);
+		$res=array();
+		foreach($this->getColumns() as $column)
+		{
+			if(in_array($this->getColumnType($column),$type))
+			{
+				$res[]=$column;
+			}
+		}
+		return $res;
+	}
+	
 	/**
 	 * Reset the list of columns.
 	 */
@@ -160,7 +188,7 @@ abstract class Ea_Model_Abstract
 				{
 					$this->_columns[]=$column;
 					$this->setColumnOrder($column, $i);
-					$this->setColumnLabel($column, $column);
+//					$this->setColumnLabel($column, $column);
 					$this->onLoadNewColumn($column);
 					$i++;				
 				}

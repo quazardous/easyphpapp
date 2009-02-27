@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.4-20090130
+ * @version     0.0.3.6-20090223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -58,12 +58,12 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 	protected $_string=null;
 	
 	/**
-	 * Enter description here...
+	 * Constructor.
 	 * 
 	 * @param string $field of record
 	 * @param Ea_Layout_Record_Adapter_Interface|Ea_Layout_Abstract|string $label 
 	 * @param Ea_Route|string $url_or_route base url or route
-	 * @param string|array $param of param in the url, can be an associative array with 'param' and 'type' ('param', 'raw', 'action', 'module').
+	 * @param string|array $param of param in the url, can be an associative array with 'param', 'module' and 'type' ('param', 'raw', 'action', 'module').
 	 */
 	public function __construct($field, $label, $url_or_route, $param=null, $target=null, $config=null)
 	{
@@ -94,6 +94,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 			{
 				if(isset($this->_param['type'])) $type=$this->_param['type'];
 				if(isset($this->_param['param'])) $param=$this->_param['param'];
+				if(isset($this->_param['module'])) $module=$this->_param['module'];
 			}
 			$route=clone $this->_url_or_route;
 			switch($type)
