@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090210
+ * @version     0.3.6-20090223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -39,7 +39,6 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 * Meta info on columns.
 	 * array(
 	 *   'column name'=>array(
-	 *   	'type'          => 'string|text|integer|float|date|datetime|boolean|enum|binary',
 	 *   	'date'          => array('dbformat'=>'strptime() format to read from base', 'format'=>'strftime() format to read/write from base'),
 	 *      'boolean'       => array('value'=>'value for true'),
 	 *      'number'        => array('decimals'=>2, 'dec_point'=>',', 'thousands_sep'=>' '),
@@ -87,27 +86,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		$this->setColumnMetaPart($column, 'date', 'dbformat', $dbformat);
 		$this->setColumnMetaPart($column, 'date', 'format', $format);
 	}
-	
-	/**
-	 * Return the list of columns with given type.
-	 * 
-	 * @param string|array(string) $type
-	 * @return array
-	 */
-	public function getColumnsOfType($type)
-	{
-		if(!is_array($type)) $type=array($type);
-		$res=array();
-		foreach($this->getColumns() as $column)
-		{
-			if(in_array($this->getColumnType($column),$type))
-			{
-				$res[]=$column;
-			}
-		}
-		return $res;
-	}
-	
+		
 	protected $_defaultLobLoad=true;
 	protected $_defaultDateDbformat='%Y-%m-%d';
 	protected $_defaultDatetimeDbformat='%Y-%m-%d %H:%M:%S';

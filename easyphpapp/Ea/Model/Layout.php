@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @version     0.3.6-20090223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -125,23 +125,19 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		{
 			$this->setDataModel($config['data_model']);
 		}
-		if(!$this->_dataModel)
-		{
-			throw new Ea_Model_Layout_Exception('You must specify a data model');
-		}
-		$this->_analyzeDataModel();
+		if($this->_dataModel) $this->_analyzeDataModel();
 	}
 	
 	protected function _analyzeDataModel()
 	{
 		$this->_columns=$this->_dataModel->getOrderedColumns();
-		$i=0;
+		$i=count($this->_columns);
 		foreach($this->_columns as $column)
 		{
 			$this->setColumnDisplay($column, true);
 			$this->setColumnOrder($column, $i);
-			$this->setColumnLabel($column, $this->_dataModel->getColumnLabel($column));
-			$this->setColumnDateFormat($column, $this->_dataModel->getColumnDateFormat($column));
+//			$this->setColumnLabel($column, $this->_dataModel->getColumnLabel($column));
+//			$this->setColumnDateFormat($column, $this->_dataModel->getColumnDateFormat($column));
 			$i++;
 		}
 		$this->_ordered=true;
@@ -160,7 +156,9 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 */
 	public function getColumnsOfType($type)
 	{
-		return $this->_dataModel->getColumnsOfType($type);
+		if($this->_dataModel) $res=$this->_dataModel->getColumnsOfType($type);
+		else $res=array();
+		return array_unique(array_merge($res, parent::getColumnsOfType($type)));
 	}
 	
 	public function setColumnAdapter($column, $adapter)
@@ -223,6 +221,14 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		}
 		return $this->getColumnLabel($column);;
 	}	
+
+	public function getColumnLabel($column)
+	{
+		$label=$this->getMetaData($column, 'label');
+		if($label) return $label;
+		if($this->_dataModel) return $this->_dataModel->getColumnLabel($column);
+		return null;
+	}
 	
 	/**
 	 * Apply special filter on record values.
@@ -235,14 +241,17 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 */
 	public function filterRecordValue($column, $value)
 	{
-		$value=$this->_dataModel->filterRecordValue($column, $value);
+		if($this->_dataModel)
+		{
+			$value=$this->_dataModel->filterRecordValue($column, $value);
+		}
 		switch($type=$this->getColumnType($column))
 		{
 			case 'date': case 'datetime':
 				//TODO : format data vs layout....
 				if(!$value)return $value;
 				$dbformat=$this->getColumnDateDbformat($column);
-				if(!$dbformat)
+				if((!$dbformat)&&$this->_dataModel)
 				{
 					if($type=='date') $dbformat=$this->_dataModel->getDefaultDateDbformat();
 					else $dbformat=$this->_dataModel->getDefaultDatetimeDbformat();
@@ -275,7 +284,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		{
 			// if meta cannot be found in layout model try to get it from data model.
 			$value=parent::__call($name, $arguments);
-			if($value===null) $value=call_user_func_array(array($this->getDataModel(), $name), $arguments);
+			if($value===null&&$this->getDataModel()) $value=call_user_func_array(array($this->getDataModel(), $name), $arguments);
 			return $value;
 		}
 		return parent::__call($name, $arguments);
