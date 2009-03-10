@@ -1,6 +1,7 @@
 *** 0.3.6-snow ***
 Improve model layout :
 - layout model metadata "heritage" from data model.
+- you can create layout model without data model.
 
 *** 0.3.5-snow ***
 Improve form support :
