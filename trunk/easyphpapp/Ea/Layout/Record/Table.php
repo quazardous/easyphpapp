@@ -16,6 +16,7 @@ require_once 'Ea/Layout/Table.php';
 require_once 'Ea/Layout/Record/Adapter/Interface.php';
 require_once 'Ea/Layout/Record/Config/Modifier/Interface.php';
 require_once 'Ea/Model/Layout.php';
+require_once 'Ea/Layout/Record/Table/Exception.php';
 
 /**
  * Table of records layout class.
@@ -208,7 +209,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['record']=array('adapter'=>$column, 'config'=>$config, 'class'=>$class);
 	}
 
-	public function seColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $adapter)
+	public function setColumnAdapter($idCol, Ea_Layout_Record_Adapter_Interface $adapter)
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
@@ -217,7 +218,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['record']['adapter']=$adapter;
 	}
 	
-	public function seColumnConfig($idCol, $config)
+	public function setColumnConfig($idCol, $config)
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
@@ -226,7 +227,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		$this->_columns[$idCol]['record']['config']=$column;
 	}
 
-	public function seColumnClass($idCol, $class)
+	public function setColumnClass($idCol, $class)
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{

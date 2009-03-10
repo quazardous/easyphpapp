@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090223
+ * @version     0.3.6-20090310
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -121,9 +121,12 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		{
 			$config=array('data_model'=>$model);
 		}
-		if(array_key_exists('data_model', $config))
+		if(is_array($config))
 		{
-			$this->setDataModel($config['data_model']);
+			if(array_key_exists('data_model', $config))
+			{
+				$this->setDataModel($config['data_model']);
+			}
 		}
 		if($this->_dataModel) $this->_analyzeDataModel();
 	}
