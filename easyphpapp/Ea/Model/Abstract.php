@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090223
+ * @version     0.3.6-20090311
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -115,6 +115,29 @@ abstract class Ea_Model_Abstract
 			$this->_ordered=true;
 		}
 		return $this->_columns;
+	}
+
+	protected $_defaultDateDbformat=null;
+	protected $_defaultDatetimeDbformat=null;
+
+	public function setDefaultDateDbformat($format)
+	{
+		$this->_defaultDateDbformat=$format;
+	}
+	
+	public function setDefaultDatetimeDbformat($format)
+	{
+		$this->_defaultDatetimeDbformat=$format;
+	}
+	
+	public function getDefaultDateDbformat()
+	{
+		return $this->_defaultDateDbformat;
+	}
+	
+	public function getDefaultDatetimeDbformat()
+	{
+		return $this->_defaultDatetimeDbformat;
 	}
 	
 	/**

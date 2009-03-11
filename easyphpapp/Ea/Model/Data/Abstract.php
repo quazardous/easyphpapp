@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090223
+ * @version     0.3.6-20090311
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -99,29 +99,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		$dbDateFormat=$stmt->fetchColumn(0);
 		$this->_defaultDateDbformat=self::format_date_oracle_to_php($dbDateFormat);
 		$this->_defaultDatetimeDbformat=self::format_date_oracle_to_php($dbDateFormat);
-	}
-	
-	public function setDefaultDateDbformat($format)
-	{
-		$this->_defaultDateDbformat=$format;
-	}
-	
-	public function setDefaultDatetimeDbformat($format)
-	{
-		$this->_defaultDatetimeDbformat=$format;
-	}
-	
-	public function getDefaultDateDbformat()
-	{
-		return $this->_defaultDateDbformat;
-	}
-	
-	public function getDefaultDatetimeDbformat()
-	{
-		return $this->_defaultDatetimeDbformat;
-	}
-	
-	
+	}	
 	
 	public static function default_date_now()
 	{
