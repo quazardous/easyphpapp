@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090310
+ * @version     0.3.6-20090311
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -94,6 +94,18 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	{
 		return $this->_defaultDatetimeFormat;
 	}
+
+	public function getDefaultDateDbformat()
+	{
+		if((!$this->_defaultDateDbformat)&&$this->_dataModel) return $this->_dataModel->getDefaultDateDbformat();
+		return $this->_defaultDateDbformat;
+	}
+	
+	public function getDefaultDatetimeDbformat()
+	{
+		if((!$this->_defaultDatetimeDbformat)&&$this->_dataModel) return $this->_dataModel->getDefaultDatetimeDbformat();
+		return $this->_defaultDatetimeDbformat;
+	}
 	
 	protected function getDefaultRecordAdapterNameByType($type)
 	{
@@ -109,15 +121,23 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	/**
 	 * Layout model constructor.
 	 * 
-	 * @param array|mixed $config constructor call Ea_Model_Data::factory() on this.
+	 * @param array|mixed|string $config
+	 * 		if string : xml file to load
+	 * 		else constructor call Ea_Model_Data::factory() on this.
 	 * 		array(
 	 * 			'data_model' => $dataModel,
+	 * 			'xml' => $xmlfile,
 	 * 		)
+	 * 		
 	 * @return unknown_type
 	 */
 	public function __construct($config=null)
 	{
-		if($model=Ea_Model_Data::factory($config))
+		if(is_string($config))
+		{
+			$config=array('xml'=>$config);
+		}
+		else if($model=Ea_Model_Data::factory($config))
 		{
 			$config=array('data_model'=>$model);
 		}
@@ -126,6 +146,10 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			if(array_key_exists('data_model', $config))
 			{
 				$this->setDataModel($config['data_model']);
+			}
+			if(array_key_exists('xml', $config))
+			{
+				$this->loadFromXmlFile($config['xml']);
 			}
 		}
 		if($this->_dataModel) $this->_analyzeDataModel();
@@ -254,10 +278,10 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 				//TODO : format data vs layout....
 				if(!$value)return $value;
 				$dbformat=$this->getColumnDateDbformat($column);
-				if((!$dbformat)&&$this->_dataModel)
+				if(!$dbformat)
 				{
-					if($type=='date') $dbformat=$this->_dataModel->getDefaultDateDbformat();
-					else $dbformat=$this->_dataModel->getDefaultDatetimeDbformat();
+					if($type=='date') $dbformat=$this->getDefaultDateDbformat();
+					else $dbformat=$this->getDefaultDatetimeDbformat();
 				}
 				$format=$this->getColumnDateFormat($column);
 				if(!$format)
