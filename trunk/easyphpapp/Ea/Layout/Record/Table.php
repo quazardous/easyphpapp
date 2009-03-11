@@ -170,9 +170,11 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * @param numeric|string $idCol a column id, if null auto increment
 	 * @param array $config the header class constructor config array
 	 * @param string $class the header class
+	 * @param string $mode append|before|after
+	 * @param string $seekCol reference col for before and after
 	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell', $mode='append', $seekCol=null)
 	{
 		if($idCol===null)
 		{
@@ -183,13 +185,53 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		{
 			throw new Ea_Layout_Record_Table_Exception("$idCol : column id already used");
 		}
-		$this->_columns[$idCol]=array('record'=>array('adapter'=>$column, 'config'=>$recordConfig, 'class'=>$recordClass), 'header'=>array('content'=>$content, 'config'=>$headerConfig, 'class'=>$headerClass));
-		
+		$ndata=array('record'=>array('adapter'=>$column, 'config'=>$recordConfig, 'class'=>$recordClass), 'header'=>array('content'=>$content, 'config'=>$headerConfig, 'class'=>$headerClass));
+		switch($mode)
+		{
+			case 'before': case 'after':
+				if(!array_key_exists($seekCol, $this->_columns))
+				{
+					throw new Ea_Layout_Record_Table_Exception("$seekCol : column does not exist");
+				}
+				$cols=array();
+				foreach($this->_columns as $cid=>$cdata)
+				{
+					if($cid==$seekCol)
+					{
+						if($mode=='before')
+						{
+							$cols[$idCol]=$ndata;
+						}	
+					}
+					$cols[$cid]=$cdata;
+					if($cid==$seekCol)
+					{
+						if($mode=='after')
+						{
+							$cols[$idCol]=$ndata;
+						}
+					}
+				}
+				$this->_columns=$cols;
+				break;
+			default:
+				$this->_columns[$idCol]=$ndata;
+		}		
 		if($content) $this->displayHeader(true);
 		
 		return $idCol;
 	}
 
+	public function addColumnAfter($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	{
+		$this->addColumn($column, $content, $idCol, $headerConfig, $recordConfig, $headerClass, $recordClass, 'after', $seekCol);
+	}
+
+	public function addColumnBefore($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	{
+		$this->addColumn($column, $content, $idCol, $headerConfig, $recordConfig, $headerClass, $recordClass, 'before', $seekCol);
+	}
+	
 	/**
 	 * Set the column adapter.
 	 * Works only on existing columns.
