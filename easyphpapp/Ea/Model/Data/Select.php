@@ -163,7 +163,6 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaPdoMysql($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if(!isset($meta['native_type']))$meta['native_type']=null;
 		switch($meta['native_type'])
 		{
@@ -208,7 +207,6 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaPdoUnsupported($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if(!isset($meta['native_type']))$meta['native_type']=null;
 		switch($meta['native_type'])
 		{

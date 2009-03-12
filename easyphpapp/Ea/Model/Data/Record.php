@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081201
+ * @version     0.3.6-20090312
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -95,7 +95,6 @@ class Ea_Model_Data_Record extends Ea_Model_Data_Abstract
 	protected function _analyzeValue($i, $column, $value)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if(is_string($value))
 		{
 			$arrd=strptime($value, $this->_defaultDatetimeDbformat);

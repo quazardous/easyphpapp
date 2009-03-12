@@ -211,7 +211,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaPdoMysql($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if($meta['DEFAULT'])
 		{
 			$this->setColumnDefault($column, $meta['DEFAULT']);
@@ -310,7 +309,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaPdoOci($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if($meta['DEFAULT'])
 		{
 			$this->setColumnDefaulta($column, $meta['DEFAULT']);
@@ -370,7 +368,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaOracle($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		if($meta['DEFAULT'])
 		{
 			$this->setColumnDefault($column, $meta['DEFAULT']);
@@ -432,7 +429,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	protected function _analyzeMetaPdoUnsupported($i, $column, &$meta)
 	{
 		$this->setColumnOrder($column, $i);
-		$this->setColumnLabel($column, $column);
 		$this->setColumnDisplay($column, true);
 		if($meta['DEFAULT'])
 		{
