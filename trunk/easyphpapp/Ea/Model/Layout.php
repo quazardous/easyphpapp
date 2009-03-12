@@ -254,7 +254,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		$label=$this->getMetaData($column, 'label');
 		if($label) return $label;
 		if($this->_dataModel) return $this->_dataModel->getColumnLabel($column);
-		return null;
+		return $column;
 	}
 	
 	/**

@@ -63,7 +63,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 	 * @param array|string $fields of record to specify in the link
 	 * 		if simple array : list of fields.
 	 * 		if associative array : field=>param
-	 * 		each item can be an associative array with 'param', 'module' and 'type' ('param', 'raw', 'action', 'module').
+	 * 		each item can be an associative array with 'column', 'module' and 'type' ('param', 'raw', 'action', 'module').
 	 * @param Ea_Layout_Record_Adapter_Interface|Ea_Layout_Abstract|string $label 
 	 * @param Ea_Route|string $url_or_route base url or route
 	 */
@@ -71,11 +71,11 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 	{
 		//parent::__construct($field);
 		if(!is_array($fields)) $fields=array($fields);
-		foreach($fields as $column=>$param)
+		foreach($fields as $param=>$column)
 		{
-			if(!is_array($param)) $param=array('param'=>$param);
-			if(!is_string($column)) $column=$param['param'];
-			$this->_params[$column]=$param;
+			if(!is_array($column)) $column=array('column'=>$column);
+			if(!is_string($param)) $param=$column['column'];
+			$this->_params[$param]=$column;
 		}
 		$this->_url_or_route=$url_or_route;
 		$this->_config=$config;
@@ -95,25 +95,25 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 		if($this->_url_or_route instanceof Ea_Route)
 		{
 			$route=clone $this->_url_or_route;
-			foreach($this->_params as $column=>$param)
+			foreach($this->_params as $param=>$column)
 			{
 				$module=null;
 				$type='param';
-				if(isset($param['type'])) $type=$param['type'];
-				if(isset($param['module'])) $module=$param['module'];
+				if(isset($column['type'])) $type=$column['type'];
+				if(isset($column['module'])) $module=$column['module'];
 				switch($type)
 				{
 					case 'raw':
-						$route->setRawParam($param['param'], $this->getValue($record, $column));
+						$route->setRawParam($param, $this->getValue($record, $column['column']));
 						break;
 					case 'action':
-						$route->setAction($this->getValue($record, $column));
+						$route->setAction($this->getValue($record, $column['column']));
 						break;
 					case 'module':
-						$route->setModule($this->getValue($record, $column));
+						$route->setModule($this->getValue($record, $column['column']));
 						break;
 					default:
-						$route->setParam($param['param'], $this->getValue($record, $column), $module);
+						$route->setParam($param, $this->getValue($record, $column['column']), $module);
 				}
 			}
 		}
@@ -129,9 +129,9 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 				$urllist=array();
 				$arr=array();
 			}
-			foreach($this->_params as $column=>$param)
+			foreach($this->_params as $param=>$column)
 			{
-				$arr[$param['param']]=$this->getValue($record, $column);
+				$arr[$param]=$this->getValue($record, $column['column']);
 			}			
 			$urllist['query']=http_build_query($arr);
 			$route=(isset($urllist["scheme"])?$urllist["scheme"]."://":"").

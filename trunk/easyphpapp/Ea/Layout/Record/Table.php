@@ -189,7 +189,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		switch($mode)
 		{
 			case 'before': case 'after':
-				if(!array_key_exists($seekCol, $this->_columns))
+				if((!array_key_exists($seekCol, $this->_columns))||($seekCol===null))
 				{
 					throw new Ea_Layout_Record_Table_Exception("$seekCol : column does not exist");
 				}
