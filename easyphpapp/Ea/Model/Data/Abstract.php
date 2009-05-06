@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090311
+ * @version     0.3.6-20090320
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -59,6 +59,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 */
 	//protected $_metadata=array();
 	
+	/*
 	public function getColumnStringLength($column)
 	{
 		$length=$this->getMetaData($column, 'string', 'length');
@@ -72,6 +73,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 		if(!$length) $length=32;
 		return $length;
 	}
+	*/
 	
 	public function getColumnEnum($column)
 	{

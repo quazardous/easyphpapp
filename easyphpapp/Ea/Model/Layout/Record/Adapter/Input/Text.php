@@ -37,12 +37,18 @@ class Ea_Model_Layout_Record_Adapter_Input_Text extends Ea_Layout_Record_Adapter
 		$rows=null;
 		if((!isset($config['rows'])&&(!isset($config['attributes']['rows']))))
 		{
-			$rows=round(log($model->getColumnStringLength($column))/2);
+			if($model->getColumnStringLength($column))
+			{
+				$rows=round(log($model->getColumnStringLength($column))/2);
+			}
 		}
 		$cols=null;
 		if((!isset($config['cols'])&&(!isset($config['attributes']['cols']))))
 		{
-			$cols=40;
+			if($model->getColumnStringLength($column))
+			{
+				$cols=40;
+			}
 		}
 		parent::__construct($column, $rows, $cols, $model->getBaseId(), $model->getRecordIndexColumn(), $config);
 		$this->_filter=array($model, 'filterRecordValue');
