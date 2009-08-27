@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090320
+ * @version     0.3.6-20090506
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -52,6 +52,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 *      'order'		    => $i, // display order
 	 *      'label'		    => 'nice label',
 	 *      'filter'		=> $callback, // filter callback used in Ea_Model_Layout::filterRecordValue()
+	 *      'mandatory'		=> true|false,
 	 *   ),
 	 * )
 	 * 
