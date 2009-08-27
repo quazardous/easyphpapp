@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.6-20090223
+ * @version     0.3.7-20090702
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -122,7 +122,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 			$urllist=parse_url($this->_url_or_route);
 			if($urllist&&isset($urllist['query']))
 			{
-				parse_str($str, $arr);
+				parse_str($urllist['query'], $arr);
 			}
 			else
 			{

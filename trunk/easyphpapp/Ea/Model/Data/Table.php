@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @version     0.3.5-20090506
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -30,7 +30,6 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 	 * array(
 	 *   'column name'=>array(
 	 *      'default'       => 'value'|array('type'=>'value|callback', 'value'=>'value', 'callback'=>'callback'),
-	 *      'mandatory'		=> true|false,
 	 *   ),
 	 * )
 	 * 
