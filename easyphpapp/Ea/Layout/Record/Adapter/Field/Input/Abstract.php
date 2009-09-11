@@ -12,6 +12,8 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
+require_once 'Ea/Layout/Record/Adapter/Field.php';
+
 /**
  * Abstract class to get column cell content from record (array or object).
  */
