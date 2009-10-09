@@ -1,4 +1,10 @@
 *** 0.3.8-snow ***
+Improve form support :
+- add submit callback
+Improve Session Namespace support :
+- add namespace/appname force session
+Change Ea_Router in Ea_App ;p
+- Ea_Router is still present for compatibility
 
 *** 0.3.7-snow ***
 Minor bug fixes :

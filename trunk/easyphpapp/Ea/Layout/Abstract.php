@@ -166,5 +166,10 @@ abstract class Ea_Layout_Abstract
 		
 	}
 	
+	public function __sleep()
+    {
+        return array();
+    }
+	
 }
 ?>

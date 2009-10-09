@@ -32,7 +32,7 @@ class Module_Index extends Ea_Module_Abstract
 		// add the text 'Hello World' to the page
 		$this->getPage()->add('Hello World');
 		
-		// router will call render
+		// application will call render
 	}
 }
 ?>

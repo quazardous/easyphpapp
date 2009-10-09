@@ -4,10 +4,10 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Router
+ * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090219
+ * @version     0.3.8-20091009
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -85,9 +85,9 @@ class Ea_Security
 	 * 
 	 * @param string $name
 	 */
-	public function setSessionNamespace($namespace)
+	public function setNamespace($namespace)
 	{
-		$this->_sessionNamespace=$namespace;
+		$this->_namespace=$namespace;
 	}
 
 	/**
@@ -95,9 +95,9 @@ class Ea_Security
 	 * 
 	 * @return string
 	 */
-	public function getSessionNamespace()
+	public function getNamespace()
 	{
-		return $this->_sessionNamespace;
+		return $this->_namespace;
 	}
 	
 	/**
@@ -125,7 +125,7 @@ class Ea_Security
 	protected function init()
 	{
 		$this->_init=true;
-		$this->_auth->setStorage(new Zend_Auth_Storage_Session($this->getSessionNamespace()));
+		$this->_auth->setStorage(new Zend_Auth_Storage_Session($this->getNamespace()));
 	}
 	
 	/**

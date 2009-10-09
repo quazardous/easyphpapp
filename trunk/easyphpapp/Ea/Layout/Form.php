@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @version     0.3.8-20091002
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -18,6 +18,7 @@ require_once 'Ea/Layout/Input/Array.php';
 require_once 'Ea/Layout/Input/Hidden.php';
 require_once 'Ea/Layout/Input/Radio.php';
 require_once 'Ea/Layout/Input/File.php';
+require_once 'Ea/Layout/Input/Submit.php';
 require_once 'Ea/Layout/Form/Exception.php';
 require_once 'Zend/Session/Namespace.php';
 
@@ -279,9 +280,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			$page=$this->getPage();
 			if(!$page instanceof Ea_Page)
 			{
-				throw new Ea_Layout_Form_Exception('Cannot use route outside EasyPhpApp router engine !');
+				throw new Ea_Layout_Form_Exception('Cannot use route outside EasyPhpApp application engine !');
 			}
-			return $page->getRouter()->url($this->getAction());
+			return $page->getApp()->url($this->getAction());
 		}
 		return $this->getAction();
 	}
@@ -453,12 +454,12 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				if(($this->getPage() instanceof Ea_Page)&&(!$action))
 				{
 					// default route
-					$action=$this->getPage()->getRouter()->getRoute();
+					$action=$this->getPage()->getApp()->getRoute();
 				}
 				if($action instanceof Ea_Route)
 				{
 					// if a route was set, the form tries to keep all params.
-					$action=$this->getPage()->getRouter()->url($action);
+					$action=$this->getPage()->getApp()->url($action);
 					$infos=parse_url($action);
 					
 					if(isset($infos['query']))
@@ -651,12 +652,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					return true;
 				}
 				$this->recursiveWalk(array($this, 'parseInput'));
+				$this->recursiveWalk(array($this, 'triggerSubmitCallbacks'));
 				// store new values
 				if($this->isStore()) $this->store();
 				return true;
 				break;
 			default:
-				throw new Ea_Layout_Form_Exception('Use Ea_Router::getParam()');
+				throw new Ea_Layout_Form_Exception('Use Ea_App::getParam()');
 		}
 	}
 	
@@ -676,6 +678,27 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				throw new Ea_Layout_Form_Exception('Cannot do that !');
 		}
 	}
+	
+	/**
+	 * Trigger the submit callback.
+	 * 
+	 * @param Ea_Layout_Input_Abstract $input
+	 */
+	public function triggerSubmitCallbacks(Ea_Layout_Input_Abstract $input)
+	{
+		switch($this->getMethod())
+		{
+			case 'post':
+				if($input instanceof Ea_Layout_Input_Submit)
+				{
+					$input->triggerSubmitCallbacks();
+				}
+				break;
+			default:
+				throw new Ea_Layout_Form_Exception('Cannot do that !');
+		}
+	}
+	
 	
 	protected function usePostData()
 	{
@@ -791,9 +814,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * 
 	 * @param string $name
 	 */
-	public function setSessionNamespace($namespace)
+	public function setNamespace($namespace)
 	{
-		$this->_sessionNamespace=$namespace;
+		$this->_namespace=$namespace;
 	}
 
 	/**
@@ -801,9 +824,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * 
 	 * @return string
 	 */
-	public function getSessionNamespace()
+	public function getNamespace()
 	{
-		return $this->_sessionNamespace;
+		return $this->_namespace;
 	}
   	
 	/**
@@ -825,11 +848,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			$page=$this->getPage();
 			if($page instanceof Ea_Page)
 			{
-				$this->_session=new Zend_Session_Namespace($this->getPage()->getRouter()->getAppName().'.forms');
+				$this->_session=new Zend_Session_Namespace($this->getPage()->getApp()->getNamespace().'.forms');
 			}
 			else
 			{
-				$this->_session=new Zend_Session_Namespace($this->_sessionNamespace);
+				$this->_session=new Zend_Session_Namespace($this->_namespace);
 			}
 		}
 		return $this->_session;
@@ -925,7 +948,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     }
 
 	/**
-	 * Link the form to the module (and the router).
+	 * Link the form to the module (and the application).
 	 * Mandatory to use session mechanisms in the app namespace.
 	 * 
 	 * @param Ea_Module_Abstract $module

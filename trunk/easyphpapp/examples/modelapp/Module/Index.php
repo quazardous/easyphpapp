@@ -118,7 +118,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->add($table3);
 		
 		
-		// router will call render
+		// application will call render
 	}
 }
 ?>

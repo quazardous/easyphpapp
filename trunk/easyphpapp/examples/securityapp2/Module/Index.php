@@ -31,21 +31,21 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->setTitle('Common stuff');
 		
 		// add the text 'Hello <user>' to the page
-		$this->getPage()->add('Hello '.$this->getRouter()->getSecurity()->getConnectedUserLogin().', your are in common stuff.');
+		$this->getPage()->add('Hello '.$this->getApp()->getSecurity()->getConnectedUserLogin().', your are in common stuff.');
 
 		// by the way, how to add non escaped code
 		$this->getPage()->add(array('text'=>'<br/>', 'escape'=>false));
 		
 		// add a link to the 'admin' action
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'admin'), 'Admin stuff'));
+		$this->getPage()->add(new Ea_Layout_Link($this->getApp()->getRoute(null, 'admin'), 'Admin stuff'));
 
 		// classic <br/>
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// add a link to the 'logout' action
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'logout'), 'Logout'));
+		$this->getPage()->add(new Ea_Layout_Link($this->getApp()->getRoute(null, 'logout'), 'Logout'));
 		
-		// router will call render
+		// application will call render
 	}
 	
 	public function actionAdmin()
@@ -54,21 +54,21 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->setTitle('Admin stuff');
 		
 		// add the text 'Hello <user>' to the page
-		$this->getPage()->add('Hello '.$this->getRouter()->getSecurity()->getConnectedUserLogin().', your are in admin stuff.');
+		$this->getPage()->add('Hello '.$this->getApp()->getSecurity()->getConnectedUserLogin().', your are in admin stuff.');
 
 		// by the way, how to add non escaped code
 		$this->getPage()->add(new Ea_Layout_Text('<br/>', false));
 		
 		// add a link to the 'index' action
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'index'), 'Common stuff'));
+		$this->getPage()->add(new Ea_Layout_Link($this->getApp()->getRoute(null, 'index'), 'Common stuff'));
 
 		// classic <br/>
 		$this->getPage()->add(new Ea_Layout_Single('br'));
 		
 		// add a link to the 'logout' action
-		$this->getPage()->add(new Ea_Layout_Link($this->getRouter()->getRoute(null, 'logout'), 'Logout'));
+		$this->getPage()->add(new Ea_Layout_Link($this->getApp()->getRoute(null, 'logout'), 'Logout'));
 		
-		// router will call render
+		// application will call render
 	}
 	
 	public function actionLogout()
@@ -76,9 +76,9 @@ class Module_Index extends Ea_Module_Abstract
 		// logout action
 		
 		// disconnect registered user
-		$this->getRouter()->getSecurity()->disconnect();
+		$this->getApp()->getSecurity()->disconnect();
 		
 		// redirect to action 'index'
-		$this->getRouter()->requestRedirect($this->getRouter()->getRoute(null, 'index'));
+		$this->getApp()->requestRedirect($this->getApp()->getRoute(null, 'index'));
 	}
 }

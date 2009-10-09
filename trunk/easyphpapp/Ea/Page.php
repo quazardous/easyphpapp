@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.8-20091009
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -16,6 +16,7 @@ require_once 'Ea/Page/Interface.php';
 require_once 'Ea/Layout/Container.php';
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Script.php';
+require_once 'Ea/Layout/Text.php';
 
 /**
  * Page class.
@@ -113,6 +114,31 @@ class Ea_Page implements Ea_Page_Interface
 	 * @var Ea_Module_Abstract
 	 */
 	protected $_module=null;
+
+	public function setDefaultShowVersion($show)
+	{
+		self::$_defaultShowVersion=$show;
+		
+	}
+	
+	static protected $_defaultShowVersion=true;
+	
+	/**
+	 * Show version information.
+	 * 
+	 * @var boolean
+	 */
+	protected $_showVersion;
+	
+	public function setShowVersion($show)
+	{
+		$this->_showVersion=$show;
+	}
+	
+	public function getShowVersion()
+	{
+		return $this->_showVersion;
+	}
 	
 	/**
 	 * Page constructor.
@@ -142,6 +168,8 @@ class Ea_Page implements Ea_Page_Interface
 		 * Can be usefull to make difference between top layout and main layout (where to add new content)
 		 */
 		$this->_main=$this->_top;
+		
+		$this->_showVersion=self::$_defaultShowVersion;
 	} 
 	
 	/**
@@ -167,13 +195,24 @@ class Ea_Page implements Ea_Page_Interface
 	}
 
 	/**
-	 * Return the router.
+	 * Return the application.
 	 *
-	 * @return Ea_Router
+	 * @return Ea_App
+	 */
+	public function getApp()
+	{
+		return $this->_module->getApp();
+	}
+
+	/**
+	 * Return the application.
+	 *
+	 * @return Ea_App
+	 * @deprecated
 	 */
 	public function getRouter()
 	{
-		return $this->_module->getRouter();
+		return $this->getApp();
 	}
 	
 	/**
@@ -239,16 +278,50 @@ class Ea_Page implements Ea_Page_Interface
 	public function render()
 	{
 		if($this->_smartRender&&$this->_rendered) return;
+		ob_start();
 		?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <?php
 		?><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <?php
+		$isStyle=false;
 		foreach($this->_styles as $style)
 		{
+			$isStyle=true;
 			?><link type="text/css" href="<?php echo $this->escape($style['href']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
 <?php
+		}
+		if((!$isStyle)&&$this->getShowVersion()&&$this->getApp())
+		{
+			//default version style ;p
+			?>
+<style type="text/css">
+* .version
+{
+	position: absolute;
+}
+.version
+{
+	border-left: solid #aaa 1px;
+	border-top: solid #aaa 1px;
+	background-color: #eee;
+	color: #555;
+	text-align: right;
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	padding-right: 3px;
+	padding-left: 3px;
+	width: auto;
+}
+body
+{
+	margin-bottom: 20px;
+}
+</style>
+			<?php
 		}
 		foreach($this->_scripts as $script)
 		{
@@ -262,12 +335,31 @@ class Ea_Page implements Ea_Page_Interface
 <?php
 		}
 		?></head><?php
+		
+		if($this->getShowVersion()&&$this->getApp())
+		{
+			$this->_top->add($this->getVersionLayout());
+		}
+		
 		$this->_top->preRender();
 		$this->_top->render();
 		$this->_top->postRender();
 		?>
 </html><?php
 		$this->_rendered=true;
+		echo ob_get_clean();
+	}
+	
+	public function getVersionLayout()
+	{
+		ob_start();
+		?>
+<div class="version">
+<span class="app"><?php echo $this->escape($this->getApp()->getAppName()); ?><?php if($this->getApp()->getVersion()) echo $this->escape('-'.$this->getApp()->getVersion()); ?></span> / 
+<span class="ea"><?php echo $this->escape(EA_VERSION); ?></span>
+</div>
+		<?php
+		return new Ea_Layout_Text(ob_get_clean(), false);
 	}
 	
 	/**
@@ -296,8 +388,8 @@ class Ea_Page implements Ea_Page_Interface
 	
 	/**
 	 * Get an url.
-	 * @see Ea_Router::getRoute()
-	 * @see Ea_Router::url()
+	 * @see Ea_App::getRoute()
+	 * @see Ea_App::url()
 	 * 
 	 * @param array(string=>string) $params
 	 * @param string $action
@@ -308,13 +400,13 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	public function url($params=null, $action=null, $module=null, $script=null, $fragment=null)
 	{
-		return $this->getRouter()->url($this->getRouter()->getRoute($params, $action, $module, $script, $fragment));
+		return $this->getApp()->url($this->getApp()->getRoute($params, $action, $module, $script, $fragment));
 	}
 
 	/**
 	 * Rediert to an url.
-	 * @see Ea_Router::getRoute()
-	 * @see Ea_Router::redirect()
+	 * @see Ea_App::getRoute()
+	 * @see Ea_App::redirect()
 	 * 
 	 * @param array(string=>string) $params
 	 * @param string $action
@@ -325,7 +417,7 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	public function redirect($params=null, $action=null, $module=null, $script=null, $fragment=null, $exit=true)
 	{
-		return $this->getRouter()->redirect($this->getRouter()->getRoute($params, $action, $module, $script, $fragment), $exit);
+		return $this->getApp()->redirect($this->getApp()->getRoute($params, $action, $module, $script, $fragment), $exit);
 	}
 }
 

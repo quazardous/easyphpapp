@@ -4,21 +4,21 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Router
- * @subpackage  Router
+ * @package     Application
+ * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.3.4-20090128
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Router.php';
+require_once 'Ea/App.php';
 require_once 'Ea/Route/Exception.php';
 
 /**
  * Route class.
  * The route is a structured way to represent internal url.
- * @see Ea_Router
+ * @see Ea_App
  * 
  */
 class Ea_Route
@@ -73,11 +73,11 @@ class Ea_Route
 	protected $_fragment=null;
 
 	/**
-	 * Ea_Router handler
+	 * Ea_App handler
 	 *
-	 * @var Ea_Router
+	 * @var Ea_App
 	 */
-	protected $_router=null;
+	protected $_app=null;
 	
 	/**
 	 * Url string. Used for optimization.
@@ -110,12 +110,12 @@ class Ea_Route
 			$this->_propagate=array();
 			foreach($propagate as $module)
 			{
-				array_push($this->_propagate, Ea_Router::standardize($module));
+				array_push($this->_propagate, Ea_App::standardize($module));
 			}
 		}
 		else if(is_string($propagate))
 		{
-			$this->_propagate=array(Ea_Router::standardize($propagate));
+			$this->_propagate=array(Ea_App::standardize($propagate));
 		}
 		else if($propagate)
 		{
@@ -141,16 +141,16 @@ class Ea_Route
 	/**
 	 * Route constructor.
 	 * 
-	 * @param Ea_Router $router
+	 * @param Ea_App $app
 	 * @param string $script
 	 * @param string $module
 	 * @param string $action
 	 * @param array $params for the given module
 	 * @param string $fragment
 	 */
-	public function __construct(Ea_Router $router, $script=null, $module=null, $action=null, $params=null, $fragment=null)
+	public function __construct(Ea_App $app, $script=null, $module=null, $action=null, $params=null, $fragment=null)
 	{
-		$this->_router=$router;
+		$this->_app=$app;
 		$this->_script=$script;
 		if($module)$this->setModule($module);
 		if($action)$this->setAction($action);
@@ -160,13 +160,13 @@ class Ea_Route
 
 	/**
 	 * Get url string.
-	 * @uses Ea_Router:url()
+	 * @uses Ea_App:url()
 	 * 
 	 * @return string
 	 */
 	public function url()
 	{
-		if(!$this->_url) $this->_url=$this->_router->url($this);
+		if(!$this->_url) $this->_url=$this->_app->url($this);
 		if($this->_fragment) return $this->_url.'#'.$this->_fragment;
 		return $this->_url;
 	}
@@ -182,7 +182,7 @@ class Ea_Route
 	{
 		if($module)
 		{
-			$module=Ea_Router::standardize($module);
+			$module=Ea_App::standardize($module);
 		}
 		else
 		{
@@ -253,7 +253,7 @@ class Ea_Route
 	 */
 	public function setModule($module)
 	{
-		$this->_module=Ea_Router::standardize($module);
+		$this->_module=Ea_App::standardize($module);
 		$this->_url=null;
 	}
 
@@ -276,7 +276,7 @@ class Ea_Route
 	 */
 	public function setAction($action)
 	{
-		$this->_action=Ea_Router::standardize($action);
+		$this->_action=Ea_App::standardize($action);
 		$this->_url=null;
 	}
 	
@@ -302,7 +302,7 @@ class Ea_Route
 	{
 		if($module)
 		{
-			$module=Ea_Router::standardize($module);
+			$module=Ea_App::standardize($module);
 			if(!array_key_exists($module, $this->_otherParams)) return null;
 			if(!array_key_exists($name, $this->_otherParams[$module])) return null;
 			return $this->_otherParams[$module][$name];
@@ -323,7 +323,7 @@ class Ea_Route
 		$this->_url=null;
 		if($module)
 		{
-			$module=Ea_Router::standardize($module);
+			$module=Ea_App::standardize($module);
 			if(!array_key_exists($module, $this->_otherParams)) $this->_otherParams[$module]=array();
 			$this->_otherParams[$module][$name]=$value;
 		}

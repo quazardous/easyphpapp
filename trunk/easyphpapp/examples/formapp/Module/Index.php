@@ -55,7 +55,7 @@ class Module_Index extends Ea_Module_Abstract
 			// You draw the form at display time and af submit time you don't and call catchInput().
 			// In this case $form[] will just map $_POST[].
 			
-			// nothing else to do, router will redirect to current URL
+			// nothing else to do, application will redirect to current URL
 			return;
 		}
 		
@@ -127,7 +127,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add($form);
 		
 		
-		// router will call render
+		// application will call render
 	}
 }
 ?>

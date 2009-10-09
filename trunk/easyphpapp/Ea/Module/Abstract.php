@@ -4,7 +4,7 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Router
+ * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.3.4-20090202
@@ -18,7 +18,7 @@ require_once 'Ea/Module/Exception.php';
  * Abstract module class.
  * 
  * You can put all the procedural stuff of a page in the module. Module can have many action method that you can trigger with route.
- * @see Ea_Router
+ * @see Ea_App
  * 
  * @uses Ea_Module_Exception
  * 
@@ -27,11 +27,11 @@ require_once 'Ea/Module/Exception.php';
 abstract class Ea_Module_Abstract
 {
 	/**
-	 * The router that triggered the module.
+	 * The application that triggered the module.
 	 *
-	 * @var Ea_Router
+	 * @var Ea_App
 	 */
-	protected $_router=null;
+	protected $_app=null;
 
 	/**
 	 * The page that will render the module.
@@ -106,43 +106,56 @@ abstract class Ea_Module_Abstract
 	/**
 	 * Module constructor.
 	 * 
-	 * @param array(string=>mixed)|Ea_Router $config
+	 * @param array(string=>mixed)|Ea_App $config
 	 * 
-	 * - if associative array : 'router' (instance of router), 'page_class', 'page' (instance of page), 'name' (module name)
+	 * - if associative array : 'application' (instance of application), 'page_class', 'page' (instance of page), 'name' (module name)
 	 * 
-	 * - if Ea_Router : instance of roouter
+	 * - if Ea_App : instance of roouter
 	 */
 	public function __construct($config)
 	{
-		if($config instanceof Ea_Router)
+		if($config instanceof Ea_App)
 		{
-			$config=array('router'=>$config);
+			$config=array('application'=>$config);
 		}
 		if(array_key_exists('name', $config)) $this->setName($config['name']);
-		if(array_key_exists('router', $config)) $this->setRouter($config['router']);
+		if(array_key_exists('application', $config)) $this->setApp($config['application']);
 		if(array_key_exists('page_class', $config)) $this->setPageClass($config['page_class']);
 		if(array_key_exists('page', $config)) $this->setPage($config['page']);
 	}
 	
 	/**
-	 * Return the router
-	 * @see $_router
+	 * Return the application
+	 * @see $_app
 	 *
-	 * @return Ea_Router
+	 * @return Ea_App
+	 */
+	public function getApp()
+	{
+		return $this->_app;
+	}
+	
+	/**
+	 * Return the application
+	 * @see $_app
+	 *
+	 * @return Ea_App
+	 * @deprecated
 	 */
 	public function getRouter()
 	{
-		return $this->_router;
+		return $this->getApp();
 	}
+	
 
 	/**
-	 * Return the router.
+	 * Return the application.
 	 * 
-	 * @param Ea_Router $router
+	 * @param Ea_App $app
 	 */
-	public function setRouter(Ea_Router $router)
+	public function setApp(Ea_App $app)
 	{
-		$this->_router=$router;
+		$this->_app=$app;
 	}
 	
 	/**
@@ -222,7 +235,7 @@ abstract class Ea_Module_Abstract
 	/**
 	 * Set a new register. Registers are application scope variables.
 	 * They can be store in session.
-	 * @uses getRouter()
+	 * @uses getApp()
 	 * 
 	 * @param mixed $name
 	 * @param $value
@@ -230,7 +243,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function setRegister($name, $value, $store=false)
 	{
-		if($this->getRouter()) $this->getRouter()->setRegister($name, $value, $store);
+		if($this->getApp()) $this->getApp()->setRegister($name, $value, $store);
 	}
 	
 	public function __set($name, $value)
@@ -244,7 +257,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function getRegister($name)
 	{
-		if($this->getRouter()) return $this->getRouter()->getRegister($name);
+		if($this->getApp()) return $this->getApp()->getRegister($name);
 		return null;
 	}
 	
@@ -268,7 +281,7 @@ abstract class Ea_Module_Abstract
 	/**
 	 * Return the param from URL.
 	 * Params are build to get the patern $_GET['module']['param'].
-	 * @uses Ea_Router::getParam()
+	 * @uses Ea_App::getParam()
 	 * 
 	 * @param string $name
 	 * @param string $module
@@ -276,7 +289,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function getParam($name, $default=null, $module=null)
 	{
-		$value=$this->getRouter()->getParam($name, $module);
+		$value=$this->getApp()->getParam($name, $module);
 		if($value===null) return $default;
 		return $value;
 	}
@@ -289,7 +302,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function getRawParam($name, $default=null)
 	{
-		$value=$this->getRouter()->getRawParam($name);
+		$value=$this->getApp()->getRawParam($name);
 		if($value===null) return $default;
 		return $value;
 	}
@@ -303,7 +316,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function getInputId($param, $module=null)
 	{
-		return $this->getRouter()->getInputId($param, $module);
+		return $this->getApp()->getInputId($param, $module);
 	}
 	
 }
