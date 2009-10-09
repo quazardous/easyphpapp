@@ -82,9 +82,9 @@ class Ea_Layout_Link extends Ea_Layout_Container
 			$page=$this->getPage();
 			if(!$page instanceof Ea_Page)
 			{
-				throw new Ea_Layout_Link_Exception('Cannot use route outside EasyPhpApp router engine !');
+				throw new Ea_Layout_Link_Exception('Cannot use route outside EasyPhpApp application engine !');
 			}
-			return $page->getRouter()->url($this->_url);
+			return $page->getApp()->url($this->_url);
 		}
 		return $this->_url;
 	}

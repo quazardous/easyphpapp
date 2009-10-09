@@ -52,7 +52,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$this->add($table1);
 		
-		// router will call render
+		// application will call render
 	}
 }
 ?>

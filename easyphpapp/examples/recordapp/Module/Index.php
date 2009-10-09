@@ -73,7 +73,7 @@ class Module_Index extends Ea_Module_Abstract
 		// add the table to the page !
 		$this->add($table2);
 		
-		// router will call preRender() and render()
+		// application will call preRender() and render()
 	}
 }
 ?>

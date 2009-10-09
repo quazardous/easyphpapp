@@ -67,7 +67,7 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
                 
                 $this->add("Valid users are john/doe (user) and aero/smith (admin).");
                 
-                // router will call render
+                // application will call render
         }
 
         /**
@@ -80,7 +80,7 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
                 $this->getPage()->setTitle('Security error');
                 
                 // add a cool deny message
-                $this->add($this->getRouter()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getRouter()->getTargetModule()."::".$this->getRouter()->getTargetAction());
+                $this->add($this->getApp()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getApp()->getTargetModule()."::".$this->getApp()->getTargetAction());
                 
                 // classic <br/>
                 $this->getPage()->add(new Ea_Layout_Single('br'));

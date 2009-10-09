@@ -53,7 +53,7 @@ class Module_Index extends Ea_Module_Abstract
 		$model1=new Ea_Model_Layout(new Ea_Model_Data_Record($records[0]));
 
 		// set the header sort adapter
-		$sortAdapter=new Ea_Model_Layout_Header_Adapter_Link('sort', $this->getRouter()->getRoute());
+		$sortAdapter=new Ea_Model_Layout_Header_Adapter_Link('sort', $this->getApp()->getRoute());
 		
 		$model1->setColumnHeaderAdapter('*', $sortAdapter);
 		
@@ -74,7 +74,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$this->add($table1);
 		
-		// router will call render
+		// application will call render
 	}
 }
 ?>

@@ -64,7 +64,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addCell(new Ea_Layout_Input_Text($idText2));
 		
 		$form[$idText2]='foo';
-		// now you can use Ea_Router::getParam('text2') and get 'foo'...
+		// now you can use Ea_App::getParam('text2') and get 'foo'...
 
 		$table->addRow();
 		
@@ -73,7 +73,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addCell(new Ea_Layout_Input_Text($idText3));
 		
 		$form[$idText3]='bar';
-		// now you can use Ea_Router::getParam('text2') and get 'foo'...
+		// now you can use Ea_App::getParam('text2') and get 'foo'...
 		
 		$table->addRow();
 		$table->addHeader('submit');
@@ -82,9 +82,9 @@ class Module_Index extends Ea_Module_Abstract
 		// add the form to the page
 		$this->getPage()->add($form);
 		
-		// NB : inside EasyPhpApp router engine, the form will try to complete the form with all the get params as hidden inputs
+		// NB : inside EasyPhpApp application engine, the form will try to complete the form with all the get params as hidden inputs
 		// see $form->setAction()	
-		// router will call render
+		// application will call render
 	}
 }
 ?>

@@ -4,7 +4,7 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Router
+ * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.0.1

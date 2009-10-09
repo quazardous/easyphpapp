@@ -50,7 +50,7 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
 		$this->getPage()->setTitle('Security error');
 		
 		// add a cool deny message
-		$this->add($this->getRouter()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getRouter()->getTargetModule()."::".$this->getRouter()->getTargetAction());
+		$this->add($this->getApp()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getApp()->getTargetModule()."::".$this->getApp()->getTargetAction());
 	}
 	
 	/**
@@ -69,8 +69,8 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
 	public function complete()
 	{
 		// complete is called after user authentication but before redirects...
-		// so here you can test $this->getRouter()->isAllowed() or whatever,
-		// and use $this->getRouter()->requestRedirect() to redirect user after good/bad login etc
+		// so here you can test $this->getApp()->isAllowed() or whatever,
+		// and use $this->getApp()->requestRedirect() to redirect user after good/bad login etc
 	}
 	
 }
