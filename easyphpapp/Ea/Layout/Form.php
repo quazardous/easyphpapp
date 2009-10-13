@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091002
+ * @version     0.3.8-20091013
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -140,6 +140,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		{
 			$this->uploadFile();
 		}
+		if($input instanceof Ea_Layout_Input_Submit)
+		{
+			// get the submit callbacks added before input was attached to form
+			foreach($input->getSubmitCallbacks() as $callback)
+			{
+				$this->addSubmitCallback($callback['callback'], $input->getId(), $callback['module']);
+			}
+			$input->resetSubmitCallbacks();
+		}
 	}
 	
 	/**
@@ -237,6 +246,95 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  		return $offset;		
  	}
 	
+	protected $_submitCallbacks=array();
+	
+	/**
+	 * Add submit callback for given button.
+	 * The callbacks are triggered when the form is Submited (POST).
+	 * @see triggerSubmitCallbacks()
+	 * 
+	 * @param callback $callback
+	 *  the callback will recieve 2 arguments : the form object and the name of the submit button.
+	 * @param string|array $id the id of the button, if null general submit callback
+	 * @param boolean $module
+	 *  by default $callback is one of the module method, else it's a classic php callback
+	 */
+	public function addSubmitCallback($callback, $id=null, $module=true)
+	{
+		if($this->getMethod()!='post') throw new Ea_Layout_Form_Exception('Only for post form');
+		if(!$id)
+		{
+			$id = '*'; //general callback
+		}
+		else
+		{
+			$id = Ea_Layout_Input_Abstract::get_name_from_id($id);
+		}
+		if(!array_key_exists($id, $this->_submitCallbacks)) $this->_submitCallbacks[$id]=array();
+		$this->_submitCallbacks[$id][]=array('callback'=>$callback, 'module'=>$module);
+	}
+	
+	/**
+	 * Flag for trigger submit callback.
+	 * 
+	 * @var boolean
+	 */
+	protected $_submitCallbacksTriggered=false;
+	
+	/**
+	 * Trigger the submit callback for the given button.
+	 * If you don't specify the button, it try determine the submitting button.
+	 * 
+	 * @param id|array $id
+	 * @return int|true|false number of triggered callbacks, true il already triggered or false if can't catchInput()
+	 * @see catchInput()
+	 */
+	public function triggerSubmitCallbacks($triggeringId=null)
+	{
+		if($this->getMethod()!='post') throw new Ea_Layout_Form_Exception('Only for post form');
+		if($this->_submitCallbacksTriggered) return true;
+		$this->_submitCallbacksTriggered=true;
+		if(!$this->catchInput()) return false;
+		if($this->isStore()&&(!$triggeringId))
+		{
+			$triggeringId=$this->_submittingInputId;
+		}
+		$triggeringId = Ea_Layout_Input_Abstract::get_name_from_id($triggeringId);
+		$n=0;
+		foreach($this->_submitCallbacks as $id => $callbacks)
+		{
+			$do=false;
+			if($id=='*') //general callback
+			{
+				$do=true;
+				$id=null;
+			}
+			else if($this->isStore())  //useStore way
+			{
+				if($triggeringId&&$triggeringId==$id) $do=true;
+			}
+			else //simple POST way
+			{
+				if($triggeringId)
+				{
+					if($triggeringId==$id) $do=true; 
+				}
+				else if($this[$id]) $do=true; 
+			}
+			if(!$do) continue;
+			foreach($callbacks as $callback)
+			{
+				if($callback['module'])
+				{
+					$callback['callback']=array($this->getPage()->getModule(), $callback['callback']);
+				}
+				//echo "call_user_func({$callback['callback'][1]}, \$this, $id)";
+				call_user_func($callback['callback'], $this, $id);
+				$n++;
+			}
+		}
+		return $n;
+	}
 	
 	/**
 	 * Action can be a route or an url.
@@ -347,12 +445,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	/**
 	 *  Get the form id.
 	 * 
-	 * @return string
+	 * @return string|array
 	 */
-	public function getId()
+	public function getId($string=true)
 	{
+		if($string) Ea_Layout_Input_Abstract::get_name_from_id($this->_id);
 		return $this->_id;
 	}
+	
+	// FIXME add getName();
 	
 	/**
 	 * Set layout attribute.
@@ -607,11 +708,31 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function getValueFromSession($id)
 	{
-		if(!isset($this->getSession()->forms[$this->getId()])) return null;
-		$input=self::array_get_from_id($this->getSession()->forms[$this->getId()], $id);
+		if(!$this->isStoredData()) return null;
+		$input=self::array_get_from_id($this->getStoredData()->items, $id);
 		//TODO think about it
 		if($input instanceof Ea_Layout_Input_Abstract) return $input->getValue();
 		return null;
+	}
+	
+	/**
+	 * Test if there are some session data for the form.
+	 * 
+	 * @return boolean
+	 */
+	protected function isStoredData()
+	{
+		return isset($this->getSession()->forms[$this->getId()]);
+	}
+
+	/**
+	 * Get the session stored data.
+	 * 
+	 * @return mixed
+	 */
+	protected function &getStoredData()
+	{
+		return $this->getSession()->forms[$this->getId()];
 	}
 	
 	protected $_post=null;
@@ -637,7 +758,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		switch($this->getMethod())
 		{
 			case 'post':
-				
 				if(!$this->isPost()) return false;
 				$magicId=$this->getMagicName('id');
 				//testing magic input
@@ -651,8 +771,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					unset($this->_post[$magicId]);
 					return true;
 				}
+				$this->_submittingInputId=null;
+				// dealing with stored structure
 				$this->recursiveWalk(array($this, 'parseInput'));
-				$this->recursiveWalk(array($this, 'triggerSubmitCallbacks'));
 				// store new values
 				if($this->isStore()) $this->store();
 				return true;
@@ -661,6 +782,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				throw new Ea_Layout_Form_Exception('Use Ea_App::getParam()');
 		}
 	}
+	
+	/**
+	 * Id of input clicked for submission.
+	 * 
+	 * @var array|string
+	 */
+	protected $_submittingInputId;
 	
 	/**
 	 * Retrieve value from submitted data for given input.
@@ -673,33 +801,19 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		{
 			case 'post':
 				$input->setValue($this->getValueFromPost($input->getId()));
-				break;
-			default:
-				throw new Ea_Layout_Form_Exception('Cannot do that !');
-		}
-	}
-	
-	/**
-	 * Trigger the submit callback.
-	 * 
-	 * @param Ea_Layout_Input_Abstract $input
-	 */
-	public function triggerSubmitCallbacks(Ea_Layout_Input_Abstract $input)
-	{
-		switch($this->getMethod())
-		{
-			case 'post':
 				if($input instanceof Ea_Layout_Input_Submit)
 				{
-					$input->triggerSubmitCallbacks();
+					if($input->getValue())
+					{
+						$this->_submittingInputId=$input->getId();
+					}
 				}
 				break;
 			default:
 				throw new Ea_Layout_Form_Exception('Cannot do that !');
 		}
 	}
-	
-	
+		
 	protected function usePostData()
 	{
 		return $this->_post!==null;
@@ -872,7 +986,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}
 	
 	/**
-	 * Tells if form must store its structure at postRender().
+	 * Test if form must store its structure at postRender().
 	 * 
 	 * @return boolean
 	 */
@@ -897,7 +1011,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	protected function store()
  	{
  		if(!isset($this->getSession()->forms)) $this->getSession()->forms=array();
- 		$this->getSession()->forms[$this->getId()]=$this->_items;
+ 		$this->getSession()->forms[$this->getId()]=(object)array('items'=>$this->_items, 'submitCallbacks'=>$this->_submitCallbacks);
  	}
  	
  	/**
@@ -907,8 +1021,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	 */
  	protected function restore()
  	{
- 		if(!isset($this->getSession()->forms[$this->getId()])) return false;
-		$this->_items=$this->getSession()->forms[$this->getId()];
+ 		if(!$this->isStoredData()) return false;
+		$this->_submitCallbacks=$this->getStoredData()->submitCallbacks;
+		$this->_items=$this->getStoredData()->items;
 		$this->recursiveWalk(array($this, 'setInputForm'));
 		return true;
  	}

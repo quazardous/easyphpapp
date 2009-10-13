@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091002
+ * @version     0.3.8-20091013
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -26,6 +26,8 @@ $app=Ea_App::singleton('callbackformapp');
 // set the module class prefix, so with Zend_Loader style, we search the class in 'Module/' directory.
 // you are responsible to configure your include path so that it can be aware of that directory
 $app->setModuleClassPrefix('Module');
+
+$app->showVersion();
 
 // call the dispath()
 $app->dispatch();

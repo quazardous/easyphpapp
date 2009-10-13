@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091009
+ * @version     0.3.8-20091012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -115,29 +115,14 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	protected $_module=null;
 
-	public function setDefaultShowVersion($show)
+	static public function setDefaultShowVersion($show)
 	{
 		self::$_defaultShowVersion=$show;
+	}
 		
-	}
-	
-	static protected $_defaultShowVersion=true;
-	
-	/**
-	 * Show version information.
-	 * 
-	 * @var boolean
-	 */
-	protected $_showVersion;
-	
-	public function setShowVersion($show)
-	{
-		$this->_showVersion=$show;
-	}
-	
 	public function getShowVersion()
 	{
-		return $this->_showVersion;
+		return $this->getApp()->getShowVersion();;
 	}
 	
 	/**
@@ -168,8 +153,6 @@ class Ea_Page implements Ea_Page_Interface
 		 * Can be usefull to make difference between top layout and main layout (where to add new content)
 		 */
 		$this->_main=$this->_top;
-		
-		$this->_showVersion=self::$_defaultShowVersion;
 	} 
 	
 	/**

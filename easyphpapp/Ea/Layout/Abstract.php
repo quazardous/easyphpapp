@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.8-20091013
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -40,7 +40,11 @@ abstract class Ea_Layout_Abstract
 	 */
 	public function __construct($config=null)
 	{
-		if($config instanceof Ea_Page_Interface)
+		if(!$config)
+		{
+			$config=array();
+		}
+		else if($config instanceof Ea_Page_Interface)
 		{
 			$config=array('page'=>$config);
 		}
@@ -49,6 +53,13 @@ abstract class Ea_Layout_Abstract
 			if(array_key_exists('page', $config))
 			{
 				$this->setPage($config['page']);
+			}
+			else
+			{
+				if(self::$_pageGetter)
+				{
+					$this->setPage(call_user_func(self::$_pageGetter));
+				}
 			}
 		}
 	}
@@ -89,6 +100,18 @@ abstract class Ea_Layout_Abstract
 	protected $_page=null;
 
 	/**
+	 * Try get page with callback.
+	 * 
+	 * @var callback
+	 */
+	static protected $_pageGetter=null;
+	
+	static public function setPageGetter($callback)
+	{
+		self::$_pageGetter=$callback;	
+	}
+	
+	/**
 	 * Set the page.
 	 * You can use your own Page class even outside EasyPhpApp engine (like Zend_View).
 	 * Your page class must "mimic"(*) Ea_Page_Interface.
@@ -118,7 +141,7 @@ abstract class Ea_Layout_Abstract
 		if($this->getParent()) $this->_page=$this->getParent()->getPage(); 
 		return $this->_page;
 	}
-	
+		
 	/**
 	 * Escape methode inherited from Ea_Page.
 	 * 

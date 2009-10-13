@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091009
+ * @version     0.3.8-20091013
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -17,6 +17,7 @@ require_once 'Ea/App/Exception.php';
 require_once 'Ea/Route.php';
 require_once 'Ea/Page.php';
 require_once 'Ea/Module/Abstract.php';
+require_once 'Ea/Layout/Abstract.php';
 require_once 'Zend/Loader.php';
 require_once 'Zend/Session/Namespace.php';
 
@@ -114,6 +115,19 @@ class Ea_App
 	protected $_defaultScript='index.php?';
 
 	/**
+	 * Add Random string to url to force refresh.
+	 * Trick because some time page do not refresh on redirect..
+	 * 
+	 * @var boolean
+	 */
+/*	protected $_addRandomToUrl=false; FIXME
+	
+	public function addRandomToUrl($random=true)
+	{
+		$this->_addRandomToUrl=$random;
+	}
+*/	
+	/**
 	 * If true, the application is responsible to render the targeted module.
 	 * 
 	 * @var boolean
@@ -180,6 +194,23 @@ class Ea_App
 	protected $_runningScript=null;
 	
 	/**
+	 * Instance of running module.
+	 * 
+	 * @var Ea_Module_Abstract
+	 */
+	protected $_runningModuleInstance=null;
+	
+	/**
+	 * Get instance of running module.
+	 * 
+	 * @return Ea_Module_Abstract
+	 */
+	public function getRunningModule()
+	{
+		return $this->_runningModuleInstance;
+	}
+	
+	/**
 	 * Singleton instance of application.
 	 * 
 	 * @var Ea_App
@@ -188,6 +219,16 @@ class Ea_App
 
 	/**
 	 * Return singleton instance of application.
+	 *
+	 * @return Ea_App
+	 */
+	/*public function getSingleton() TODO
+	{
+		return self::$_singleton;
+	}*/
+	
+	/**
+	 * Return/create singleton instance of application.
 	 *
 	 * @param string $appName internal name used for session namespace.
 	 * @param string $version user application version.
@@ -385,10 +426,15 @@ class Ea_App
 		$script=$route->getScript();
 		if(!$script) $script=$this->_targetScript;
 		
+		$url=$script;
 		$get=$this->getUrlParams($route);
-	
-		$url=$script.http_build_query($get);
-		$url=rtrim($url, '?');
+		$url.=http_build_query($get);
+/*		$url.='&';
+		if($this->_addRandomToUrl)
+		{
+			$url.=md5(strftime('%A'));
+		} FIXME */
+		$url=rtrim($url, '?&');
 		if(!$url)$url='.';
 		return $url;
 	}
@@ -556,12 +602,17 @@ class Ea_App
 				throw new Ea_App_Exception("{$moduleClasse} does not extend Ea_Module_Abstract");
 			}
 		}
+		$this->_runningModuleInstance=$module;
 		$m=get_class_methods($moduleClasse);
 		if(! in_array( $actionMethod, $m))
 		{
 			throw new Ea_App_Exception("{$actionMethod} does not exists in {$moduleClasse}");
 		}
 		$this->_runningAction=$action;
+		
+		// by default all layouts will try get a page
+		Ea_Layout_Abstract::setPageGetter(array($obj, 'getPage'));
+		
 		$obj->init();
 		$obj->$actionMethod();
 		$obj->complete();
@@ -1235,5 +1286,24 @@ class Ea_App
 		if($this->_requestedRedirectPriority===false) return;
 		$this->redirect($this->getRequestedRedirect());
 	}
+	
+	/**
+	 * Show version information.
+	 * 
+	 * @var boolean
+	 */
+	protected $_showVersion=false;
+	
+	public function showVersion($show=true)
+	{
+		$this->_showVersion=$show;
+	}
+	
+	public function getShowVersion()
+	{
+		return $this->_showVersion;
+	}
+	
+	
 }
 ?>
