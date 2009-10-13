@@ -21,25 +21,44 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 {
 	protected $_type='submit';
 	
+	/**
+	 * Temporary submit callback, copied in Ea_Layout_Form.
+	 * 
+	 * @var array
+	 */
 	protected $_submitCallbacks=array();
+	
+	public function getSubmitCallbacks()
+	{
+		return $this->_submitCallbacks;	
+	}
+	
+	public function resetSubmitCallbacks()
+	{
+		return $this->_submitCallbacks=array();	
+	}
 	
 	/**
 	 * Add submit callback to the button.
 	 * 
 	 * @param callback $callback
-	 *  the callback will recieve one argument : the form object.
 	 * @param boolean $module : by default $callback is one of the module method, else it's a classic php callback
-	 *  be aware that callbacks can be serialized.
+	 * 
+	 * @see Ea_Layout_Form::addSubmitCallback()
 	 */
 	public function addSubmitCallback($callback, $module=true)
 	{
-		$this->_submitCallbacks[]=array('callback'=>$callback, 'module'=>$module);
+		if($this->getForm())
+		{
+			// if already attached to a form add callback to the form.
+			$this->getForm()->addSubmitCallback($this->getId(), $callback, $module);
+		}
+		else
+		{
+			// put it in a temporary array
+			$this->_submitCallbacks[]=array('callback'=>$callback, 'module'=>$module);
+		}
 	}
-	
-	public function __sleep()
-    {
-        return array_merge(parent::__sleep(), array('_submitCallbacks'));
-    }
 	
 	public function __construct($id=null, $value=null, $callback=null, $config=null)
 	{

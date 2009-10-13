@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.3.8-20091013
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -184,6 +184,24 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	}
 	
 	/**
+	 * Get name from id.
+	 * 
+	 * @param array $id
+	 * @return string
+	 */
+	public static function get_name_from_id($id)
+	{
+		if(!is_array($id)) return $id;
+		$name=false;
+		foreach($id as $pid)
+		{
+			if($name) $name.="[".$pid."]";
+			else $name=$pid;
+		}
+		return $name;
+	}
+	
+	/**
 	 * Set the input Id.
 	 *
 	 * @param string|array(string) $id
@@ -248,13 +266,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	{
 		if(count($this->_id)==0) return null;
 		if(count($this->_id)==1) return $this->_id[0];
-		$name=false;
-		foreach($this->_id as $pid)
-		{
-			if($name) $name.="[".$pid."]";
-			else $name=$pid;
-		}
-		return $name;
+		return self::get_name_from_id($this->_id);
 	}
 	
 	/**

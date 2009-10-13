@@ -318,6 +318,5 @@ abstract class Ea_Module_Abstract
 	{
 		return $this->getApp()->getInputId($param, $module);
 	}
-	
 }
 ?>

@@ -2,7 +2,7 @@
 Improve form support :
 - add submit callback
 Improve Session Namespace support :
-- add namespace/appname force session
+- add namespace/appname for session
 Change Ea_Router in Ea_App ;p
 - Ea_Router is still present for compatibility
 
