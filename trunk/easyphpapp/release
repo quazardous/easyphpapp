@@ -1,3 +1,7 @@
+*** 0.4.0-maki ***
+Improve form support :
+- modules can "auto manage" forms : submit callbacks added to forms can be auto triggered.
+
 *** 0.3.8-snow ***
 Improve form support :
 - add submit callback
