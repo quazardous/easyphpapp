@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091012
+ * @version     0.4.0-20091014
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -120,9 +120,9 @@ class Ea_Page implements Ea_Page_Interface
 		self::$_defaultShowVersion=$show;
 	}
 		
-	public function getShowVersion()
+	public function isShowVersion()
 	{
-		return $this->getApp()->getShowVersion();;
+		return $this->getApp()->isShowVersion();;
 	}
 	
 	/**
@@ -275,7 +275,7 @@ class Ea_Page implements Ea_Page_Interface
 			?><link type="text/css" href="<?php echo $this->escape($style['href']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
 <?php
 		}
-		if((!$isStyle)&&$this->getShowVersion()&&$this->getApp())
+		if((!$isStyle)&&$this->isShowVersion()&&$this->getApp())
 		{
 			//default version style ;p
 			?>
@@ -319,7 +319,7 @@ body
 		}
 		?></head><?php
 		
-		if($this->getShowVersion()&&$this->getApp())
+		if($this->isShowVersion()&&$this->getApp())
 		{
 			$this->_top->add($this->getVersionLayout());
 		}

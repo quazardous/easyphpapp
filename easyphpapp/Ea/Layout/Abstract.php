@@ -54,14 +54,8 @@ abstract class Ea_Layout_Abstract
 			{
 				$this->setPage($config['page']);
 			}
-			else
-			{
-				if(self::$_pageGetter)
-				{
-					$this->setPage(call_user_func(self::$_pageGetter));
-				}
-			}
 		}
+		$this->executeRegisterCallbacks();
 	}
 
 	/**
@@ -100,15 +94,29 @@ abstract class Ea_Layout_Abstract
 	protected $_page=null;
 
 	/**
-	 * Try get page with callback.
+	 * Callbacks triggered in constructor.
+	 * Callbacks take new object ($this) at unique argument.
 	 * 
-	 * @var callback
+	 * @var array
 	 */
-	static protected $_pageGetter=null;
-	
-	static public function setPageGetter($callback)
+	static protected $_registerCallbacks=array();
+		
+	/**
+	 * Add register callback.
+	 * 
+	 * @param callback $callback
+	 */
+	static public function addRegisterCallback($callback)
 	{
-		self::$_pageGetter=$callback;	
+		self::$_registerCallbacks[]=$callback;	
+	}
+	
+	protected function executeRegisterCallbacks()
+	{
+		foreach(self::$_registerCallbacks as $callback)
+		{
+			call_user_func($callback, $this);
+		}
 	}
 	
 	/**

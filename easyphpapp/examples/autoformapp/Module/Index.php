@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091013
+ * @version     0.4.0-20091014
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -48,11 +48,8 @@ class Module_Index extends Ea_Module_Abstract
 		// by default the callback is a method of the module
 		$form->addSubmitCallback('onSubmitIndex');
 		
-		// catch if some datas were send
-		if($form->triggerSubmitCallbacks())
-		{
-			return;
-		}
+		// by default the forms are auto managed
+		// callback will be triggered at submit after render
 		
 		$form->add($table=new Ea_Layout_Table);
 		
@@ -128,6 +125,7 @@ class Module_Index extends Ea_Module_Abstract
 		$_SESSION['select1']=(string)$form['select1'];
 		$_SESSION['textarea1']=(string)$form['textarea1'];
 		$_SESSION['radio1']=(string)$form['radio1'];
+		// NB string cast is important because form structure is declared in the action, so without cast you have the object itself.
 	}
 	
 }

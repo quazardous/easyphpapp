@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091013
+ * @version     0.4.0-20091014
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -192,24 +192,7 @@ class Ea_App
 	 * FIXME : useless
 	 */
 	protected $_runningScript=null;
-	
-	/**
-	 * Instance of running module.
-	 * 
-	 * @var Ea_Module_Abstract
-	 */
-	protected $_runningModuleInstance=null;
-	
-	/**
-	 * Get instance of running module.
-	 * 
-	 * @return Ea_Module_Abstract
-	 */
-	public function getRunningModule()
-	{
-		return $this->_runningModuleInstance;
-	}
-	
+		
 	/**
 	 * Singleton instance of application.
 	 * 
@@ -602,7 +585,7 @@ class Ea_App
 				throw new Ea_App_Exception("{$moduleClasse} does not extend Ea_Module_Abstract");
 			}
 		}
-		$this->_runningModuleInstance=$module;
+
 		$m=get_class_methods($moduleClasse);
 		if(! in_array( $actionMethod, $m))
 		{
@@ -611,11 +594,21 @@ class Ea_App
 		$this->_runningAction=$action;
 		
 		// by default all layouts will try get a page
-		Ea_Layout_Abstract::setPageGetter(array($obj, 'getPage'));
+		Ea_Layout_Abstract::addRegisterCallback(array($obj, 'registerLayout'));
+		
+		// tells the module if application manage forms by default
+		$obj->manageForms($this->isManageForms());
 		
 		$obj->init();
 		$obj->$actionMethod();
 		$obj->complete();
+		
+		if($obj->isManageForms())
+		{
+			// trigger the submit callbacks of managed forms
+			$obj->doManageForms();
+		}
+		
 		$this->executeCallbacks();
 		$this->applyRequestedRedirect();
 		if($render&&$this->_renderModule) $obj->render();
@@ -1299,9 +1292,36 @@ class Ea_App
 		$this->_showVersion=$show;
 	}
 	
-	public function getShowVersion()
+	public function isShowVersion()
 	{
 		return $this->_showVersion;
+	}
+	
+	
+	/**
+	 * Manage the forms callbacks.
+	 * Application level flag.
+	 * 
+	 * @var boolean
+	 * @see Ea_Module::$_manageForms
+	 */
+	protected $_manageForms=true;
+	
+	/**
+	 * Manage the forms callbacks.
+	 * Application level flag.
+	 * 
+	 * @param boolean $manage
+	 * @see Ea_Module::manageForms()
+	 */
+	public function manageForms($manage=true)
+	{
+		$this->_manageForms=$manage;
+	}
+	
+	public function isManageForms()
+	{
+		return $this->_manageForms;
 	}
 	
 	

@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090202
+ * @version     0.4.0-20091014
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -53,7 +53,7 @@ abstract class Ea_Module_Abstract
 	 * @var string
 	 */
 	protected $_name=null;
-
+	
 	/**
 	 * Set the name.
 	 * @see $_pageClass
@@ -275,6 +275,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function add($content, $append=true)
 	{
+		// FIXME call registerLayout() ?
 		$this->getPage()->add($content, $append);
 	}
 
@@ -318,5 +319,78 @@ abstract class Ea_Module_Abstract
 	{
 		return $this->getApp()->getInputId($param, $module);
 	}
+	
+	/**
+	 * Manage the forms callbacks.
+	 * Module level flag.
+	 * 
+	 * @var boolean
+	 * @see Ea_App::$_manageForms
+	 */
+	protected $_manageForms=true;
+	
+	/**
+	 * Manage the forms callbacks.
+	 * Module level flag.
+	 * 
+	 * @param boolean $manage
+	 * @see Ea_App::manageForms()
+	 */
+	public function manageForms($manage=true)
+	{
+		$this->_manageForms=$manage;
+	}
+	
+	public function isManageForms()
+	{
+		return $this->_manageForms;
+	}
+	
+	public function doManageForms()
+	{
+		foreach($this->_managedForms as $form)
+		{
+			if($form->getMethod()=='post')
+			{
+				$form->triggerSubmitCallbacks();
+			}
+		}
+	}
+	
+	/**
+	 * Register layout with module.
+	 * 
+	 * @param Ea_Layout_Abstract $layout
+	 */
+	public function registerLayout(Ea_Layout_Abstract $layout)
+	{
+		if(!$layout->getPage())
+		{
+			$layout->setPage($this->getPage());
+		}
+		if($layout instanceof Ea_Layout_Form)
+		{
+			$this->registerForm($layout);
+		}
+	}
+	
+	/**
+	 * Array of managed forms.
+	 * 
+	 * @var array
+	 */
+	protected $_managedForms=array();
+	
+	/**
+	 * Register a form to manage.
+	 * 
+	 * @param Ea_Layout_Form $layout
+	 * @see manageForms()
+	 */
+	public function registerForm(Ea_Layout_Form $form)
+	{
+		$this->_managedForms[]=$form;
+	}
+	
 }
 ?>
