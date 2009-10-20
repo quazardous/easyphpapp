@@ -70,7 +70,7 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 	
 	protected $_recordCellClass='Ea_Layout_Table_Cell';
 	
-	protected $_rawRecordValue=false;
+	protected $_rawRecordValues=false;
 	
 	protected $_tableTag=null;
 	
@@ -110,9 +110,9 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 		{
 			$this->_recordCellClass=$config['record_cell_class'];
 		}
-		if(isset($config['raw_record_value']))
+		if(isset($config['raw_record_values']))
 		{
-			$this->_rawRecordValue=$config['raw_record_value'];
+			$this->_rawRecordValues=$config['raw_record_values'];
 		}
 		if(isset($config['table_tag']))
 		{
@@ -217,7 +217,7 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 		if($adapter&&$adapter!==$this)
 		{
 			// be carefull not to provoque recursion here
-			return $adapter->getRecordCell($colName, $record, $i, $spread);
+			return $adapter->getRecordCell($idCol, $record, $i, $spread);
 		}
 		$class=$this->_recordCellClass;
 		Zend_Loader::loadClass($class);
@@ -227,7 +227,7 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 			$config=$modifier->modify($config, $record, $i, $idCol);
 		}
 		$cell = new $class($config);
-		if($this->_rawRecordValue)
+		if($this->_rawRecordValues)
 		{
 			$content=$this->getTable()->getColumnAdapter($idCol)->getRawValue($record);
 		}

@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091014
+ * @version     0.4.0-20091020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -205,10 +205,10 @@ class Ea_App
 	 *
 	 * @return Ea_App
 	 */
-	/*public function getSingleton() TODO
+	public function getSingleton()
 	{
 		return self::$_singleton;
-	}*/
+	}
 	
 	/**
 	 * Return/create singleton instance of application.
@@ -336,6 +336,24 @@ class Ea_App
 	}
 
 	/**
+	 * Force use of module params.
+	 * 
+	 * @var boolean
+	 * @see Ea_Route::setParam()
+	 */
+	protected $_forceModuleParams=true;
+
+	public function forceModuleParams($force=true)
+	{
+		$this->_forceModuleParams=$force;
+	}
+
+	public function isForceModuleParams()
+	{
+		return $this->_forceModuleParams;
+	}
+	
+	/**
 	 * Return the URL params array of the given route.
 	 * 
 	 * @param Ea_Route $route
@@ -379,12 +397,28 @@ class Ea_App
 		{
 			$get[$this->_actionParamName]=$action;
 		}
-		foreach($route->getAllParams($module) as $mod => $params)
+		foreach($route->getModuleParams($module) as $mod => $params)
 		{
 			foreach($params as $name=>$value)
 			{
 				if(!array_key_exists($mod, $get)) $get[$mod]=array();
 				$get[$mod][$name]=$value;
+			}
+		}
+		foreach($route->getParams() as $name => $value)
+		{
+			if($this->isForceModuleParams())
+			{
+				if(!array_key_exists($module, $get)) $get[$module]=array();
+				$get[$module][$name]=$value;
+			}
+			else
+			{
+				if($name==$this->_moduleParamName||$name==$this->_actionParamName)
+				{
+					throw new Ea_App_Exception("{$name} invalid param name");
+				}
+				$get[$name]=$value;
 			}
 		}
 		foreach($route->getRawParams() as $name => $value)
@@ -395,6 +429,7 @@ class Ea_App
 			}
 			$get[$name]=$value;
 		}
+		
 		return $get;
 	}
 	

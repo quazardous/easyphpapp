@@ -5,8 +5,8 @@ Improve layout support :
 - can add() array of layouts
 Improve records table :
 - rethink of populate() method to allow raw record (ie : non data records) 
-TODO : Simplify url params :
-- can use application range params (no more module prefix in urls)
+Simplify url params :
+- can use application range params (no more module prefix in urls => same as raw param)
 
 *** 0.3.8-snow ***
 Improve form support :

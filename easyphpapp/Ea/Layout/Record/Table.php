@@ -157,6 +157,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	public function resetRecords()
 	{
 		$this->_records=array();
+		$this->setMultiple(false);
 	}
 	
 	/**
@@ -170,6 +171,14 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	{
 		if(!$this->_spread) $this->setSpread(self::spread_vertical);
 		array_push($this->_records, array('data'=>$record, 'adapter'=>$adapter));
+		if(count($this->_records)>1)
+		{
+			$this->setMultiple(true);
+		}
+		if($adapter)
+		{
+			$adapter->acknowledge($this);
+		}
 	}
 
 	/**
@@ -435,7 +444,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 			}
 			// if only one record adapter gets a null
 			if($this->isMultiple()) $i=0;
-			else $i=null;
+			else $i=0;
 			foreach($this->_records as $record)
 			{
 				if($record['adapter'])
@@ -446,7 +455,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 				{
 					$a=$adapter;
 				}
-				$this->add($a->getRecordRow($record['data'], $i));
+				$this->add($a->getRecordRow($record['data'], $this->isMultiple()?$i:null));
 				if($this->isMultiple()) $i++;
 			}
 		}
@@ -455,10 +464,11 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 			if($this->isMultiple()) $i=0;
 			else $i=null;
 			$records=array();
-			foreach($this->_records as $record)
+			foreach($this->_records as $i=>$record)
 			{
 				// FIXME $i null => '' string(0)
-				$records[$i]=$record['data'];
+				if($this->isMultiple()) $records[$i]=$record['data'];
+				else $records[]=$record['data'];
 			}
 			
 			foreach($this->getListColumns() as $idCol)
