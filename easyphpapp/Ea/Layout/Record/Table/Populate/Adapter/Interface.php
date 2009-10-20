@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091015
+ * @version     0.4.0-20091020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -46,9 +46,20 @@ interface Ea_Layout_Record_Table_Populate_Adapter_Interface
 	/**
 	 * Return the row if spread is horizontal
 	 * 
-	 * @param string $colName
+	 * @param string $idCol
 	 * @return Ea_Layout_Table_Row
 	 */
-	public function getColRow($colName, $records);
+	public function getColRow($idCol, $records);
 
+	/**
+	 * Return the record cell.
+	 * 
+	 * @param string $idCol
+	 * @param mixed $record
+	 * @param int $i
+	 * @param 'vertical'|'horizontal' $spread
+	 * @return Ea_Layout_Table_Cell
+	 */
+	public function getRecordCell($idCol, $record, $i, $spread);
+	
 }

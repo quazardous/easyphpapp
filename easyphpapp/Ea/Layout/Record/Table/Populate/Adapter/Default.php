@@ -47,6 +47,11 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 	public function acknowledge(Ea_Layout_Record_Table $table)
 	{
 		$this->_table=$table;
+		$this->_table->assertRow($this->_strictTable);
+		if($this->_tableTag)
+		{
+			$this->_table->setTag($this->_tableTag);
+		}
 	}
 	
 	protected $_headerRowConfig=null;
@@ -65,7 +70,11 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 	
 	protected $_recordCellClass='Ea_Layout_Table_Cell';
 	
-	protected $_onlyRecordValue=false;
+	protected $_rawRecordValue=false;
+	
+	protected $_tableTag=null;
+	
+	protected $_strictTable=true;
 		
 	public function __construct($config=array())
 	{
@@ -105,6 +114,14 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 		{
 			$this->_rawRecordValue=$config['raw_record_value'];
 		}
+		if(isset($config['table_tag']))
+		{
+			$this->_tableTag=$config['table_tag'];
+		}
+		if(isset($config['strict_table']))
+		{
+			$this->_strictTable=$config['strict_table'];
+		}
 	}
 
 	/**
@@ -128,16 +145,7 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 		
 		foreach($this->getTable()->getListColumns() as $idCol)
 		{
-			$config=$this->_recordCellConfig;
-			foreach($this->getTable()->getRecordConfigCellModifiers() as $modifier)
-			{
-				$config=$modifier->modify($config, $record, $i, $idCol);
-			}
-			$row->addCell(
-				$this->getTable()->getColumnAdapter($idCol)->getContent($record, $i),
-				$config,
-				true,
-				$this->_recordCellClass);
+			$row->add($this->getRecordCell($idCol, $record, $i, 'vertical'));
 		}
 		
 		return $row;
@@ -188,14 +196,47 @@ class Ea_Layout_Record_Table_Populate_Adapter_Default implements Ea_Layout_Recor
 		
 		foreach($records as $i => $record)
 		{
-			$config=$this->_recordCellConfig;
-			foreach($this->getTable()->getRecordConfigCellModifiers() as $modifier)
-			{
-				$config=$modifier->modify($config, $record, $i, $idCol);
-			}
-			$row->addCell($this->getTable()->getColumnAdapter($idCol)->getContent($record, $i), $config, true, $this->_recordCellClass);
+			$row->add($this->getRecordCell($idCol, $record, $i, 'horizontal'));
 		}
 		
 		return $row;
 	}
+
+	/**
+	 * Return the record cell.
+	 * 
+	 * @param string $idCol
+	 * @param mixed $record
+	 * @param int $i
+	 * @param 'vertical'|'horizontal' $spread
+	 * @return Ea_Layout_Table_Cell
+	 */
+	public function getRecordCell($idCol, $record, $i, $spread)
+	{
+		$adapter=$this->getTable()->getRecordAdapter($i);
+		if($adapter&&$adapter!==$this)
+		{
+			// be carefull not to provoque recursion here
+			return $adapter->getRecordCell($colName, $record, $i, $spread);
+		}
+		$class=$this->_recordCellClass;
+		Zend_Loader::loadClass($class);
+		$config=$this->_recordCellConfig;
+		foreach($this->getTable()->getRecordConfigCellModifiers() as $modifier)
+		{
+			$config=$modifier->modify($config, $record, $i, $idCol);
+		}
+		$cell = new $class($config);
+		if($this->_rawRecordValue)
+		{
+			$content=$this->getTable()->getColumnAdapter($idCol)->getRawValue($record);
+		}
+		else
+		{
+			$content=$this->getTable()->getColumnAdapter($idCol)->getContent($record, $i);
+		}
+		$cell->add($content);
+		return $cell;
+	}
+	
 }

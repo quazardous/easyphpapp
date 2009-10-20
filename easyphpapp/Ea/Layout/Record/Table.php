@@ -239,7 +239,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	 * @param string $seekCol reference col for before and after
 	 * @see Ea_Layout_Record_Adapter_Interface
 	 */
-	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null/*, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell'*/, $mode='append', $seekCol=null)
+	public function addColumn(Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null, $mode='append', $seekCol=null)
 	{
 		if($idCol===null)
 		{
@@ -287,12 +287,12 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		return $idCol;
 	}
 
-	public function addColumnAfter($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null)//, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	public function addColumnAfter($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null)
 	{
 		$this->addColumn($column, $content, $idCol, 'after', $seekCol);
 	}
 
-	public function addColumnBefore($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null)//, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell')
+	public function addColumnBefore($seekCol, Ea_Layout_Record_Adapter_Interface $column, $content=null, $idCol=null)
 	{
 		$this->addColumn($column, $content, $idCol, 'before', $seekCol);
 	}
@@ -385,17 +385,31 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 	protected $_populated=false;
 
 	/**
+	 * Return populate adapter.
+	 * 
+	 * @param int $i
+	 * @return Ea_Layout_Record_Table_Populate_Adapter_Interface
+	 */
+	public function getRecordAdapter($i)
+	{
+		if($this->isMultiple())
+		{
+			return $this->_records[$i]['adapter'];
+		}
+		foreach($this->_records as $record)
+		{
+			return $record['adapter'];
+		}
+		return null;
+	}
+	
+	/**
 	 * This method will populate the table from the records, filling the table with record rows.
 	 * If you don't call populate(), preRender() will do it for you.
 	 * 
 	 * @param Ea_Layout_Record_Table_Populate_Adapter_Interface $adapter
-	 * @param array $headerConfig the config array for the row constructor 
-	 * @param array $recordConfig the config array for the row constructor 
-	 * @param string $headerRowClass the row class
-	 * @param string $recordRowClass the row class
 	 */
 	public function populate($adapter=null)
-	//, $headerConfig=null, $recordConfig=null, $headerRowClass='Ea_Layout_Table_Row', $recordRowClass='Ea_Layout_Table_Row', )
 	{
 		if(!$adapter)
 		{
