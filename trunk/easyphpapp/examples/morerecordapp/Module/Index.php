@@ -69,9 +69,14 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// set one record...
 		$table2->setRecord($records[0]);
+		$table2->addRecord(array(
+				'name'=>'the name of the person',
+				'age'=>'the age of the person',
+				'gender'=>'the gender of the person'),
+			new Ea_Layout_Record_Table_Populate_Adapter_Default(array('raw_record_values'=>true)));
 		
 		// default for 1 record table is horizontal
-		// $table2->setSpread('horizontal');
+		$table2->setSpread('horizontal');
 		
 		// add the table to the page !
 		$this->add($table2);

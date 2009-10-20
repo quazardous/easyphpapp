@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090128
+ * @version     0.4.0-20091020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -56,7 +56,7 @@ class Ea_Route
 	 * 
 	 * @var array(string=>array))
 	 */
-	protected $_otherParams=array();
+	protected $_modulesParams=array();
 
 	/**
 	 * Raw params to put in the query part.
@@ -178,26 +178,21 @@ class Ea_Route
 	 * 
 	 * @return array(string=>array(string=>string))
 	 */
-	public function getAllParams($module=null)
+	public function getModuleParams()
 	{
-		if($module)
-		{
-			$module=Ea_App::standardize($module);
-		}
-		else
-		{
-			$module=$this->_module;
-		}
-		if(!$module)
-		{
-			throw new Ea_Route_Exception('no target module');
-		}
-		foreach($this->_params as $name=>$value)
-		{
-			if(!array_key_exists($module, $this->_otherParams)) $this->_otherParams[$module]=array();
-			$this->_otherParams[$module][$name]=$value;
-		}
-		return $this->_otherParams;
+		return $this->_modulesParams;
+	}
+	
+	/**
+	 * Return an associative arrays of params.
+	 *
+	 * @param string $module target module
+	 * 
+	 * @return array(string=>string)
+	 */
+	public function getParams()
+	{
+		return $this->_params;
 	}	
 	
 	/**
@@ -303,9 +298,9 @@ class Ea_Route
 		if($module)
 		{
 			$module=Ea_App::standardize($module);
-			if(!array_key_exists($module, $this->_otherParams)) return null;
-			if(!array_key_exists($name, $this->_otherParams[$module])) return null;
-			return $this->_otherParams[$module][$name];
+			if(!array_key_exists($module, $this->_modulesParams)) return null;
+			if(!array_key_exists($name, $this->_modulesParams[$module])) return null;
+			return $this->_modulesParams[$module][$name];
 		}
 		if(isset($this->_params[$name])) return $this->_params[$name];
 		return null;		
@@ -324,8 +319,8 @@ class Ea_Route
 		if($module)
 		{
 			$module=Ea_App::standardize($module);
-			if(!array_key_exists($module, $this->_otherParams)) $this->_otherParams[$module]=array();
-			$this->_otherParams[$module][$name]=$value;
+			if(!array_key_exists($module, $this->_modulesParams)) $this->_modulesParams[$module]=array();
+			$this->_modulesParams[$module][$name]=$value;
 		}
 		else
 		{
