@@ -42,7 +42,7 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 	 * Add submit callback to the button.
 	 * 
 	 * @param callback $callback
-	 * @param boolean $module : by default $callback is one of the module method, else it's a classic php callback
+	 * @param boolean $module : by default if $callback is a string $callback is taken as one of the module method, else it's a classic php callback
 	 * 
 	 * @see Ea_Layout_Form::addSubmitCallback()
 	 */
@@ -60,10 +60,30 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 		}
 	}
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param string $id
+	 * @param string $value
+	 * @param callback $callback
+	 *  if it's a string it is taken as one of the module method, if it's an array it's taken as a php callback.
+	 *  NB : here you can use an array with a null first element to add a basic static function as callback :
+	 *   ie : array(null, 'foo') will call the non class member function foo().
+	 * @param array $config
+	 */
 	public function __construct($id=null, $value=null, $callback=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
-		if($callback)$this->addSubmitCallback($callback);
+		if($callback)
+		{
+			$module=true;
+			if(is_array($callback)&&$callback[0]===null)
+			{
+				$callback=$callback[1];
+				$module=false;
+			}
+			$this->addSubmitCallback($callback, $module);
+		}
 	}
 }
 ?>

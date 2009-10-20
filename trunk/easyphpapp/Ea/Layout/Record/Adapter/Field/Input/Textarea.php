@@ -38,7 +38,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Textarea extends Ea_Layout_Record_Ada
 	 */
 	public function getContent($record, $i)
 	{
-		return new Ea_Layout_Input_Textarea($this->getId($record, $i), $this->_rows, $this->_cols, $this->getValue($record), $this->_config);
+		return new Ea_Layout_Input_Textarea($this->getId($record, $i), $this->_rows, $this->_cols, $this->getRawValue($record), $this->_config);
 	}
 }
 

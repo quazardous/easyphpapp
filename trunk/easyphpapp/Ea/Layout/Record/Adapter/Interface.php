@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.0.20081106
+ * @version     0.4.0-20091020
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -27,12 +27,12 @@ interface Ea_Layout_Record_Adapter_Interface
 	function getContent($record, $i);
 
 	/**
-	 * This function must return field content from record.
+	 * This function must return raw field content from record.
 	 * 
 	 * @param array $record
 	 * @return string
 	 */
-	//public function getValue($record);
+	public function getRawValue($record);
 	//TODO : think about it
 	
 }

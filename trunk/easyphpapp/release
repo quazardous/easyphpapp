@@ -1,6 +1,12 @@
 *** 0.4.0-maki ***
 Improve form support :
 - modules can "auto manage" forms : submit callbacks added to forms can be auto triggered.
+Improve layout support :
+- can add() array of layouts
+Improve records table :
+- rethink of populate() method to allow raw record (ie : non data records) 
+TODO : Simplify url params :
+- can use application range params (no more module prefix in urls)
 
 *** 0.3.8-snow ***
 Improve form support :

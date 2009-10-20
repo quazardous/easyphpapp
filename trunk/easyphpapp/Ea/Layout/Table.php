@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.4.0-20091015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -46,12 +46,33 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 */
 	public function add($content, $append=true)
 	{
-		if(!($content instanceof Ea_Layout_Table_Row))
+		if(is_array($content)&&(!is_object($content)))
+		{
+			foreach($content as $item)
+			{
+				$this->add($item, $append);
+			}
+			return;
+		}
+		if(($this->_assertRow)&&(!$content instanceof Ea_Layout_Table_Row))
 		{
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Row");
 		}
+		$this->_currentRow=$content;
 		parent::add($content);
 	}
+	
+	/**
+	 * Tells to check if children are strict row layout.
+	 * 
+	 * @param boolean $assert
+	 */
+	public function assertRow($assert=true)
+	{
+		$this->_assertRow=$assert;
+	}
+	
+	protected $_assertRow=true;
 	
 	/**
 	 * Current row.
@@ -71,13 +92,9 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	public function addRow($config=null, $append=true, $class='Ea_Layout_Table_Row')
 	{
 		Zend_Loader::loadClass($class);
-		$this->_currentRow=new $class($config);
-		if(!$this->_currentRow instanceof Ea_Layout_Table_Row)
-		{
-			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Row");
-		}
-		$this->add($this->_currentRow, $append);
-		return $this->_currentRow;
+		$row=new $class($config);
+		$this->add($row, $append);
+		return $row;
 	}
 	
 	/**

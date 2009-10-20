@@ -104,16 +104,16 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 				switch($type)
 				{
 					case 'raw':
-						$route->setRawParam($param, $this->getValue($record, $column['column']));
+						$route->setRawParam($param, $this->getRawValue($record, $column['column']));
 						break;
 					case 'action':
-						$route->setAction($this->getValue($record, $column['column']));
+						$route->setAction($this->getRawValue($record, $column['column']));
 						break;
 					case 'module':
-						$route->setModule($this->getValue($record, $column['column']));
+						$route->setModule($this->getRawValue($record, $column['column']));
 						break;
 					default:
-						$route->setParam($param, $this->getValue($record, $column['column']), $module);
+						$route->setParam($param, $this->getRawValue($record, $column['column']), $module);
 				}
 			}
 		}
@@ -131,7 +131,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 			}
 			foreach($this->_params as $param=>$column)
 			{
-				$arr[$param]=$this->getValue($record, $column['column']);
+				$arr[$param]=$this->getRawValue($record, $column['column']);
 			}			
 			$urllist['query']=http_build_query($arr);
 			$route=(isset($urllist["scheme"])?$urllist["scheme"]."://":"").

@@ -13,7 +13,7 @@
  * @filesource
  */
 
-// This app will demonstrate advanced form support
+// This app will demonstrate auto manage forms
 
 // don't forget to set your include path
 require '../conf/config.php';

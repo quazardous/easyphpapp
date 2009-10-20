@@ -51,7 +51,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table1->setRecords($records);
 
 		// default for multiple records table is vertical
-		// $table1->setOrientation('vertical');
+		// $table1->setSpread('vertical');
 
 		// add the table to the page !
 		$this->add($table1);
@@ -68,7 +68,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table2->setRecord($records[0]);
 		
 		// default for 1 record table is horizontal
-		// $table2->setOrientation('horizontal');
+		// $table2->setSpread('horizontal');
 		
 		// add the table to the page !
 		$this->add($table2);

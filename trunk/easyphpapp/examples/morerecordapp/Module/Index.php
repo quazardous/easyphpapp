@@ -45,7 +45,7 @@ class Module_Index extends Ea_Module_Abstract
 		// declare the column using the basic record to field adapter.
 		$table1->addColumn(new Ea_Layout_Record_Adapter_Field('name'),   'Name', 'name');
 		// add before...
-		$table1->addColumnBefore('name', new Ea_Layout_Record_Adapter_Field('age'),    'Age', 'age');
+		$table1->addColumnBefore('name', new Ea_Layout_Record_Adapter_Field('age'), 'Age', 'age');
 		
 		// add after...
 		$table1->addColumnAfter('age', new Ea_Layout_Record_Adapter_Field('gender'), 'Gender', 'gender');
@@ -54,7 +54,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table1->setRecords($records);
 
 		// default for multiple records table is vertical
-		// $table1->setOrientation('vertical');
+		// $table1->setSpread('vertical');
 
 		// add the table to the page !
 		$this->add($table1);
@@ -71,7 +71,7 @@ class Module_Index extends Ea_Module_Abstract
 		$table2->setRecord($records[0]);
 		
 		// default for 1 record table is horizontal
-		// $table2->setOrientation('horizontal');
+		// $table2->setSpread('horizontal');
 		
 		// add the table to the page !
 		$this->add($table2);

@@ -264,7 +264,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * @param string $value
 	 * @return string
 	 * 
-	 * @see Ea_Layout_Record_Adapter_Field::getValue()
+	 * @see Ea_Layout_Record_Adapter_Field::getRawValue()
 	 */
 	public function filterRecordValue($column, $value)
 	{

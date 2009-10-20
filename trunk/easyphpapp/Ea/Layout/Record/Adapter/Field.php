@@ -22,11 +22,11 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	protected $_field=null;
 	
 	/**
-	 * If defined, callback used in getValue().
+	 * If defined, callback used in getRawValue().
 	 * filterCallback($column, $value)
 	 * 
 	 * @var callback
-	 * @see getValue()
+	 * @see getRawValue()
 	 */
 	protected $_filter=null;
 	
@@ -42,7 +42,7 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 * @param string $field if not given, uses $this->_field.
 	 * @return string
 	 */
-	public function getValue($record, $field=null)
+	public function getRawValue($record, $field=null)
 	{
 		if(!$field) $field=$this->_field;
 		if((is_array($record)||$record instanceof ArrayAccess)&&isset($record[$field]))
@@ -67,7 +67,7 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 */
 	public function getContent($record, $i)
 	{
-		return $this->getValue($record);
+		return $this->getRawValue($record);
 	}
 }
 
