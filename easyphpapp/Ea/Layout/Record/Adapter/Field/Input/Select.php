@@ -36,7 +36,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Select extends Ea_Layout_Record_Adapt
 	 */
 	public function getContent($record, $i)
 	{
-		return new Ea_Layout_Input_Select($this->getId($record, $i), $this->_options, $this->getValue($record), $this->_config);
+		return new Ea_Layout_Input_Select($this->getId($record, $i), $this->_options, $this->getRawValue($record), $this->_config);
 	}
 }
 

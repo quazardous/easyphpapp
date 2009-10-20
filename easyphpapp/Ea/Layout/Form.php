@@ -257,7 +257,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 *  the callback will recieve 2 arguments : the form object and the name of the submit button.
 	 * @param string|array $id the id of the button, if null general submit callback
 	 * @param boolean $module
-	 *  by default $callback is one of the module method, else it's a classic php callback
+	 *  by default if $callback is a string it's taken as one of the module method, else it's a classic php callback
 	 */
 	public function addSubmitCallback($callback, $id=null, $module=true)
 	{
@@ -324,7 +324,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			if(!$do) continue;
 			foreach($callbacks as $callback)
 			{
-				if($callback['module'])
+				if($callback['module']&&!is_array($callback['callback']))
 				{
 					$callback['callback']=array($this->getPage()->getModule(), $callback['callback']);
 				}

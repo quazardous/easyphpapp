@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.4.0-2001015
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -43,6 +43,14 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	 */
 	public function add($content, $append=true)
 	{
+		if(is_array($content)&&(!is_object($content)))
+		{
+			foreach($content as $item)
+			{
+				$this->add($item, $append);
+			}
+			return;
+		}
 		if(!($content instanceof Ea_Layout_Table_Cell))
 		{
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Cell");

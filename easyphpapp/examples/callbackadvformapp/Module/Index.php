@@ -36,6 +36,7 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
+		
 		// declare new form
 		$form=new Ea_Layout_Form('form4');
 		

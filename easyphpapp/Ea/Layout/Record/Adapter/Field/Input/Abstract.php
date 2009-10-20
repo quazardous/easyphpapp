@@ -68,7 +68,7 @@ abstract class Ea_Layout_Record_Adapter_Field_Input_Abstract extends Ea_Layout_R
 	 */
 	protected function getIndex($record, $i)
 	{
-		if($this->_indexColumn) return $this->getValue($record, $this->_indexColumn);
+		if($this->_indexColumn) return $this->getRawValue($record, $this->_indexColumn);
 		return $i;
 	}
 }
