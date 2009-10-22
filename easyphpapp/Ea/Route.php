@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091020
+ * @version     0.4.0-20091022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -92,7 +92,7 @@ class Ea_Route
 	 * @var boolean|array
 	 * - false : don't propagate other modules params
 	 * - true : propagate other modules params
-	 * - array : propagate given modules params
+	 * - array(string) : propagate given modules params or raw params
 	 */
 	protected $_propagate=true;
 	

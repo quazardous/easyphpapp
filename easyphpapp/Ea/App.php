@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091020
+ * @version     0.4.0-20091022
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -364,12 +364,13 @@ class Ea_App
 		$propagate=$route->getPropagate();
 		if(is_array($propagate))
 		{
+			// maybe an array of what to propagate
 			$get=array();
-			foreach($propagate as $module)
+			foreach($propagate as $moduleOrParam)
 			{
-				if(array_key_exists($module, $_GET))
+				if(array_key_exists($moduleOrParam, $_GET))
 				{
-					$get[$module]=$_GET[$module];
+					$get[$moduleOrParam]=$_GET[$moduleOrParam];
 				}
 			}
 		}
@@ -678,16 +679,24 @@ class Ea_App
 	 */
 	public function getParam($name, $module=null)
 	{
-		if(!$module) $module=$this->_runningModule;
-		else $module=self::standardize($module);
-		if(!$module)
+		if($this->isForceModuleParams())
 		{
-			throw new Ea_App_Exception("no module");
+			if(!$module) $module=$this->_runningModule;
+			if(!$module)
+			{
+				throw new Ea_App_Exception("no module");
+			}
 		}
-		if(isset($_GET[$module][$name]))
+		if($module)
 		{
-			return $_GET[$module][$name];
+			$module=self::standardize($module);
+			if(isset($_GET[$module][$name]))
+			{
+				return $_GET[$module][$name];
+			}
+			return null;
 		}
+		if(!$this->isForceModuleParams()) return $this->getRawParam($name);
 		return null;
 	}
 	
