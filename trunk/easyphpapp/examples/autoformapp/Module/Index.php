@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091014
+ * @version     0.4.1-20091113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -37,6 +37,7 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
+		
 		// declare new form
 		$form=new Ea_Layout_Form('form2');
 				
@@ -115,7 +116,7 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function onSubmitIndexSend(Ea_Layout_Form $form, $id)
 	{
-		$_SESSION['submit']=$id;
+		$_SESSION['submit']=$id;	
 	}
 
 	public function onSubmitIndex(Ea_Layout_Form $form, $id)

@@ -246,7 +246,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
@@ -254,6 +254,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 		{
 			$this->_setAttribute('multiple', 'multiple');
 		}
+		return $render;
 	}
 	
 	public function __sleep()

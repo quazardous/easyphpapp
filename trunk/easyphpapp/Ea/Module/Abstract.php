@@ -7,12 +7,15 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091014
+ * @version     0.4.1-20091113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Module/Exception.php';
+require_once 'Ea/Layout/Form.php';
+require_once 'Ea/Layout/Messages.php';
+
 
 /**
  * Abstract module class.
@@ -255,10 +258,10 @@ abstract class Ea_Module_Abstract
 	 * @param $name
 	 * @return mixed
 	 */
-	public function getRegister($name)
+	public function &getRegister($name)
 	{
 		if($this->getApp()) return $this->getApp()->getRegister($name);
-		return null;
+		return $tmp=$null;
 	}
 	
 	public function __get($name)
@@ -372,6 +375,10 @@ abstract class Ea_Module_Abstract
 		{
 			$this->registerForm($layout);
 		}
+		if($layout instanceof Ea_Layout_Messages)
+		{
+			$this->registerMessagesLayout($layout);
+		}
 	}
 	
 	/**
@@ -392,5 +399,74 @@ abstract class Ea_Module_Abstract
 		$this->_managedForms[]=$form;
 	}
 	
+	/**
+	 * Array of managed messages zones.
+	 * 
+	 * @var array
+	 */
+	protected $_managedMessages=array();
+	
+	/**
+	 * Register a form to manage.
+	 * 
+	 * @param Ea_Layout_Messages $layout
+	 */
+	public function registerMessagesLayout(Ea_Layout_Messages $messages)
+	{
+		$this->_managedMessages[$messages->getId()]=$messages;
+	}
+	
+	/**
+	 * Set a one page load persistent message (ie. from form).
+	 * 
+	 * @param string|Ea_Layout_Abstract $content
+	 * @param string $type success|notice|warning|error
+	 * @param string $id the messages zone
+	 * @see Ea_Layout_Messages
+	 */
+	public function addMessage($content, $type=Ea_Layout_Messages::notice, $id='default')
+	{
+		array_push($this->getMessagesRegister($id), (object)array(
+				'content'=>$content,
+				'type'=>$type,
+			));
+	}
+	
+	protected function &getMessagesRegister($id='default')
+	{
+		if(!$this->getRegister('_messages'))
+		{
+			$this->setRegister('_messages', array(), true);
+		}
+		$all=&$this->getRegister('_messages');
+		if(!isset($all[$id])) $all[$id]=array();
+		return $all[$id];
+	}
+	
+	protected function resetMessagesRegister($id='default')
+	{
+		if(!$this->getRegister('_messages'))
+		{
+			return;
+		}
+		$all=&$this->getRegister('_messages');
+		unset($all[$id]);
+	}
+
+	/**
+	 * Get persistent messages.
+	 * 
+	 * @param string $id the messages zone
+	 * @return array
+	 */
+	public function getMessages($id='default')
+	{
+		return $this->getMessagesRegister($id);
+	}
+	
+	public function resetMessages($id='default')
+	{
+		$this->resetMessagesRegister($id);
+	}
 }
 ?>

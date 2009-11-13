@@ -351,7 +351,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
@@ -360,6 +360,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->_setAttribute('value', $this->getValue());
 		$this->_setAttribute('type', $this->getType());
 		$this->_setAttribute('disabled', $this->getDisabled()?'disabled':null);
+		return $render;
 	}
 	
 	public function __sleep()

@@ -92,11 +92,12 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
 		if($this->isChecked()) $this->_setAttribute('checked', 'checked');
+		return $render;
 	}
 	
 	/**

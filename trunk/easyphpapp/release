@@ -1,3 +1,8 @@
+*** 0.4.1-maki ***
+Consolidation release.
+- TODO : Allow use of id vs/different name in inputs.
+- Message Overlay / setMessage()
+
 *** 0.4.0-maki ***
 Improve form support :
 - modules can "auto manage" forms : submit callbacks added to forms can be auto triggered.

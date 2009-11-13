@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091014
+ * @version     0.4.1-20091113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -21,6 +21,7 @@ require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
 require_once 'Ea/Layout/Input/Radio.php';
 require_once 'Ea/Layout/Table.php';
+require_once 'Ea/Layout/Messages.php';
 
 /**
  * My basic module.
@@ -36,6 +37,8 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
+		$this->add(new Ea_Layout_Messages);
+		
 		// declare new form
 		$form=new Ea_Layout_Form('form4');
 		
@@ -145,6 +148,7 @@ class Module_Index extends Ea_Module_Abstract
 	public function onSubmitIndexSend(Ea_Layout_Form $form, $id)
 	{
 		$_SESSION['submit']=$id;
+		$this->addMessage('onSubmitIndexSend()', 'succes');
 	}
 
 	public function onSubmitIndex(Ea_Layout_Form $form, $id)
@@ -155,6 +159,7 @@ class Module_Index extends Ea_Module_Abstract
 		$_SESSION['select2']=$form['select2']->getValue();
 		$_SESSION['textarea1']=(string)$form['textarea1'];
 		$_SESSION['radio1']=$form['radio1']->getValue();
+		$this->addMessage('onSubmitIndex()');
 	}
 	
 }
