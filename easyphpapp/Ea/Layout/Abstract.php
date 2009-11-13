@@ -168,10 +168,11 @@ abstract class Ea_Layout_Abstract
 	/**
 	 * Pre render validation stuff.
 	 * It's highly recommended that preRender() call parent::preRender().
+	 * @return boolean if not true do not render the layout
 	 */
 	public function preRender()
 	{
-		
+		return true;
 	}
 	
 	/**

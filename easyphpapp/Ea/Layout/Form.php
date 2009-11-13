@@ -316,10 +316,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			else //simple POST way
 			{
 				if($triggeringId)
-				{
+				{					
 					if($triggeringId==$id) $do=true; 
 				}
-				else if($this[$id]) $do=true; 
+				else
+				{
+					// cast is important because with auto managed form all inputs are added to form
+					if((string)$this[$id]) $do=true;
+				}
 			}
 			if(!$do) continue;
 			foreach($callbacks as $callback)
@@ -602,13 +606,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		$this->_setAttribute('action', $this->getActionUrl());
 		$this->_setAttribute('id', $this->getId());
 		$this->_setAttribute('name', $this->getId());
 		$this->_setAttribute('method', $this->getMethod());
 		if($this->canUploadFile()) $this->_setAttribute('enctype', 'multipart/form-data');
 		$this->magic();
+		return $render;
 	}
 
 	/**

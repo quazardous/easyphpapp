@@ -155,7 +155,7 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 	
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
@@ -164,6 +164,7 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 			$this->_setAttribute('checked', 'checked');
 		}
 		$this->_setAttribute('value', $this->getRadioValue());
+		return $render;
 	}
 	
 }

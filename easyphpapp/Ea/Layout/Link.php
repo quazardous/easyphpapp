@@ -122,8 +122,9 @@ class Ea_Layout_Link extends Ea_Layout_Container
 
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		$this->_setAttribute('href', $this->getUrlString());
+		return $render;
 	}
 	
 }

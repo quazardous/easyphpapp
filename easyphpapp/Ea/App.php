@@ -644,7 +644,7 @@ class Ea_App
 			// trigger the submit callbacks of managed forms
 			$obj->doManageForms();
 		}
-		
+
 		$this->executeCallbacks();
 		$this->applyRequestedRedirect();
 		if($render&&$this->_renderModule) $obj->render();
@@ -1092,7 +1092,7 @@ class Ea_App
 	 * @param $name
 	 * @return mixed by ref
 	 */
-	public function getRegister($name)
+	public function &getRegister($name)
 	{
 		Zend_Session::start();
 		if(isset($this->getSession()->registers[$name]))
@@ -1104,7 +1104,7 @@ class Ea_App
 		{
 			if(isset($this->_registers[$name]['value']))return $this->_registers[$name]['value'];
 		}
-		return null;
+		return $tmp=null;
 	}
 	
 	public function unstoreRegister($name)

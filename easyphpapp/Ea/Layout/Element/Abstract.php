@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.3-20081219
+ * @version     0.4.1-20091112
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -137,6 +137,28 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	}
 	
 	/**
+	 * If attribute already exists add the value as item array.
+	 * 
+	 * @param string $name
+	 * @param string $value
+	 */
+	public function addAtribute($name, $value)
+	{
+		if(isset($this->_attributes[$name]))
+		{
+			if(is_array($this->_attributes[$name]))
+			{
+				$this->_attributes[$name]=array($this->_attributes[$name]);
+			}
+		}
+		else
+		{
+			$this->_attributes[$name]=array();
+		}
+		$this->_attributes[$name][]=$value;
+	}
+	
+	/**
 	 * Set attributes from an associative array.
 	 *
 	 * @param array(string=>string) $attributes
@@ -163,21 +185,19 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	}
 
 	/**
-	 * Set an attribute. Protected version.
+	 * Set an attribute.
 	 *
 	 * @param string $name
 	 * @param string|numeric $value
 	 * 
 	 * @see $_attributes
-	 * @final
 	 */
-	final protected function _setAttribute($name, $value)
+	protected function _setAttribute($name, $value)
 	{
 		$name=strtolower($name);
-		//if(in_array($name, $this->_blockedAttributes)) return;
 		$this->_attributes[$name]=$value;
 	}
-
+	
 	public function __get($name)
 	{
 		return $this->getAttribute($name);
@@ -207,10 +227,11 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	/**
 	 * Pre render validation stuff.
 	 * It's highly recommended that preRender() call parent::preRender().
+	 * @return boolean if not true do not render the layout
 	 */
 	public function preRender()
 	{
-		parent::preRender();
+		$render=parent::preRender();
 		if(!$this->_tag)
 		{
 			/*
@@ -218,6 +239,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 			 */
 			throw new Ea_Layout_Element_Exception("no tag defined");
 		}
+		return $render;
 	}
 	
 	/**
@@ -230,9 +252,18 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 		{
 			if($value!==null&&(!$this->isBlockedAttribute($name)))
 			{
-				echo ' '.$name.'="'.$this->escape($value).'"';
+				$this->renderAttribute($name, $value);
 			}
 		}
+	}
+	
+	protected function renderAttribute($name, $value)
+	{
+		if(is_array($value))
+		{
+			$value=trim(implode(' ', $value));
+		}
+		echo ' '.$name.'="'.$this->escape($value).'"';
 	}
 }
 ?>

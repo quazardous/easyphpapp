@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20090315
+ * @version     0.4.1-20091113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -104,9 +104,11 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 		$this->open();
 		foreach($this->_subLayouts as $layout)
 		{
-			$layout->preRender();
-			$layout->render();
-			$layout->postRender();
+			if($layout->preRender())
+			{
+				$layout->render();
+				$layout->postRender();
+			}
 		}
 		$this->close();
 	}

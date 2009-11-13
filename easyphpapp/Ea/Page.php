@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091014
+ * @version     0.4.1-20091113
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -299,6 +299,41 @@ class Ea_Page implements Ea_Page_Interface
 	padding-left: 3px;
 	width: auto;
 }
+
+.messages
+{
+	border: dashed #aaa 1px;
+	padding: 0;
+}
+
+.messages div
+{
+	margin: 1px;
+}
+
+.messages .succes
+{
+	background-color: #efe;
+	color: #070;
+}
+
+.messages .notice
+{
+	background-color: #eee;
+}
+
+.messages .warning
+{
+	background-color: #ffe;
+}
+
+.messages .error
+{
+	background-color: #fee;
+	color: #700;
+	font-weight: bold;
+}
+
 body
 {
 	margin-bottom: 20px;
@@ -308,9 +343,11 @@ body
 		}
 		foreach($this->_scripts as $script)
 		{
-			$script->preRender();
-			$script->render();
-			$script->postRender();
+			if($script->preRender())
+			{
+				$script->render();
+				$script->postRender();
+			}
 		}
 		if($this->_title)
 		{
@@ -324,9 +361,11 @@ body
 			$this->_top->add($this->getVersionLayout());
 		}
 		
-		$this->_top->preRender();
-		$this->_top->render();
-		$this->_top->postRender();
+		if($this->_top->preRender())
+		{
+			$this->_top->render();
+			$this->_top->postRender();
+		}
 		?>
 </html><?php
 		$this->_rendered=true;
