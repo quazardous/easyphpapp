@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -349,15 +349,23 @@ abstract class Ea_Module_Abstract
 		return $this->_manageForms;
 	}
 	
+	/**
+	 * Execute the callbacks for the submitted form.
+	 * Is auto executed by the framework, but can be called il the module for optimization (ie. rendering forms is useless at submit time).
+	 * 
+	 * @return boolean
+	 */
 	public function doManageForms()
 	{
+		$ok=false;
 		foreach($this->_managedForms as $form)
 		{
 			if($form->getMethod()=='post')
 			{
-				$form->triggerSubmitCallbacks();
+				$ok=$ok||$form->triggerSubmitCallbacks();
 			}
 		}
+		return $ok;
 	}
 	
 	/**

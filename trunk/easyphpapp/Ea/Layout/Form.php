@@ -286,7 +286,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * If you don't specify the button, it try determine the submitting button.
 	 * 
 	 * @param id|array $id
-	 * @return int|true|false number of triggered callbacks, true il already triggered or false if can't catchInput()
+	 * @return int|true|false number of triggered callbacks, true if already triggered or false if can't catchInput()
 	 * @see catchInput()
 	 */
 	public function triggerSubmitCallbacks($triggeringId=null)
