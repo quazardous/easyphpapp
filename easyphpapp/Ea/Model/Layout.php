@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090311
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -300,7 +300,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 						$d['tm_sec'],
 						$d['tm_mon']+1,
 						$d['tm_mday'],
-						$d['tm_year']));
+						$d['tm_year']+1900));
 			default: return $value;
 		}
 	}

@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090506
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -266,7 +266,7 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 						break;
 				}
 				break;
-				case 'date': case 'datetime': case 'timestamp':
+			case 'date': case 'datetime': case 'timestamp':
 				switch($meta['DATA_TYPE'])
 				{
 					case 'date':
@@ -275,7 +275,7 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
+						$this->setColumnDateDbformat($column, $this->_defaultDatetimeDbformat);
 				}
 				if($meta['DEFAULT']=='CURRENT_TIMESTAMP')
 				{

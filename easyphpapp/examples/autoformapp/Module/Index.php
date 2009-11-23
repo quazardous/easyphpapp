@@ -32,7 +32,7 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		session_start();
 		// set the page title
-		$this->getPage()->setTitle('Callback form');
+		$this->getPage()->setTitle('Auto form');
 	}
 	
 	public function actionIndex()

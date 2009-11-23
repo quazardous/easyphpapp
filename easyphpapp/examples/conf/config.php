@@ -33,6 +33,8 @@ set_include_path(
 get_include_path()
 );
 
+require_once '../conf/strptime.php';
+
 // db config
 define('DB_HOST',       	 'localhost');
 define('DB_NAME',     		 'test');

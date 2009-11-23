@@ -3,6 +3,7 @@ Consolidation release.
 - Message Overlay / setMessage()
 - ereg functions deprecated => preg functions
 - Fix minor issue with containers
+- Fix bugs on date format in data/layout models
 
 *** 0.4.0-maki ***
 Improve form support :

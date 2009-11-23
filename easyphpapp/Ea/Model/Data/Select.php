@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081201
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -193,7 +193,7 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 						break;
 					default:
 						$this->setColumnType($column, self::type_datetime);
-						$this->setColumnDateDbformat($column, $this->_defaultDateDbformat);
+						$this->setColumnDateDbformat($column, $this->_defaultDatetimeDbformat);
 				}
 					
 				break;
