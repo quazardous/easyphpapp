@@ -7,13 +7,14 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091013
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Page/Interface.php';
 require_once 'Ea/Page.php';
+require_once 'Ea/Layout/Container.php';
 
 /**
  * Abstract layout class.
@@ -23,6 +24,8 @@ require_once 'Ea/Page.php';
  */
 abstract class Ea_Layout_Abstract
 {
+
+	
 	/**
 	 * Abstract layout constructor.
 	 *
@@ -64,7 +67,7 @@ abstract class Ea_Layout_Abstract
 	 * @var Ea_Layout_Container
 	 */
 	protected $_parent=null;
-	
+		
 	/**
 	 * Set the parent container.
 	 * 

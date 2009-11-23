@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090311
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -240,7 +240,7 @@ abstract class Ea_Model_Abstract
 
 	static protected function get_function_name_from_name($prefix, $name)
 	{
-		$words=explode('/',eregi_replace('[^0-9a-z_]','/',strtolower($name)));
+		$words=explode('/', preg_replace('|[^0-9a-z_]|i','/',strtolower($name)));
 		foreach($words as $word)
 		{
 			if($word)$prefix.=ucfirst($word);
@@ -250,7 +250,7 @@ abstract class Ea_Model_Abstract
 
 	static protected function get_id_from_name($name)
 	{
-		$words=explode('/',eregi_replace('[^0-9a-z_]','/',strtolower($name)));
+		$words=explode('/', preg_replace('|[^0-9a-z_]|i','/',strtolower($name)));
 		$id=array();
 		foreach($words as $word)
 		{

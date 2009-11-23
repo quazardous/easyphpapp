@@ -1,7 +1,8 @@
 *** 0.4.1-maki ***
 Consolidation release.
-- TODO : Allow use of id vs/different name in inputs.
 - Message Overlay / setMessage()
+- ereg functions deprecated => preg functions
+- Fix minor issue with containers
 
 *** 0.4.0-maki ***
 Improve form support :
