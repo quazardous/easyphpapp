@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.1-20081114
+ * @version     0.4.1-20091123
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -103,4 +103,23 @@ class Ea_Layout_Input_Array extends Ea_Layout_Container implements ArrayAccess, 
  			}
  		}
  	}
-}
+ 	
+ 	protected function dumpItem($item)
+ 	{
+ 		if($item instanceof Ea_Layout_Input_Abstract)
+ 		{
+ 			echo $item->getName().' => '.$item->getValue()."\n";
+ 		}
+ 		else
+ 		{
+ 			echo ((string)$item)."\n";
+ 		}
+ 	}
+ 	
+ 	public function dump()
+ 	{
+ 		echo "(\n";
+ 		$this->recursiveWalk(array($this, 'dumpItem'));
+ 		echo ")\n";
+ 	}
+ }

@@ -181,15 +181,24 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 * @see addCallback()
 	 * 
 	 * @param Ea_Layout_Abstract $layout
-	 * @param boolean $recursive recursively call the callbacks of the parents container
+	 * @param boolean $applyParentCallbacks recursively call the callbacks of the parents container
+	 * @param boolean $applyCallbacksOnChildren call the callbacks on the children of the new layout
 	 */
-	protected function execCallbacksOn(Ea_Layout_Abstract $layout, $recursive=true)
+	protected function execCallbacksOn(Ea_Layout_Abstract $layout, $applyParentCallbacks=true, $applyCallbacksOnChildren=true)
 	{
-		if($recursive&&$this->_parent) $this->_parent->execCallbacksOn($layout, true);
+		if($applyParentCallbacks&&$this->_parent) $this->_parent->execCallbacksOn($layout, true, $applyCallbacksOnChildren);
 		foreach($this->_callbacks as $callback)
 		{
 			call_user_func($callback, $layout);
 		}
+		if($applyCallbacksOnChildren && $layout instanceof self)
+		{
+			foreach($layout->_subLayouts as $sublayout)
+			{
+				$this->execCallbacksOn($sublayout, $applyParentCallbacks, true);
+			}
+		}
 	}
+	
 }
 ?>
