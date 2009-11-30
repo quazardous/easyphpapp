@@ -19,7 +19,7 @@ INSTALL :
 QUICKSTART :
  - Look at the ./examples folder.
  - Just set up the ./examples/conf/config.php.
- - Play with the examples.
+ - Play with the examples (autoformapp is a good start).
  
 CONTACT :
 David Berlioz <berlioz@nicematin.fr>

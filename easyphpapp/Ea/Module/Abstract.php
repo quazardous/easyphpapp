@@ -260,8 +260,9 @@ abstract class Ea_Module_Abstract
 	 */
 	public function &getRegister($name)
 	{
+		static $null=null; // FIXME ugly trick
 		if($this->getApp()) return $this->getApp()->getRegister($name);
-		return $tmp=$null;
+		return null;
 	}
 	
 	public function __get($name)

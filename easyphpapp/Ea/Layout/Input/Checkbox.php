@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.4.1-20091130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -103,10 +103,12 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	/**
 	 * Set the value from $_POST.
 	 * 
+	 * @param string|numeric $value from POST
+	 * 
 	 */
-	public function setFromPost()
+	public function setValueFromForm($value=null)
 	{
-		parent::setFromPost();
+		parent::setValueFromForm($value);
 		$this->setChecked($this->getValue()!=null);
 	}
 	

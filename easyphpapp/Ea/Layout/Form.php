@@ -805,7 +805,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		switch($this->getMethod())
 		{
 			case 'post':
-				$input->setValue($this->getValueFromPost($input->getId()));
+				$input->setValueFromForm($this->getValueFromPost($input->getId()));
 				if($input instanceof Ea_Layout_Input_Submit)
 				{
 					if($input->getValue())

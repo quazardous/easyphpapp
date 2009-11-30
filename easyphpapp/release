@@ -4,6 +4,7 @@ Consolidation release.
 - ereg functions deprecated => preg functions
 - Fix minor issue with containers
 - Fix bugs on date format in data/layout models
+- Add Date Input Layout
 
 *** 0.4.0-maki ***
 Improve form support :

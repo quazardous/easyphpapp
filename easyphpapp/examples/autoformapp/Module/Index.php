@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.1-20091130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -16,6 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Text.php';
+require_once 'Ea/Layout/Input/Date.php';
 require_once 'Ea/Layout/Input/Textarea.php';
 require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
@@ -32,7 +33,7 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		session_start();
 		// set the page title
-		$this->getPage()->setTitle('Auto form');
+		$this->getPage()->setTitle('Callback form');
 	}
 	
 	public function actionIndex()
@@ -96,6 +97,19 @@ class Module_Index extends Ea_Module_Abstract
 		}
 
 		$table->addRow();
+		$table->addHeader('date');
+		$table->addCell($input=new Ea_Layout_Input_Date('date1'));
+		$input->setFormat('%d/%m/%Y');
+		$input->setDefaultValue(strftime('%d/%m/%Y'));
+		// if session, it means we hit send last time...
+		if(isset($_SESSION['date1']))
+		{
+			$table->addCell($_SESSION['date1']);
+			// clean up
+			unset($_SESSION['date1']);
+		}
+		
+		$table->addRow();
 		$table->addHeader('submit');
 		$table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
 		if(isset($_SESSION['submit']))
@@ -116,16 +130,16 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function onSubmitIndexSend(Ea_Layout_Form $form, $id)
 	{
-		$_SESSION['submit']=$id;	
+		$_SESSION['submit']=$id;
 	}
 
 	public function onSubmitIndex(Ea_Layout_Form $form, $id)
 	{
-		// do you form stuff
 		$_SESSION['text1']=(string)$form['text1'];
 		$_SESSION['select1']=(string)$form['select1'];
 		$_SESSION['textarea1']=(string)$form['textarea1'];
 		$_SESSION['radio1']=(string)$form['radio1'];
+		$_SESSION['date1']=(string)$form['date1'];
 		// NB string cast is important because form structure is declared in the action, so without cast you have the object itself.
 	}
 	
