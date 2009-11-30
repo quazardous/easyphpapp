@@ -477,5 +477,31 @@ abstract class Ea_Module_Abstract
 	{
 		$this->resetMessagesRegister($id);
 	}
+	
+	/**
+	 * Register a db table (for session storage).
+	 * 
+	 * @param string $name
+	 * @param string $class
+	 * @param mixed $config
+	 * @return Zend_Db_Table
+	 */
+	public function registerDbTable($name, $class, $config=null)
+	{
+		
+		return $this->getApp()->registerDbTable($name, $class, $config);
+	}
+	
+	/**
+	 * Get or try to register a db table.
+	 * 
+	 * @param string $classOrName
+	 * @return Zend_Db_Table
+	 */
+	public function getDbTable($classOrName)
+	{
+		return $this->getApp()->getDbTable($classOrName);
+	}	
+	
 }
 ?>
