@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091022
+ * @version     0.4.1-20091130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -1370,5 +1370,35 @@ class Ea_App
 	}
 	
 	
+	/**
+	 * Register a db table (for session storage).
+	 * 
+	 * @param string $name
+	 * @param string $class
+	 * @param mixed $config
+	 * @return Zend_Db_Table
+	 */
+	public function registerDbTable($name, $class, $config=null)
+	{
+		$dbTable=new $class($config);
+		$this->setRegister("tbl::{$name}", $dbTable, true);
+		return $dbTable;
+	}
+	
+	/**
+	 * Get or try to register a db table.
+	 * 
+	 * @param string $classOrName
+	 * @return Zend_Db_Table
+	 */
+	public function getDbTable($classOrName)
+	{
+		$dbTable=$this->getRegister("tbl::{$classOrName}");
+		if((!$dbTable)&&class_exists($classOrName))
+		{
+			$dbTable=$this->registerDbTable($classOrName, $classOrName);
+		}
+		return $dbTable;
+	}
 }
 ?>
