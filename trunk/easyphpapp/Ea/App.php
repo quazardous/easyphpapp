@@ -1094,6 +1094,7 @@ class Ea_App
 	 */
 	public function &getRegister($name)
 	{
+		static $null=null; // FIXME ugly trick
 		Zend_Session::start();
 		if(isset($this->getSession()->registers[$name]))
 		{
@@ -1104,7 +1105,7 @@ class Ea_App
 		{
 			if(isset($this->_registers[$name]['value']))return $this->_registers[$name]['value'];
 		}
-		return $tmp=null;
+		return $null;
 	}
 	
 	public function unstoreRegister($name)

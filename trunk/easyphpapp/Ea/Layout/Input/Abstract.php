@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091013
+ * @version     0.4.1-20091130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -343,10 +343,23 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	/**
 	 * Set the value from $_POST.
 	 * 
+	 * @param string|numeric $value from POST
+	 * 
 	 */
-	public function setFromPost()
+	public function setValueFromForm($value=null)
 	{
-		$this->setValue($this->getForm()->getValueFromPost($this->getId()));
+		if($value===null) $value=$this->getForm()->getValueFromPost($this->getId());
+		$this->setValue($value);
+	}
+	
+	/**
+	 * Return the value for form rendering.
+	 * 
+	 * @return string
+	 */
+	public function getValueForForm()
+	{
+		return $this->getValue();
 	}
 	
 	public function preRender()
@@ -357,7 +370,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		 */
 		$this->_setAttribute('name', $this->getName());
 		$this->_setAttribute('id', $this->getName());
-		$this->_setAttribute('value', $this->getValue());
+		$this->_setAttribute('value', $this->getValueForForm());
 		$this->_setAttribute('type', $this->getType());
 		$this->_setAttribute('disabled', $this->getDisabled()?'disabled':null);
 		return $render;
@@ -371,9 +384,11 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
     /**
      * Set remember Value.
      * 
+     * @param string $defaultValue
+     * 
      * @param boolean $remember
      */
-    public function rememberValue()
+    public function rememberValue($defaultValue=false)
     {
     	if($this->getForm())
     	{
@@ -382,6 +397,25 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
     	if($this->_value===null)
     	{
     		$this->setValue($this->getForm()->getValueFromSession($this->getId()));
+    	}
+    	if($defaultValue!==false)
+    	{
+    		$this->setDefaultValue($defaultValue);
+    	}
+    }
+    
+    /**
+     * For now, set value if no current value.
+     * 
+     * @param string $value
+     * 
+     * @return unknown_type
+     */
+    public function setDefaultValue($value)
+    {
+    	if($this->_value===null)
+    	{
+    		$this->setValue($value);
     	}
     }
 }

@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.1-20091130
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -16,6 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Text.php';
+require_once 'Ea/Layout/Input/Date.php';
 require_once 'Ea/Layout/Input/Textarea.php';
 require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
@@ -32,7 +33,7 @@ class Module_Index extends Ea_Module_Abstract
 	public function init()
 	{
 		// set the page title
-		$this->getPage()->setTitle('Auto advanced form');
+		$this->getPage()->setTitle('Callback advanced form');
 	}
 	
 	public function actionIndex()
@@ -127,6 +128,19 @@ class Module_Index extends Ea_Module_Abstract
 		}
 
 		$table->addRow();
+		$table->addHeader('date');
+		$table->addCell($input=new Ea_Layout_Input_Date('date1'));
+		$input->setFormat('%d/%m/%Y');
+		$input->rememberValue(strftime('%d/%m/%Y'));
+		// if session, it means we hit send last time...
+		if(isset($_SESSION['date1']))
+		{
+			$table->addCell($_SESSION['date1']);
+			// clean up
+			unset($_SESSION['date1']);
+		}
+		
+		$table->addRow();
 		$table->addHeader('submit');
 		$table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
 		if(isset($_SESSION['submit']))
@@ -159,6 +173,7 @@ class Module_Index extends Ea_Module_Abstract
 		$_SESSION['select2']=$form['select2']->getValue();
 		$_SESSION['textarea1']=(string)$form['textarea1'];
 		$_SESSION['radio1']=$form['radio1']->getValue();
+		$_SESSION['date1']=(string)$form['date1'];
 		$this->addMessage('onSubmitIndex()');
 	}
 	
