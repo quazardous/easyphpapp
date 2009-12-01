@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090123
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -55,10 +55,36 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	protected $_defaultRecordAdapterName = 'Input_Default';
 	protected $_defaultRecordAdapterNameByType=array(
-		'string' => 'Input_String',
-		'text'   => 'Input_Text',
-		'enum'   => 'Input_Enum',
+		'string' 	=> 'Input_String',
+		'text'   	=> 'Input_Text',
+		'enum'   	=> 'Input_Enum',
 		'boolean'   => 'Input_Boolean',
+		'date'   	=> 'Input_Date',
+		'datetime'  => 'Input_Date',
 	);
+	
+	/**
+	 * Apply special filter on record values.
+	 * 
+	 * @param string $column
+	 * @param string $value
+	 * @param mixed $data
+	 * @return string
+	 * 
+	 * @see Ea_Layout_Record_Adapter_Field::getRawValue()
+	 */
+	public function filterRecordValue($column, $value, $data=null)
+	{
+		switch($this->getColumnType($column))
+		{
+			case 'date': case 'datetime':
+				if($this->_dataModel)
+				{
+					$value=$this->_dataModel->filterRecordValue($column, $value, $data);
+				}
+				return $value;
+			default: return parent::filterRecordValue($column, $value, $data);
+		}
+	}
 	
 }

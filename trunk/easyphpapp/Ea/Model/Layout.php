@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -262,15 +262,16 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * 
 	 * @param string $column
 	 * @param string $value
+	 * @param mixed $data
 	 * @return string
 	 * 
 	 * @see Ea_Layout_Record_Adapter_Field::getRawValue()
 	 */
-	public function filterRecordValue($column, $value)
+	public function filterRecordValue($column, $value, $data=null)
 	{
 		if($this->_dataModel)
 		{
-			$value=$this->_dataModel->filterRecordValue($column, $value);
+			$value=$this->_dataModel->filterRecordValue($column, $value, $data);
 		}
 		switch($type=$this->getColumnType($column))
 		{
@@ -278,11 +279,6 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 				//TODO : format data vs layout....
 				if(!$value)return $value;
 				$dbformat=$this->getColumnDateDbformat($column);
-				if(!$dbformat)
-				{
-					if($type=='date') $dbformat=$this->getDefaultDateDbformat();
-					else $dbformat=$this->getDefaultDatetimeDbformat();
-				}
 				$format=$this->getColumnDateFormat($column);
 				if(!$format)
 				{
@@ -304,7 +300,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			default: return $value;
 		}
 	}
-
+		
 	public function __call($name, $arguments)
 	{
 		if(strpos($name, 'getColumn')===0)
