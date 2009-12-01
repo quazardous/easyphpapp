@@ -13,6 +13,12 @@ Download the last *EasyPhpApp tarball* and untar it. You can also checkout the [
 
 Look at the *./examples* folder.
 
+[http://code.google.com/p/easyphpapp/source/browse/#svn/trunk/easyphpapp/examples/autoadvformapp autoadvformapp] is a typical EasyPhpApp form example.
+
+[http://code.google.com/p/easyphpapp/source/browse/#svn/trunk/easyphpapp/examples/recordapp recordapp] shows the 'grid' implementation.
+
+[http://code.google.com/p/easyphpapp/source/browse/#svn/trunk/easyphpapp/examples/routeapp routeapp] shows how to make internal URLs.
+
 Just set up the *./examples/conf/config.php*.
 
 Play with the examples.
