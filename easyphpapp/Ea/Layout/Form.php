@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091013
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -740,6 +740,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return $this->getSession()->forms[$this->getId()];
 	}
 	
+	/**
+	 * Copy of post data.
+	 * 
+	 * @var array
+	 */
 	protected $_post=null;
 
 	/**
@@ -1227,4 +1232,15 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     	}
     }
     
+ 	public function dump()
+ 	{
+ 		if($this->usePostData())
+ 		{
+ 			print_r($this->_post);
+ 		}
+ 		else
+ 		{
+ 			parent::dump();
+ 		}
+ 	}
 }
