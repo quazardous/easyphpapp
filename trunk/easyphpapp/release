@@ -1,4 +1,6 @@
 *** 0.4.2-maki ***
+- Fix minor bugs for not session stored forms
+- Fix minor bugs in date input
 
 *** 0.4.1-maki ***
 Consolidation release.
