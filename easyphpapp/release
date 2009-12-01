@@ -5,6 +5,7 @@ Consolidation release.
 - Fix minor issue with containers
 - Fix bugs on date format in data/layout models
 - Add Date Input Layout
+- Modify form model layout to use date input
 
 *** 0.4.0-maki ***
 Improve form support :

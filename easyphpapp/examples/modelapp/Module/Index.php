@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  modelapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081201
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -20,6 +20,7 @@ require_once 'Ea/Model/Layout/Form.php';
 require_once 'Ea/Layout/Record/Table.php';
 require_once 'Zend/Session.php';
 require_once 'Ea/Layout/Form.php';
+require_once 'Ea/Layout/Input/Submit.php';
 
 /**
  * My basic module.
@@ -67,9 +68,15 @@ class Module_Index extends Ea_Module_Abstract
 		$table1->setRecords($ea_test_table1->fetchAll());
 		
 		$this->add($table1);
+
+		// same with a form
+		$form=new Ea_Layout_Form('form4');
+		
+		$this->add($form);
 		
 		// now we'll do the same for a form...
 		$table2=new Ea_Layout_Record_Table;
+		$form->add($table2);
 		
 		// build the form model
 		// Ea_Model_Layout::factory() can handle db table => it calls Ea_Model_Data_Abstract::factory()
@@ -86,14 +93,10 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// add one row
 		$table2->setRecord($ea_test_table1->fetchRow());
+		$table2->populate(); // fill table with records
 		
-		// same with a form
-		$form=new Ea_Layout_Form('form4');
-		
-		// define a table layout
-		$form->add($table2);
-		
-		$this->add($form);
+		$table2->addRow();
+		$table2->addCell(new Ea_Layout_Input_Submit('send', 'Send', 'onSubmit'));
 
 		global $db;
 		
@@ -119,6 +122,13 @@ class Module_Index extends Ea_Module_Abstract
 		
 		
 		// application will call render
+	}
+	
+	public function onSubmit(Ea_Layout_Form $form, $id)
+	{
+		$form->dump();
+		die();
+		
 	}
 }
 ?>

@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090506
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -130,11 +130,12 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	 * 
 	 * @param string $column
 	 * @param string $value
+	 * @param mixed $data
 	 * @return string
 	 * 
 	 * @see Ea_Layout_Record_Adapter_Field::getRawValue()
 	 */
-	public function filterRecordValue($column, $value)
+	public function filterRecordValue($column, $value, $data=null)
 	{
 		$filter=$this->getMetaData($column, 'filter');
 		if($filter)

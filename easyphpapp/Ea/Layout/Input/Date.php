@@ -140,9 +140,10 @@ class Ea_Layout_Input_Date extends Ea_Layout_Input_Abstract
 	 * @param unknown_type $formFormat form date format
 	 * @param unknown_type $config
 	 */
-	public function __construct($id=null, $value=null, $format=null, $formFormat=null , $config=null)
+	public function __construct($id=null, $value=null, $format=null, $formFormat=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
+		if($format) $this->setFormat($format, $formFormat);
 	}
 	
 	/**

@@ -321,6 +321,24 @@ abstract class Ea_Model_Abstract
 		if(!isset($this->_metadata[$column])) return null;
 		return self::array_get_from_id($this->_metadata[$column], $id);
 	}
+
+	public function getColumnDateDbformat($column)
+	{
+		$format=$this->getColumnMetaFromId(array('date','dbformat'), $column);
+		if($format) return $format;
+		$type=$this->getColumnType($column);	
+		if($type=='date') return $this->getDefaultDateDbformat();
+		return $this->getDefaultDatetimeDbformat();
+	}
+
+	public function getColumnDateFormat($column)
+	{
+		$format=$this->getColumnMetaFromId(array('date','format'), $column);
+		if($format) return $format;
+		$type=$this->getColumnType($column);	
+		if($type=='date') return $this->getDefaultDateFormat();
+		return $this->getDefaultDatetimeFormat();
+	}
 	
 	protected function setParamFromXml(Ea_Xml_Element $xml_param)
 	{
