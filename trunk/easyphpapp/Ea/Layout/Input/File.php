@@ -60,7 +60,8 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 	 */
 	public function getFileName()
 	{
-		return $this->getForm()->getUploadedFileName($this->getId());
+		if($this->getForm()) return $this->getForm()->getUploadedFileName($this->getId());
+		return null;
 	}
 
 	/**
