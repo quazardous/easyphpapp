@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -275,7 +275,10 @@ class Ea_Page implements Ea_Page_Interface
 			?><link type="text/css" href="<?php echo $this->escape($style['href']); ?>" rel="stylesheet" media="<?php echo $this->escape($style['media']); ?>" />
 <?php
 		}
-		if((!$isStyle)&&$this->isShowVersion()&&$this->getApp())
+		if($this->getApp()&&(
+			((!$isStyle)&&($this->getApp()->isDefaultStyle()===null))
+				||($this->getApp()->isDefaultStyle())
+			))
 		{
 			//default version style ;p
 			?>

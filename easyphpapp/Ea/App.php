@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.4.1-20091201
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -309,6 +309,23 @@ class Ea_App
 	public function getVersion()
 	{
 		return $this->_version;
+	}
+	
+	/**
+	 * Add default CSS.
+	 * 
+	 * @var boolean
+	 */
+	protected $_applyDefaultStyle=null; // if null display default CSS if no CSS given.
+	
+	public function applyDefaultStyle($apply=true)
+	{
+		$this->_applyDefaultStyle=$apply;
+	}
+	
+	public function isDefaultStyle()
+	{
+		return $this->_applyDefaultStyle;
 	}
 	
 	/**

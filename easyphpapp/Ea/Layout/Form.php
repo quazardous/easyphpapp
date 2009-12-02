@@ -126,6 +126,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function addInput(Ea_Layout_Input_Abstract $input)
 	{
 		$input->setForm($this);
+
 		$id=$input->getId();
 		if($id)
 		{
@@ -135,12 +136,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			{
 				$input->rememberValue();
 			}
+			
 		}
 		if($input instanceof Ea_Layout_Input_File)
 		{
+			
 			$this->uploadFile();
 		}
-		if($input instanceof Ea_Layout_Input_Submit)
+		else if($input instanceof Ea_Layout_Input_Submit)
 		{
 			// get the submit callbacks added before input was attached to form
 			foreach($input->getSubmitCallbacks() as $callback)
@@ -301,8 +304,10 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		}
 		$triggeringId = Ea_Layout_Input_Abstract::get_name_from_id($triggeringId);
 		$n=0;
+
 		foreach($this->_submitCallbacks as $id => $callbacks)
 		{
+			
 			$do=false;
 			if($id=='*') //general callback
 			{
@@ -716,6 +721,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		if(!$this->isStoredData()) return null;
 		$input=self::array_get_from_id($this->getStoredData()->items, $id);
 		//TODO think about it
+		// $input->setForm($this); no !
 		if($input instanceof Ea_Layout_Input_Abstract) return $input->getValue();
 		return null;
 	}
@@ -1032,8 +1038,8 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	protected function restore()
  	{
  		if(!$this->isStoredData()) return false;
-		$this->_submitCallbacks=$this->getStoredData()->submitCallbacks;
-		$this->_items=$this->getStoredData()->items;
+		$this->_submitCallbacks=array_merge($this->getStoredData()->submitCallbacks, $this->_submitCallbacks);
+		$this->_items=array_merge($this->getStoredData()->items, $this->_items);
 		$this->recursiveWalk(array($this, 'setInputForm'));
 		return true;
  	}
@@ -1234,6 +1240,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
     
  	public function dump()
  	{
+ 		echo $this->getId().' => ';
  		if($this->usePostData())
  		{
  			print_r($this->_post);

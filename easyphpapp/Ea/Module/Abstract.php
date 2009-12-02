@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.2-20091202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -405,7 +405,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function registerForm(Ea_Layout_Form $form)
 	{
-		$this->_managedForms[]=$form;
+		$this->_managedForms[$form->getId()]=$form;
 	}
 	
 	/**
