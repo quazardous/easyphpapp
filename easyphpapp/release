@@ -2,6 +2,7 @@
 - Fix minor bugs for not session stored forms
 - Fix minor bugs in date input
 - Fix minor bugs with "cross module" form use
+- Security : allow use of getUserXXX() methods when no user connected and rename getConnectedUserXXX() methods in getUserXXX()
 
 *** 0.4.1-maki ***
 Consolidation release.
