@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091009
+ * @version     0.4.2-20091202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -208,23 +208,35 @@ class Ea_Security
 	 * 
 	 * @return string
 	 */
-	public function getConnectedUserLogin()
+	public function getUserLogin()
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
+		if(!$identity) return null;
 		return $identity['login'];
 	}
 
+	public function getConnectedUserLogin()
+	{
+		return $this->getUserLogin();
+	}
+	
 	/**
 	 * Get the roles of an user.
 	 * 
 	 * @return array(string)
 	 */
-	public function getConnectedUserRoles()
+	public function getUserRoles()
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
+		if(!$identity) return array();
 		return $identity['roles'];
+	}
+	
+	public function getConnectedUserRoles()
+	{
+		return $this->getUserRoles();
 	}
 
 	/**
@@ -232,11 +244,17 @@ class Ea_Security
 	 * 
 	 * @return array(string)
 	 */
-	public function getConnectedUserAttributes()
+	public function getUserAttributes()
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
+		if($identity) return array();
 		return $identity['attributes'];
+	}
+	
+	public function getConnectedUserAttributes()
+	{
+		return $this->getUserAttributes();
 	}
 
 	/**
@@ -244,15 +262,21 @@ class Ea_Security
 	 * 
 	 * @return string
 	 */
-	public function getConnectedUserAttribute($name)
+	public function getUserAttribute($name)
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
+		if(!$identity) return null;
 		if(array_key_exists($name, $identity['attributes']))
 		{
 			return $identity['attributes'][$name];
 		}
 		return null;
+	}
+	
+	public function getConnectedUserAttribute($name)
+	{
+		return $this->getUserAttribute($name);
 	}
 	
 	/**
@@ -261,11 +285,17 @@ class Ea_Security
 	 * @param string $role
 	 * @return boolean
 	 */
-	public function connectedUserHasRole($role)
+	public function userHasRole($role)
 	{
 		$this->init();
 		$identity=$this->_auth->getIdentity();
+		if(!$identity) return false;
 		return array_key_exists($role, $identity['roles']);
+	}
+	
+	public function connectedUserHasRole($role)
+	{
+		return $this->userHasRole($role);
 	}
 	
 	/**

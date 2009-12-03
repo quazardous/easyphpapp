@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091201
+ * @version     0.4.2-20091202
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -1175,11 +1175,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 * Get the error code for the uploaded file.
 	 * 
 	 * @param $inputId
-	 * @return numeric
+	 * @return numeric -1 if no files at all
 	 */
 	public function getUploadedFileError($inputId)
 	{
-		if(!isset($_FILES)) return null;
+		if(!isset($_FILES)) return -1;
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
 		return Ea_Layout_Form::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'error'));
 	}
