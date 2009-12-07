@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.2-20091203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -206,5 +206,19 @@ abstract class Ea_Layout_Abstract
         return array();
     }
 	
+    /**
+     * Render and get HTML content as string.
+     * 
+     * @return string
+     */
+    public function getContent()
+    {
+    	$this->preRender();
+    	ob_start();
+    	$this->render();
+    	$content=ob_get_clean();
+    	$this->postRender();
+    	return $content;
+    }
 }
 ?>

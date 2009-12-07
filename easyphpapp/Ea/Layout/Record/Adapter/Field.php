@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081203
+ * @version     0.4.2-20091203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -20,6 +20,7 @@ require_once 'Ea/Layout/Record/Adapter/Interface.php';
 class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interface
 {
 	protected $_field=null;
+	protected $_map=null;
 	
 	/**
 	 * If defined, callback used in getRawValue().
@@ -30,9 +31,10 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 */
 	protected $_filter=null;
 	
-	public function __construct($column)
+	public function __construct($column, $map=null)
 	{
 		$this->_field=$column;
+		$this->_map=$map;
 	}
 
 	/**
@@ -67,7 +69,9 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	 */
 	public function getContent($record, $i)
 	{
-		return $this->getRawValue($record);
+		$content=$this->getRawValue($record);
+		if($this->_map&&isset($this->_map[$content])) $content=$this->_map[$content];
+		return $content;
 	}
 }
 

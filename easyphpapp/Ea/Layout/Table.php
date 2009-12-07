@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091015
+ * @version     0.4.2-20091203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -124,7 +124,7 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	public function addHeader($content=null, $config=null, $append=true, $class='Ea_Layout_Table_Header')
 	{
 		if(!$this->_currentRow) $this->addRow();
-		return $this->_currentRow->addHeader($content, $append, $config, $class);
+		return $this->_currentRow->addHeader($content, $config, $append, $class);
 	}
 }
 
