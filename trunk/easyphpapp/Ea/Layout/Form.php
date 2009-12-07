@@ -75,8 +75,8 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		$this->setMethod($method);
 		$this->setAction($action);
+		$this->setId($id); //before construct because of layout registration
 		parent::__construct(null, $config);
-		$this->setId($id);
 		if(is_array($config))
 		{
 			if(array_key_exists('method', $config))

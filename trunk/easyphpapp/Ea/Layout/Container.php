@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.2-20091203
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -53,6 +53,11 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 */
 	protected $_subLayouts=array();
 	
+	public function resetSubLayouts()
+	{
+		$this->_subLayouts=array();
+	}
+	
 	/**
 	 * Add a sublayout.
 	 * If $content is not a Ea_Layout_Abstract, try to create a Ea_Layout_Text with $content.
@@ -64,6 +69,17 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 * @param boolean $append
 	 */
 	public function add($content, $append=true)
+	{
+		$this->_add($content, $append);
+	}
+	
+	/**
+	 * Internal Add a sublayout.
+	 * 
+	 * @param Ea_Layout_Abstract|mixed $content
+	 * @param boolean $append
+	 */
+	protected function _add($content, $append=true)
 	{
 		if(is_array($content)&&(!is_object($content)))
 		{

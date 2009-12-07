@@ -359,7 +359,7 @@ abstract class Ea_Module_Abstract
 	public function doManageForms()
 	{
 		$ok=false;
-		foreach($this->_managedForms as $form)
+		foreach($this->_managedForms as $id=>$form)
 		{
 			if($form->getMethod()=='post')
 			{
@@ -384,7 +384,7 @@ abstract class Ea_Module_Abstract
 		{
 			$this->registerForm($layout);
 		}
-		if($layout instanceof Ea_Layout_Messages)
+		else if($layout instanceof Ea_Layout_Messages)
 		{
 			$this->registerMessagesLayout($layout);
 		}
