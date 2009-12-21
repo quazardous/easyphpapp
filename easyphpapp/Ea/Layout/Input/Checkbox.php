@@ -7,12 +7,13 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Input/Abstract.php';
+require_once 'Ea/Layout/Label.php';
 
 /**
  * Checkbox input layout class.
@@ -26,14 +27,29 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	 *
 	 * @param string|array(string) $id the id of the input
 	 * @param boolean $checked
+	 * @param string $label
 	 * @param string|numeric $value
 	 * @param array $config
 	 * 
 	 */
-	public function __construct($id=null, $checked=null, $value='X', $config=null)
+	public function __construct($id=null, $checked=null, $label=null, $value='X', $config=null)
 	{
 		parent::__construct($id, $value, $config);
 		if($checked!==null)$this->setChecked($checked);
+		$this->setLabel($label);
+		$this->protectAttribute('checked', 'setChecked', 'isChecked');
+	}
+	
+	/**
+	 * Label of the input.
+	 * 
+	 * @var string|Ea_Layout_A
+	 */
+	protected $_label=null;
+	
+	public function setLabel($label)
+	{
+		$this->_label=$label;
 	}
 	
 	/**
@@ -50,7 +66,16 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	 */
 	public function setChecked($checked)
 	{
-		$this->_checked=$checked;
+		if(is_bool($checked)) $this->_checked=$checked;
+		else $this->_checked=strtolower($checked)=='checked'?true:false;
+	}
+	
+	public function setDefaultChecked($checked)
+	{
+		if($this->_checked===null)
+		{
+			$this->_checked=$checked;
+		}
 	}
 	
 	/**
@@ -62,35 +87,8 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	{
 		return $this->_checked;
 	}
-
-	public function setAttribute($name, $value)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'checked': $this->setChecked(strtolower($value)=='checked'); break;
-			default:
-				parent::setAttribute($name, $value);
-		}
-	}
-
-	public function getAttribute($name)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'checked': return $this->isChecked()?'checked':null;
-			default: return parent::getAttribute($name);
-		}
-	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		/*
@@ -112,5 +110,35 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 		$this->setChecked($this->getValue()!=null);
 	}
 	
+    /**
+     * Set remember Value.
+     * 
+     * @param string $defaultValue
+     * 
+     * @param boolean $remember
+     */
+    public function rememberValue($defaultValue=false)
+    {
+    	parent::rememberValue($defaultValue);
+    	$input=$this->getForm()->getInputFromSession($this->getId());
+    	if($input) $this->setChecked($input->isChecked());
+    }
+	
+	public function __sleep()
+    {
+        return array_merge(parent::__sleep(), array('_checked'));
+    }
+    
+	protected function render()
+	{
+		parent::render();
+		// TODO : think about it vs add()
+		if($this->_label)
+		{
+			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
+			$label->display();
+		}
+	}
+    
 }
 ?>

@@ -44,7 +44,7 @@ class Ea_Layout_Single extends Ea_Layout_Element_Abstract
 		if($tag) $this->setTag($tag);
 	}
 	
-	public function render()
+	protected function render()
 	{
 		echo '<';
 		echo $this->_tag;

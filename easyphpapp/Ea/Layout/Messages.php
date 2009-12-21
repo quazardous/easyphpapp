@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091113
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -43,7 +43,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 	{
 		$this->setId($id); // before parent construct
 		parent::__construct(null, $config);
-		$this->addAtribute('class', 'messages');
+		$this->addAttribute('class', 'messages');
 	}
 	
 	protected $_messages=array();
@@ -84,7 +84,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 		return $this->_id;
 	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		if(!$this->getAttribute('id'))
@@ -97,7 +97,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 			foreach($this->getPage()->getModule()->getMessages($this->getId()) as $message)
 			{
 				$div=new Ea_Layout_Container('div');
-				$div->addAtribute('class', $message->type);
+				$div->addAttribute('class', $message->type);
 				$div->add($message->content);
 				$this->add($div);
 				$ismsg=true;
@@ -107,7 +107,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 		return false;
 	}
 	
-	public function postRender()
+	protected function postRender()
 	{
 		parent::postRender();
 		if($this->getPage() instanceof Ea_Page)

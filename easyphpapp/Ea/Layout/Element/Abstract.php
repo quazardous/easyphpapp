@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091112
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -102,38 +102,94 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	protected $_attributes=array();
 
 	/**
-	 * Children class can block some attributes.
+	 * Extended class can specify some attributes not to be rendered.
 	 * 
 	 * @var array
 	 */
-	protected $_blockedAttributes=array();
+	protected $_notRenderedAttributes=array();
 	
-	protected function blockAttribute($name, $block=true)
+	/**
+	 * Attributes that can not be directly set.
+	 * 
+	 * @var array(attribute=>set method))
+	 */
+	protected $_protectedAttributes=array();
+	
+	/**
+	 * Protect attribute from beiing directly set.
+	 * 
+	 * @param string $name
+	 * @param string $setMethod set method of the class
+	 * @param string $getMethod get method of the class
+	 */
+	protected function protectAttribute($name, $setMethod=null, $getMethod=null)
+	{
+		if(!$setMethod) $setMethod='set'.ucfirst($name);
+		if(!$getMethod) $getMethod='get'.ucfirst($name);
+		$this->_protectedAttributes[$name]=array('set'=>$setMethod, 'get'=>$getMethod);
+	}
+	
+	/**
+	 * Test if attribute is protected.
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	protected function protectedAttribute($name)
+	{
+		return array_key_exists($name, $this->_protectedAttributes);
+	}
+	
+	/**
+	 * Use the special set method given for this attribute.
+	 * 
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	protected function setProtectedAttribute($name, $value)
+	{
+		$method=$this->_protectedAttributes[$name]['set'];
+		$this->$method($value);
+	}
+	
+	protected function getProtectedAttribute($name)
+	{
+		$method=$this->_protectedAttributes[$name]['get'];
+		return $this->$method();
+	}
+	
+	/**
+	 * Block the rendering of the given attribute.
+	 * 
+	 * @param string $name
+	 * @param boolean $block
+	 */
+	protected function noRenderAttribute($name, $block=true)
 	{
 		if($block)
 		{
-			if(!in_array($name, $this->_blockedAttributes))
+			if(!in_array($name, $this->_notRenderedAttributes))
 			{
-				$this->_blockedAttributes[]=$name;
+				$this->_notRenderedAttributes[]=$name;
 			}
 		}
 		else
 		{
-			if(in_array($name, $this->_blockedAttributes))
+			if(in_array($name, $this->_notRenderedAttributes))
 			{
 				$new=array();
-				foreach($this->_blockedAttributes as $attr)
+				foreach($this->_notRenderedAttributes as $attr)
 				{
 					if($attr!=$name) $new[]=$attr;
 				}
-				$this->_blockedAttributes=$new;
+				$this->_notRenderedAttributes=$new;
 			}
 		}
 	}
 	
-	protected function isBlockedAttribute($name)
+	protected function notRenderedAttribute($name)
 	{
-		return in_array($name, $this->_blockedAttributes);
+		return in_array($name, $this->_notRenderedAttributes);
 	}
 	
 	/**
@@ -142,11 +198,18 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	 * @param string $name
 	 * @param string $value
 	 */
-	public function addAtribute($name, $value)
+	public function addAttribute($name, $value)
 	{
+		$name=strtolower($name);
+		if($this->protectedAttribute($name))
+		{
+			// if protected attribute : like setAttribute()
+			$this->setProtectedAttribute($name, $value);
+			return;
+		}
 		if(isset($this->_attributes[$name]))
 		{
-			if(is_array($this->_attributes[$name]))
+			if(!is_array($this->_attributes[$name]))
 			{
 				$this->_attributes[$name]=array($this->_attributes[$name]);
 			}
@@ -181,11 +244,13 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	 */
 	public function setAttribute($name, $value)
 	{
-		$this->_setAttribute($name, $value);
+		$name=strtolower($name);
+		if($this->protectedAttribute($name)) $this->setProtectedAttribute($name, $value);
+		else $this->_setAttribute($name, $value);
 	}
 
 	/**
-	 * Set an attribute.
+	 * Internal and filtered set an attribute.
 	 *
 	 * @param string $name
 	 * @param string|numeric $value
@@ -196,6 +261,13 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	{
 		$name=strtolower($name);
 		$this->_attributes[$name]=$value;
+	}
+	
+	protected function _getAttribute($name)
+	{
+		$name=strtolower($name);
+		if(array_key_exists($name, $this->_attributes)) return $this->_attributes[$name];
+		return null;
 	}
 	
 	public function __get($name)
@@ -229,7 +301,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	 * It's highly recommended that preRender() call parent::preRender().
 	 * @return boolean if not true do not render the layout
 	 */
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		if(!$this->_tag)
@@ -250,7 +322,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	{
 		foreach($this->_attributes as $name=>$value)
 		{
-			if($value!==null&&(!$this->isBlockedAttribute($name)))
+			if($value!==null&&(!$this->notRenderedAttribute($name)))
 			{
 				$this->renderAttribute($name, $value);
 			}

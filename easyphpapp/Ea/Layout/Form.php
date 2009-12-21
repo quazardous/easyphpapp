@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091202
+ * @version     0.4.2-20091205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -96,6 +96,31 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		 * We want to know when input layouts are added.
 		 */
 		$this->addCallback(array($this, 'onAddLayout'));
+		$this->protectAttribute('name');
+		$this->protectAttribute('id');
+		$this->protectAttribute('method');
+		$this->protectAttribute('action', 'setAction', 'getActionUrl');
+		$this->protectAttribute('enctype');
+	}
+	
+	public function setName($value)
+	{
+		throw new Ea_Layout_Form_Exception("name : forbidden attribute for form");
+	}
+	
+	public function getName()
+	{
+		return $this->getId();
+	}
+	
+	public function setEnctype($value)
+	{
+		throw new Ea_Layout_Form_Exception("enctype : forbidden attribute for form");
+	}
+	
+	public function getEnctype()
+	{
+		return $this->canUploadFile()?'multipart/form-data':null;
 	}
 	
 	/**
@@ -191,6 +216,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 						$selected=$input->isSelected();
 						$input->setGroupParent($arr[$pid]);
 						if($selected) $arr[$pid]->setValue($input->getRadioValue());
+						$input->setDelta();
 					}
 					// if same id => same input just break
 					break;
@@ -463,49 +489,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}
 	
 	// FIXME add getName();
-	
-	/**
-	 * Set layout attribute.
-	 * 
-	 * @param string $name
-	 * @param string $value
-	 * TODO : simplify
-	 */
-	public function setAttribute($name, $value)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			case 'name': case 'action':
-				throw new Ea_Layout_Form_Exception("$name: forbidden attribute for form");
-				break;
-			case 'method':
-				$this->setMethod($value);
-				break;
-			case 'id':
-				$this->setId($value);
-				break;
-			case 'enctype':
-				$this->uploadFile(strtolower($value)=='multipart/form-data');
-				break;
-			default:
-				parent::setAttribute($name, $value);
-		}
-	} 
-
-	public function getAttribute($name)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			case 'name': case 'id':	return $this->getId();	
-			case 'action': return $this->getActionUrl();
-			case 'method': return $this->getMethod();
-			case 'enctype': return $this->canUploadFile()?'multipart/form-data':null;
-			default: return parent::getAttribute($name);
-		}
-	}	
-	
+		
 	/**
 	 * Use(render) magic hidden input to determine if the form was submitted.
 	 * 
@@ -609,14 +593,14 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return $this->_magicNamePrefix.'_'.$name;
 	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		$this->_setAttribute('action', $this->getActionUrl());
 		$this->_setAttribute('id', $this->getId());
 		$this->_setAttribute('name', $this->getId());
 		$this->_setAttribute('method', $this->getMethod());
-		if($this->canUploadFile()) $this->_setAttribute('enctype', 'multipart/form-data');
+		if($this->canUploadFile()) $this->_setAttribute('enctype', $this->getEnctype());
 		$this->magic();
 		return $render;
 	}
@@ -711,6 +695,18 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	}
 	
 	/**
+	 * Get the stored input for the given id.
+	 * 
+	 * @param array $id
+	 * @return Ea_Layout_Input_Abstract
+	 */
+	public function getInputFromSession($id)
+	{
+		if(!$this->isStoredData()) return null;
+		return self::array_get_from_id($this->getStoredData()->items, $id);
+	}
+	
+	/**
 	 * Get the stored value for the given id.
 	 * 
 	 * @param array $id
@@ -718,8 +714,8 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function getValueFromSession($id)
 	{
-		if(!$this->isStoredData()) return null;
-		$input=self::array_get_from_id($this->getStoredData()->items, $id);
+		$input=$this->getInputFromSession($id);
+		if(!$input) return null;
 		//TODO think about it
 		// $input->setForm($this); no !
 		if($input instanceof Ea_Layout_Input_Abstract) return $input->getValue();
@@ -1228,7 +1224,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		return file_get_contents($this->getUploadedFileTmpName($inputId), $flags, null, $offset, $maxlen);
 	}
     
-    public function postRender()
+    protected function postRender()
     {
     	parent::postRender();
     	if($this->isStore())

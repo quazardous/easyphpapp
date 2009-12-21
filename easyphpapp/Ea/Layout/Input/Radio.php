@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -34,6 +34,23 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 	{
 		$this->setRadioValue($value);
 		parent::__construct($id, $selected?$value:null, $config);
+		$this->protectAttribute('value', 'setRadioValue', 'getRadioValue');
+		$this->protectAttribute('checked', 'setSelected', 'isSelected');
+		$this->protectAttribute('id', 'setAttributeId', 'getAttributeId');
+	}
+
+	/*public function setAttributeId($value)
+	{
+		parent::setAttributeId($value);
+	}*/
+	
+	public function getAttributeId()
+	{
+		// id attribute can be different from internal id
+		$id=$this->_getAttribute('id');
+		if($id) return $id;
+		return $this->getName().'-'.$this->_delta;
+		//TODO : think about it
 	}
 	
 	/**
@@ -91,9 +108,35 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 		}
 	}
 	
+	/**
+	 * Test if this radio is selected.
+	 * 
+	 * @return boolean
+	 */
 	public function isSelected()
 	{
 		return $this->getValue()==$this->getRadioValue();
+	}
+	
+	/**
+	 * Select or unselect this radio.
+	 * 
+	 * @param boolean $value
+	 */
+	public function setSelected($value)
+	{
+		if(!is_bool($value)) $value=strtolower($value)=='checked'||strtolower($value)=='selected'?true:false;
+		if($value)
+		{
+			$this->setValue($this->getRadioValue());
+		}
+		else
+		{
+			if($this->getValue()==$this->getRadioValue())
+			{
+				$this->setValue(null);
+			}
+		}
 	}
 	
 	/**
@@ -123,43 +166,33 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 		$this->_groupParent=$parent;
 	}
 	
-	public function setAttribute($name, $value)
+	protected $_delta=0;
+	protected $_maxDelta=0;
+	public function setDelta($delta=null)
 	{
-		$name=strtolower($name);
-		switch($name)
+		if(!$this->_groupParent) return;
+		if($delta===null)
 		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'value': $this->setRadioValue($value); break;
-			case 'checked': if(strtolower($value)=='checked') $this->setValue($this->getRadioValue()); break;
-			default:
-				parent::setAttribute($name, $value);
+			$delta=$this->_groupParent->_maxDelta+1;
 		}
+		if($delta>$this->_groupParent->_maxDelta)
+		{
+			$this->_groupParent->_maxDelta=$delta;
+		}
+		$this->_delta=$delta;
 	}
 	
-	public function getAttribute($name)
+	protected function preRender()
 	{
-		$name=strtolower($name);
-		switch($name)
+		if(!$this->_getAttribute('id'))
 		{
-			/*
-			 * Some reserved attributes...
-			 */
-			//TODO : think about it
-			case 'value': return $this->getRadioValue();
-			case 'checked': return $this->isSelected()?'checked':null;
-			default: return parent::getAttribute($name);
+			$this->_setAttribute('id', $this->getAttributeId());
 		}
-	}
-	
-	public function preRender()
-	{
 		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
-		if($this->getRadioValue()==$this->getValue())
+		if($this->isSelected())
 		{
 			$this->_setAttribute('checked', 'checked');
 		}

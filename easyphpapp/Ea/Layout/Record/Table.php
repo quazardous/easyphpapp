@@ -478,7 +478,7 @@ class Ea_Layout_Record_Table extends Ea_Layout_Table
 		}
 	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		if(!$this->_populated) $this->populate();

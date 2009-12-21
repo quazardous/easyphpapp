@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.7.20081023
+ * @version     0.4.2_20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -41,6 +41,7 @@ class Ea_Layout_Link extends Ea_Layout_Container
 		if($content) $this->add($content);
 		if($target) $this->setAttribute('target', $target);
 		$this->setUrl($url);
+		$this->protectAttribute('href', 'setUrl', 'getUrlString');
 	}
 	
 	/**
@@ -88,39 +89,8 @@ class Ea_Layout_Link extends Ea_Layout_Container
 		}
 		return $this->_url;
 	}
-	
-	/**
-	 * Set an attribute.
-	 *
-	 * @param string $name
-	 * @param string|numeric $value
-	 * 
-	 * @see $_attributes
-	 */
-	public function setAttribute($name, $value)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			case 'href':
-				$this->setUrl($value);
-				break;
-			default:
-				parent::setAttribute($name, $value);
-		}
-	}
-	
-	public function getAttribute($name)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			case 'href': return $this->getUrlString();
-			default: return parent::getAttribute($name);
-		}
-	}
 
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		$this->_setAttribute('href', $this->getUrlString());

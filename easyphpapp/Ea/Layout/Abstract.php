@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091203
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -167,13 +167,20 @@ abstract class Ea_Layout_Abstract
 	{
 		return $this->getPage()->escape($string);
 	}
+
+	/*
+	public function encode($string)
+	{
+		// no need for encode in layout context. see Ea_Page
+	}
+	*/
 	
 	/**
 	 * Pre render validation stuff.
 	 * It's highly recommended that preRender() call parent::preRender().
 	 * @return boolean if not true do not render the layout
 	 */
-	public function preRender()
+	protected function preRender()
 	{
 		return true;
 	}
@@ -190,13 +197,13 @@ abstract class Ea_Layout_Abstract
 	 * @see preRender()
 	 * 
 	 */
-	abstract public function render();
+	abstract protected function render();
 	
 	/**
 	 * Post render completion stuff.
 	 * It's highly recommended that postRender() call parent::postRender().
 	 */
-	public function postRender()
+	protected function postRender()
 	{
 		
 	}
@@ -213,12 +220,51 @@ abstract class Ea_Layout_Abstract
      */
     public function getContent()
     {
-    	$this->preRender();
-    	ob_start();
-    	$this->render();
-    	$content=ob_get_clean();
-    	$this->postRender();
-    	return $content;
+    	if($this->preRender())
+    	{
+    		ob_start();
+    		$this->render();
+    		$content=ob_get_clean();
+    		$this->postRender();
+    		return $content;
+    	}
+    	return '';
     }
+    
+    /**
+     * Render and dispaly content.
+     * 
+     */
+    public function display()
+    {
+    	if($this->preRender())
+    	{
+    		$this->render();
+    		$this->postRender();
+    		return true;
+    	}
+    	return false;
+    }
+    
+    /**
+     * Method called just before adding the layout to it's container.
+     * 
+     * @param Ea_Layout_Container $parent
+     */
+    protected function beforeAdd(Ea_Layout_Container $parent)
+    {
+    	
+    }
+
+    /**
+     * Method called just after adding the layout to it's container.
+     * 
+     * @param Ea_Layout_Container $parent
+     */
+    protected function afterAdd(Ea_Layout_Container $parent)
+    {
+    	
+    }
+    
 }
 ?>

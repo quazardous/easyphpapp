@@ -85,7 +85,9 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 		{
 			foreach($content as $item)
 			{
+				$this->beforeAdd($this);
 				$this->add($item, $append);
+				$this->afterAdd($this);
 			}
 			return;
 		}
@@ -115,16 +117,12 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 * Render the container and the sublayouts.
 	 * 
 	 */
-	public function render()
+	protected function render()
 	{
 		$this->open();
 		foreach($this->_subLayouts as $layout)
 		{
-			if($layout->preRender())
-			{
-				$layout->render();
-				$layout->postRender();
-			}
+			$layout->display();
 		}
 		$this->close();
 	}
