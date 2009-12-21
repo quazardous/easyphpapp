@@ -4,6 +4,9 @@
 - Fix minor bugs with "cross module" form use
 - Security : allow use of getUserXXX() methods when no user connected and rename getConnectedUserXXX() methods in getUserXXX()
 - Add flash layout
+- Add label for inputs and modify checkout and radio constructor
+- Refresh the attributes code for layouts
+- Add Google Map v3 Layout
 
 *** 0.4.1-maki ***
 Consolidation release.

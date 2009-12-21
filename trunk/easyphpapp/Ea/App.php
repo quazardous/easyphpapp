@@ -879,7 +879,7 @@ class Ea_App
 		
 		// user is allowed (maybe public)
 		if($this->isAllowed()) return;
-
+		
 		// not allowed, maybe no user connected
 		if(!$this->isConnectedUser())
 		{
@@ -917,7 +917,7 @@ class Ea_App
 			$this->_execute($this->_securityModule, 'deny', 'security');
 			die();
 		}
-
+		
 	}
 	
 	/**

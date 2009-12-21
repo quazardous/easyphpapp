@@ -15,27 +15,61 @@
 require_once 'Ea/Layout/Single.php';
 
 /**
- * Textarea input layout class.
+ * Script layout class.
  */
 class Ea_Layout_Script extends Ea_Layout_Single
 {
 	protected $_tag='script';
 
 	/**
-	 * Ea_Layout_Input_Abstract constructor.
-	 *
-	 * @param string|array(string) $id the id of the input
-	 * @param string|numeric $value
-	 * @param array $config
+	 * Script is called with document.onload.
 	 * 
-	 * @see $_id
+	 * @var boolean
 	 */
-	public function __construct($src, $script, $type='text/javascript', $config=null)
+	protected $_onload=false;
+	
+	/**
+	 * Get  Onload.
+	 *
+	 * @return type onload
+	 */
+	public function getOnload() 
+	{
+		return $this->_onload;
+	}
+	
+	/**
+	 * Set Onload.
+	 * 
+	 * @param type onload
+	 */
+	public function setOnload($onload=true)
+	{
+		$this->_onload = $onload;
+		if($this->getPage() instanceof Ea_Page)
+		{
+			if($onload)
+			{
+				$this->getPage()->setOnloadSupport(true);
+			}
+		}
+	}
+	
+	/**
+	 * Script constructor.
+	 * 
+	 * @param string $src
+	 * @param string $script
+	 * @param string $type
+	 * @param array $config
+	 */
+	public function __construct($src, $script=null, $onload=false, $type='text/javascript', $config=null)
 	{
 		parent::__construct(null, $config);
 		$this->setScript($script);
 		if($src)$this->setAttribute('src', $src);
 		$this->setAttribute('type', $type);
+		$this->setOnload($onload);
 	} 
 	
 	protected $_script=null;
@@ -48,18 +82,43 @@ class Ea_Layout_Script extends Ea_Layout_Single
 		return $this->_script;
 	}
 		
-	public function render()
+	protected function render()
 	{
 		echo '<';
 		echo $this->_tag;
 		$this->renderAttributes();
 		echo '>';
+	
+		if($this->getOnload())
+		{
+			echo '
+			ea.addOnload(function(){
+			';
+		}
+		
+		echo $this->getScript();
 
-		echo $this->escape($this->getScript());
-
+		if($this->getOnload())
+		{
+			echo ' });';
+		
+		}		
+		
 		echo '</';
 		echo $this->_tag;
 		echo '>';
+	}
+	
+	public function setPage($page)
+	{
+		parent::setPage($page);
+		if($this->getPage() instanceof Ea_Page)
+		{
+			if($this->getOnload())
+			{
+				$this->getPage()->setOnloadSupport(true);
+			}
+		}
 	}
 }
 ?>

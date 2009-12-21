@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091201
+ * @version     0.4.2-20091221
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -37,6 +37,16 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	protected $_top=null;
 
+	/**
+	 * Return top container (body).
+	 *
+	 * @return Ea_Layout_Container
+	 */
+	public function getTopLayout()
+	{
+		return $this->_top;
+	}
+	
 	/**
 	 * Main layout.
 	 * The main layout is where you can add more content.
@@ -80,6 +90,18 @@ class Ea_Page implements Ea_Page_Interface
 	 * @var array(string)
 	 */
 	protected $_scripts=array();
+	
+	protected $_rawHeaders=array();
+	
+	/**
+	 * Enter description here...
+	 * 
+	 * @param Ea_Layout_Abstract|string $header
+	 */
+	public function addRawHeader($header)
+	{
+		$this->_rawHeaders[]=$header;
+	}
 	
 	/**
 	 * If true, the page is render only once, even if render() is called many times.
@@ -248,10 +270,40 @@ class Ea_Page implements Ea_Page_Interface
 	 * @param string $href
 	 * @param string $media default is 'all'
 	 */
-	public function addScript($src, $script=null, $type='text/javascript')
+	public function addScript($src, $script=null, $type='text/javascript', $replace=true)
 	{
-		array_push($this->_scripts, $layout=new Ea_Layout_Script($src, $script, $type));
+		$layout=new Ea_Layout_Script($src, $script, false, $type);
+		if($replace&&$src)
+		{
+			$this->_scripts[$src]=$layout;
+		}
+		else
+		{
+			$this->_scripts[]=$layout;
+		}
 		$layout->setPage($this);
+	}
+	
+	protected $_onloadSupport=false;
+	
+	/**
+	 * Get  OnloadSupport.
+	 *
+	 * @return type onloadSupport
+	 */
+	public function getOnloadSupport() 
+	{
+		return $this->_onloadSupport;
+	}
+	
+	/**
+	 * Set OnloadSupport.
+	 * 
+	 * @param type onloadSupport
+	 */
+	public function setOnloadSupport($onloadSupport=true)
+	{
+		$this->_onloadSupport = $onloadSupport;
 	}
 	
 	/**
@@ -281,8 +333,103 @@ class Ea_Page implements Ea_Page_Interface
 			))
 		{
 			//default version style ;p
-			?>
-<style type="text/css">
+			echo $this->getDefaultStyle();
+		}
+		$this->addInternalScripts();
+		foreach($this->_scripts as $script)
+		{
+			$script->display();
+		}
+		foreach($this->_rawHeaders as $header)
+		{
+			if($header instanceof Ea_Layout_Abstract)$header->display();
+			else echo $header;
+		}
+		if($this->_title)
+		{
+			?><title><?php echo $this->escape($this->_title); ?></title>
+<?php
+		}
+		?></head><?php
+		
+		if($this->isShowVersion()&&$this->getApp())
+		{
+			$this->_top->add($this->getVersionLayout());
+		}
+		
+		$this->_top->display();
+		?>
+</html><?php
+		$this->_rendered=true;
+		echo ob_get_clean();
+	}
+	
+	public function getVersionLayout()
+	{
+		ob_start();
+		?>
+<div class="version">
+<span class="app"><?php echo $this->escape($this->getApp()->getAppName()); ?><?php if($this->getApp()->getVersion()) echo $this->escape('-'.$this->getApp()->getVersion()); ?></span> / 
+<span class="ea"><?php echo $this->escape(EA_VERSION); ?></span>
+</div>
+		<?php
+		return new Ea_Layout_Text(ob_get_clean(), false);
+	}
+	
+	/**
+	 * Add content to the page. In fact add content to the main layout.
+	 * @uses $_main
+	 * @see Ea_Layout_Abstract
+	 * 
+	 * @param mixed $content
+	 */
+	public function add($content, $append=true)
+	{
+		$this->_main->add($content, $append);
+	}
+	
+	/**
+	 * Get the default style.
+	 * 
+	 * @return string
+	 */
+	
+	public function addInternalScripts()
+	{
+		if($this->getOnloadSupport())
+		{
+			ob_start();
+?>
+<script type="text/javascript">
+Ea_JS = function()
+{
+	this._onloads=new Array();
+};
+
+Ea_JS.prototype.addOnload = function(f)
+{
+	this._onloads.push(f);
+};
+
+Ea_JS.prototype.onload = function()
+{
+	for(i in this._onloads){ this._onloads[i](); }
+};
+
+var ea=new Ea_JS;
+
+window.onload=function(){ea.onload();};
+</script>
+<?php
+			$this->addRawHeader(ob_get_clean());
+		}
+	}
+	
+	public function getDefaultStyle()
+	{
+		ob_start();
+		?>
+		<style type="text/css">
 * .version
 {
 	position: absolute;
@@ -342,61 +489,8 @@ body
 	margin-bottom: 20px;
 }
 </style>
-			<?php
-		}
-		foreach($this->_scripts as $script)
-		{
-			if($script->preRender())
-			{
-				$script->render();
-				$script->postRender();
-			}
-		}
-		if($this->_title)
-		{
-			?><title><?php echo $this->escape($this->_title); ?></title>
-<?php
-		}
-		?></head><?php
-		
-		if($this->isShowVersion()&&$this->getApp())
-		{
-			$this->_top->add($this->getVersionLayout());
-		}
-		
-		if($this->_top->preRender())
-		{
-			$this->_top->render();
-			$this->_top->postRender();
-		}
-		?>
-</html><?php
-		$this->_rendered=true;
-		echo ob_get_clean();
-	}
-	
-	public function getVersionLayout()
-	{
-		ob_start();
-		?>
-<div class="version">
-<span class="app"><?php echo $this->escape($this->getApp()->getAppName()); ?><?php if($this->getApp()->getVersion()) echo $this->escape('-'.$this->getApp()->getVersion()); ?></span> / 
-<span class="ea"><?php echo $this->escape(EA_VERSION); ?></span>
-</div>
 		<?php
-		return new Ea_Layout_Text(ob_get_clean(), false);
-	}
-	
-	/**
-	 * Add content to the page. In fact add content to the main layout.
-	 * @uses $_main
-	 * @see Ea_Layout_Abstract
-	 * 
-	 * @param mixed $content
-	 */
-	public function add($content, $append=true)
-	{
-		$this->_main->add($content, $append);
+		return ob_get_clean();
 	}
 	
 	/**
@@ -410,6 +504,18 @@ body
 	{
 		return htmlentities($string);
 	}
+
+	/**
+	 * Does nothing fot now.
+	 * 
+	 * @param string $string
+	 * @return string
+	 */
+	public function encode($string)
+	{
+		return $string;
+	}
+	
 	
 	/**
 	 * Get an url.

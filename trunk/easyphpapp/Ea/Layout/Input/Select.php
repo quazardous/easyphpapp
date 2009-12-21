@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090127
+ * @version     0.4.2-20091218
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -35,11 +35,12 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	{
 		parent::__construct($id, $value, $config);
 		if(is_array($value)) $this->isMultiple(true);
-		$this->blockAttribute('value', true);
+		$this->noRenderAttribute('value', true);
 		$this->_options=$options;
+		$this->protectAttribute('multiple', 'setMultiple', 'isMultiple');
 	}
 
-	public function render()
+	protected function render()
 	{
 		echo '<';
 		echo $this->_tag;
@@ -150,12 +151,14 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 	protected $_magicName=true;
 	
 	/**
-	 * Set checked.
+	 * Set Multiple.
 	 * 
-	 * @param boolean $checked
+	 * @param boolean $multiple
+	 * @param integer $size number of displayed values
 	 */
 	public function setMultiple($multiple=true, $size=null)
 	{
+		if(!is_bool($multiple)) $multiple=strtolower($multiple)=='multiple'?true:false;
 		if($multiple)
 		{
 			if(!is_array($this->_value))
@@ -202,32 +205,6 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 		return $this->_magicName;
 	}
 	
-	public function setAttribute($name, $value)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'multiple': $this->setMultiple(strtolower($value)=='multiple'); break;
-			default:
-				parent::setAttribute($name, $value);
-		}
-	}
-
-	public function getAttribute($name)
-	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'multiple': return $this->isMultiple()?'multiple':null;
-			default: return parent::getAttribute($name);
-		}
-	}
 
 	/**
 	 * Return the input name.
@@ -244,7 +221,7 @@ class Ea_Layout_Input_Select extends Ea_Layout_Input_Abstract
 		return $name;
 	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		/*

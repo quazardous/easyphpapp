@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091202
+ * @version     0.4.2-20091215
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -500,8 +500,10 @@ class Ea_Security
 		}
 		else
 		{
+			// if not connected you are anonymous
 			$roles='anonymous';
 		}
+
 		if($roles===null) $roles=array();
 		if(!is_array($roles)) $roles=array($roles);
 		

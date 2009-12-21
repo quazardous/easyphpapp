@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.4.2-20091205
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -88,10 +88,11 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	 */
 	public function setDisabled($disabled)
 	{
-		$this->_disabled=$disabled;
+		if(is_bool($disabled)) $this->_disabled=$disabled;
+		else $this->_disabled=strtolower($disabled)=='disabled'?true:false;
 	}
 	
-	public function getDisabled()
+	public function isDisabled()
 	{
 		return $this->_disabled;
 	}
@@ -121,43 +122,29 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 				$this->setDisabled($config['disabled']);
 			}
 		}
-		
+		$this->protectAttribute('type');
+		$this->protectAttribute('value');
+		$this->protectAttribute('name');
+		$this->protectAttribute('id', 'setAttributeId', 'getAttributeId');
+		$this->protectAttribute('disabled', 'setDisabled', 'isDisabled');
 	}
 
-	public function setAttribute($name, $value)
+	public function setAttributeId($value)
 	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'type': $this->setType($value); break;
-			case 'value': $this->setValue($value); break;
-			case 'disabled': $this->setDisabled($value=='disabled'); break;
-			case 'name': case 'id':
-				throw new Ea_Layout_Input_Exception("$name: forbidden attribute for input");
-				break;
-			default:
-				parent::setAttribute($name, $value);
-		}
+		//it's ok id attribute can be different from internal id
+		$this->_setAttribute('id', $value);
 	}
 	
-	public function getAttribute($name)
+	public function getAttributeId()
 	{
-		$name=strtolower($name);
-		switch($name)
-		{
-			/*
-			 * Some reserved attributes...
-			 */
-			case 'type': return $this->getType();
-			case 'value': return $this->getValue();
-			case 'name': return $this->getName();
-			case 'id': return $this->getId();
-			case 'disabled': return $this->getDisabled();
-			default: return parent::getAttribute($name);
-		}
+		$id=$this->_getAttribute('id');
+		if($id) return $id;
+		return $this->getName();
+	}
+	
+	public function setName($value)
+	{
+		throw new Ea_Layout_Input_Exception("name : forbidden attribute for input");
 	}
 	
 	/**
@@ -226,14 +213,14 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		{
 			if($first)
 			{
-				if(!preg_match('|^[a-z][a-z0-9_]*$|i', $pid))
+				if(!preg_match('|^[a-z][a-z0-9_-]*$|i', $pid))
 				{
 					throw new Ea_Layout_Input_Exception("'$pid' incorrect first value for input id");
 				}
 			}
 			else
 			{
-				if(!($pid===null||is_numeric($pid)||preg_match('/^[a-z][a-z0-9_]*$/i', $pid)))
+				if(!($pid===null||is_numeric($pid)||preg_match('/^[a-z][a-z0-9_-]*$/i', $pid)))
 				{
 					throw new Ea_Layout_Input_Exception("'$pid' incorrect value for input id");
 				}
@@ -362,17 +349,20 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		return $this->getValue();
 	}
 	
-	public function preRender()
+	protected function preRender()
 	{
 		$render=parent::preRender();
 		/*
 		 * Display the reserved attributes...
 		 */
 		$this->_setAttribute('name', $this->getName());
-		$this->_setAttribute('id', $this->getName());
+		if(!$this->_getAttribute('id'))
+		{
+			$this->_setAttribute('id', $this->getName());
+		}
 		$this->_setAttribute('value', $this->getValueForForm());
 		$this->_setAttribute('type', $this->getType());
-		$this->_setAttribute('disabled', $this->getDisabled()?'disabled':null);
+		$this->_setAttribute('disabled', $this->isDisabled()?'disabled':null);
 		return $render;
 	}
 	

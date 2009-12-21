@@ -91,7 +91,7 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 	 * Render the text.
 	 * 
 	 */
-	public function render()
+	protected function render()
 	{
 		if($this->_escape) echo $this->escape($this->_text);
 		else echo $this->_text;

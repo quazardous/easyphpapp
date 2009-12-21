@@ -1,0 +1,94 @@
+<?php
+
+require_once 'Ea/Layout/GMap/Point.php';
+require_once 'Ea/Layout/GMap.php';
+
+class Ea_Layout_GMap_Marker extends Ea_Layout_GMap_Point
+{
+	
+	protected $_title=null;
+	
+	/**
+	 * Get  Title.
+	 *
+	 * @return type title
+	 */
+	public function getTitle() 
+	{
+		return $this->_title;
+	}
+	
+	/**
+	 * Set Title.
+	 * 
+	 * @param type title
+	 */
+	public function setTitle($title)
+	{
+		$this->_title = $title;
+	}
+	
+	public function __construct($lat, $lng, $title=null)
+	{
+		parent::__construct($lat, $lng);
+		$this->setTitle($title);
+	}
+	
+	/**
+	 * Map object.
+	 * 
+	 * @var Ea_Layout_GMap
+	 */
+	protected $_map=null;
+	
+	/**
+	 * Set Map object.
+	 * 
+	 * @param Ea_Layout_GMap $map
+	 */
+	public function setMap(Ea_Layout_GMap $map)
+	{
+		$this->_map=$map;
+	}
+	
+	/**
+	 * Get Map object.
+	 * 
+	 * @return Ea_Layout_GMap
+	 */
+	public function getMap()
+	{
+		return $this->_map;
+	}
+	
+	public function getJS()
+	{
+		$script='new google.maps.Marker({
+      		position: '.parent::getJS().', 
+      		map: '.$this->getMap()->getJSVar().', 
+      		title: "'.addcslashes($this->getTitle(), '"').'"';
+		foreach($this->_options as $option)
+		{
+			$value=$option->value;
+			if($option->quote)
+			{
+				$value='"'.addcslashes($value, '"').'"';
+			}
+			$script.=', '.$option->name.': '.$value;
+		}
+  		$script.='});';
+  		return $script;
+	}
+	
+	protected $_options=array();
+	
+	public function addOption($name, $value, $quote=false)
+	{
+		$this->_options[]=(object)array(
+			'name'=>$name,
+			'value'=>$value,
+			'quote'=>$quote,
+		);
+	}
+	
+} 

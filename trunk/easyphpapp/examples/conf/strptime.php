@@ -1,4 +1,4 @@
- <?php
+<?php
 /*
  * This work of Lionel SAURON (http://sauron.lionel.free.fr:80) is licensed under the
  * Creative Commons Attribution-Noncommercial-Share Alike 2.0 France License.
