@@ -97,9 +97,9 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$table->addRow();
 		$table->addHeader('radio');
-		$cell=$table->addCell($toto=new Ea_Layout_Input_Radio('radio1', 'One'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two', true)); // you can use $form['radio1']='Two';
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three'));
+		$cell=$table->addCell($toto=new Ea_Layout_Input_Radio('radio1', 'One', 'One'));
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two', 'Two', true)); // you can use $form['radio1']='Two';
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three', 'Three'));
 		// if session, it means we hit send last time...
 		if(isset($_SESSION['radio1']))
 		{

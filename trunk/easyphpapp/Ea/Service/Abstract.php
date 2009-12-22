@@ -4,8 +4,8 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Layout
- * @subpackage  GMap
+ * @package     Service
+ * @subpackage  core
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.4.2-20091222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
@@ -13,12 +13,11 @@
  */
 
 /**
- * Exception class for Ea_Layout_GMap.
- * 
- * @see Ea_Layout_Flash
+ * Abstract service class.
+ * A service is typically a call to an external web service.
+ *
  */
-
-class Ea_Layout_GMap_Exception  extends Exception
+class Ea_Service_Abstract
 {
-	
+
 }

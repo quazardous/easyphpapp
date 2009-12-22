@@ -7,12 +7,13 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @version     0.4.2-20091222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Input/Abstract.php';
+require_once 'Ea/Layout/Label.php';
 
 /**
  * Radio button input layout class.
@@ -30,15 +31,28 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 	 * 
 	 * @see $_id
 	 */
-	public function __construct($id=null, $value, $selected=false, $config=null)
+	public function __construct($id, $value, $label=null, $selected=false, $config=null)
 	{
 		$this->setRadioValue($value);
 		parent::__construct($id, $selected?$value:null, $config);
 		$this->protectAttribute('value', 'setRadioValue', 'getRadioValue');
 		$this->protectAttribute('checked', 'setSelected', 'isSelected');
 		$this->protectAttribute('id', 'setAttributeId', 'getAttributeId');
+		$this->setLabel($label);
 	}
 
+	/**
+	 * Label of the input.
+	 * 
+	 * @var string|Ea_Layout_Abstract
+	 */
+	protected $_label=null;
+	
+	public function setLabel($label)
+	{
+		$this->_label=$label;
+	}	
+	
 	/*public function setAttributeId($value)
 	{
 		parent::setAttributeId($value);
@@ -200,5 +214,15 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 		return $render;
 	}
 	
+	protected function render()
+	{
+		parent::render();
+		// TODO : think about it vs add()
+		if($this->_label)
+		{
+			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
+			$label->display();
+		}
+	}
 }
 ?>

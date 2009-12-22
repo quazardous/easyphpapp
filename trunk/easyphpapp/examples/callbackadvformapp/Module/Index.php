@@ -117,9 +117,9 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$table->addRow();
 		$table->addHeader('radio');
-		$cell=$table->addCell($input=new Ea_Layout_Input_Radio('radio1', 'One'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two'));
-		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three'));
+		$cell=$table->addCell($input=new Ea_Layout_Input_Radio('radio1', 'One', 'One'));
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Two', 'Two'));
+		$cell->add(new Ea_Layout_Input_Radio('radio1', 'Three', 'Three'));
 		$input->rememberValue();
 		if(isset($_SESSION['radio1']))
 		{

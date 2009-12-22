@@ -4,7 +4,7 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Layout
+ * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
  * @version     0.4.2-20091222
@@ -12,13 +12,14 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-/**
- * Exception class for Ea_Layout_GMap.
- * 
- * @see Ea_Layout_Flash
- */
+require_once 'Ea/Service/Abstract.php';
 
-class Ea_Layout_GMap_Exception  extends Exception
+/**
+ * Google Map Geocoder service.
+ * You will need a Google Map Api Key to use it.
+ * 
+ */
+class Ea_Service_GMap_Geocoder extends Ea_Service_Abstract
 {
-	
+
 }

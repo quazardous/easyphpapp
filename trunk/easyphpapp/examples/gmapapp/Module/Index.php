@@ -31,7 +31,6 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
-		// simple gmap layout
 		$this->add($gmap=new Ea_Layout_GMap(500, 400, 'gmap_test'));
 		
 		$gmap->setCenter(-34.397, 150.644);
@@ -39,9 +38,12 @@ class Module_Index extends Ea_Module_Abstract
 		for($i=0;$i<10;$i++)
 		{
 			$marker=$gmap->addMarker(-34.397+$i*0.1, 150.644+$i*0.1, "Hello World $i");
-			$marker->addOption('icon', 'http://www.google.com/uds/samples/places/temp_marker.png', true);
+			$marker->setOption('icon', 'icon');
 		}
-
+		
+		$gmap->initScript('var icon="http://www.google.com/uds/samples/places/temp_marker.png";');
+		
+		// application will call render
 	}
 }
 ?>
