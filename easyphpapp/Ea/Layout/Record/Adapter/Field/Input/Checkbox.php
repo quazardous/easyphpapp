@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090209
+ * @version     0.4.2-20091222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -22,13 +22,14 @@ class Ea_Layout_Record_Adapter_Field_Input_Checkbox extends Ea_Layout_Record_Ada
 {
 	
 	protected $_value=null;
+	protected $_label=null;
 	
-	public function __construct($field, $value='X', $baseId=null, $indexColumn=null, $config=null)
+	public function __construct($field, $label=null, $value='X', $baseId=null, $indexColumn=null, $config=null)
 	{
 		parent::__construct($field, $baseId, $indexColumn, $config);
 		$this->_value=$value;
+		$this->_label=$label;
 	}
-	
 	
 	/**
 	 * This function must return content from record.
@@ -38,7 +39,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Checkbox extends Ea_Layout_Record_Ada
 	 */
 	public function getContent($record, $i)
 	{
-		return new Ea_Layout_Input_Checkbox($this->getId($record, $i), $this->getRawValue($record)==$this->_value, $this->_value, $this->_config);
+		return new Ea_Layout_Input_Checkbox($this->getId($record, $i), $this->_label, $this->getRawValue($record)==$this->_value, $this->_value, $this->_config);
 	}
 }
 

@@ -32,7 +32,7 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	 * @param array $config
 	 * 
 	 */
-	public function __construct($id=null, $checked=null, $label=null, $value='X', $config=null)
+	public function __construct($id=null, $label=null, $checked=null, $value='X', $config=null)
 	{
 		parent::__construct($id, $value, $config);
 		if($checked!==null)$this->setChecked($checked);
@@ -43,7 +43,7 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	/**
 	 * Label of the input.
 	 * 
-	 * @var string|Ea_Layout_A
+	 * @var string|Ea_Layout_Abstract
 	 */
 	protected $_label=null;
 	

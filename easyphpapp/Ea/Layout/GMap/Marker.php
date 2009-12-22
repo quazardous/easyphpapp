@@ -1,8 +1,26 @@
 <?php
+/**
+ * EasyPhpApp Framework
+ * A simple form application framework
+ * 
+ * @category    EasyPhpApp
+ * @package     Layout
+ * @subpackage  GMap
+ * @author      David Berlioz <berlioz@nicematin.fr>
+ * @version     0.4.2-20091222
+ * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
+ * @copyright   David Berlioz <berlioz@nicematin.fr>
+ */
 
 require_once 'Ea/Layout/GMap/Point.php';
 require_once 'Ea/Layout/GMap.php';
 
+/**
+ * Marker for GMap.
+ * 
+ * @author berlioz
+ *
+ */
 class Ea_Layout_GMap_Marker extends Ea_Layout_GMap_Point
 {
 	
@@ -82,13 +100,20 @@ class Ea_Layout_GMap_Marker extends Ea_Layout_GMap_Point
 	
 	protected $_options=array();
 	
-	public function addOption($name, $value, $quote=false)
+	public function setOption($name, $value, $quote=false)
 	{
-		$this->_options[]=(object)array(
-			'name'=>$name,
-			'value'=>$value,
-			'quote'=>$quote,
-		);
+		switch((strtolower($name)))
+		{
+			case 'title': $this->setTitle($name); break;
+			case 'position': case 'map':
+				throw new Ea_Layout_GMap_Exception("$name : option not allowed !");
+			default:
+				$this->_options[]=(object)array(
+					'name'=>$name,
+					'value'=>$value,
+					'quote'=>$quote,
+				);
+		}
 	}
 	
 } 

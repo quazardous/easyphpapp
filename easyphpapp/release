@@ -7,6 +7,7 @@
 - Add label for inputs and modify checkout and radio constructor
 - Refresh the attributes code for layouts
 - Add Google Map v3 Layout
+- Add "label for" to checkbox and radio input
 
 *** 0.4.1-maki ***
 Consolidation release.
