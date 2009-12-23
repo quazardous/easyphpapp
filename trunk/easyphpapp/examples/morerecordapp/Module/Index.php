@@ -14,7 +14,7 @@
  */
 
 require_once 'Ea/Module/Abstract.php';
-require_once 'Ea/Layout/Record/Table.php';
+require_once 'Ea/Layout/Grid.php';
 require_once 'Ea/Layout/Record/Adapter/Field.php';
 
 /**
@@ -40,7 +40,7 @@ class Module_Index extends Ea_Module_Abstract
 		);
 		
 		// declare new records table
-		$table1=new Ea_Layout_Record_Table;
+		$table1=new Ea_Layout_Grid;
 		
 		// declare the column using the basic record to field adapter.
 		$table1->addColumn(new Ea_Layout_Record_Adapter_Field('name'),   'Name', 'name');
@@ -60,7 +60,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->add($table1);
 
 		// declare new records table
-		$table2=new Ea_Layout_Record_Table;
+		$table2=new Ea_Layout_Grid;
 		
 		// declare the column using the basic record to field adapter.
 		$table2->addColumn(new Ea_Layout_Record_Adapter_Field('name'),   'Name');
@@ -73,7 +73,7 @@ class Module_Index extends Ea_Module_Abstract
 				'name'=>'the name of the person',
 				'age'=>'the age of the person',
 				'gender'=>'the gender of the person'),
-			new Ea_Layout_Record_Table_Populate_Adapter_Default(array('raw_record_values'=>true)));
+			new Ea_Layout_Grid_Populate_Adapter_Default(array('raw_record_values'=>true)));
 		
 		// default for 1 record table is horizontal
 		$table2->setSpread('horizontal');

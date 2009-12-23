@@ -17,7 +17,7 @@ require_once 'Table/EaTestTable1.php';
 require_once 'Ea/Model/Data.php';
 require_once 'Ea/Model/Layout.php';
 require_once 'Ea/Model/Layout/Form.php';
-require_once 'Ea/Layout/Record/Table.php';
+require_once 'Ea/Layout/Grid.php';
 require_once 'Zend/Session.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Submit.php';
@@ -59,7 +59,7 @@ class Module_Index extends Ea_Module_Abstract
 		$model1->setColumnDateFormat($model1->getColumnsOfType('datetime'), '%d/%m/%Y');
 		
 		// define a table layout
-		$table1=new Ea_Layout_Record_Table;
+		$table1=new Ea_Layout_Grid;
 		
 		// construct columns from model
 		$table1->applyModel($model1);
@@ -75,7 +75,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->add($form);
 		
 		// now we'll do the same for a form...
-		$table2=new Ea_Layout_Record_Table;
+		$table2=new Ea_Layout_Grid;
 		$form->add($table2);
 		
 		// build the form model
@@ -110,7 +110,7 @@ class Module_Index extends Ea_Module_Abstract
 		$model3->setColumnDateFormat($model3->getColumnsOfType('datetime'), '%d/%m/%Y');
 		
 		// define a table layout
-		$table3=new Ea_Layout_Record_Table;
+		$table3=new Ea_Layout_Grid;
 		
 		// construct columns from model
 		$table3->applyModel($model3);

@@ -14,8 +14,8 @@
 
 /**
  * Interface to modify config of cell or row depending on record.
- * @see Ea_Layout_Record_Table::addRecordConfigRowModifier()
- * @see Ea_Layout_Record_Table::addRecordConfigCellModifier()
+ * @see Ea_Layout_Grid::addRecordConfigRowModifier()
+ * @see Ea_Layout_Grid::addRecordConfigCellModifier()
  */
 interface Ea_Layout_Record_Config_Modifier_Interface
 {

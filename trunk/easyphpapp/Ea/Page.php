@@ -272,7 +272,8 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	public function addScript($src, $script=null, $type='text/javascript', $replace=true)
 	{
-		$layout=new Ea_Layout_Script($src, $script, false, $type);
+		$layout=new Ea_Layout_Script($script, false, $type);
+		$layout->setSrc($src);
 		if($replace&&$src)
 		{
 			$this->_scripts[$src]=$layout;
@@ -335,7 +336,7 @@ class Ea_Page implements Ea_Page_Interface
 			//default version style ;p
 			echo $this->getDefaultStyle();
 		}
-		$this->addInternalScripts();
+		$this->internalScripts();
 		foreach($this->_scripts as $script)
 		{
 			$script->display();
@@ -394,11 +395,10 @@ class Ea_Page implements Ea_Page_Interface
 	 * @return string
 	 */
 	
-	public function addInternalScripts()
+	public function internalScripts()
 	{
 		if($this->getOnloadSupport())
 		{
-			ob_start();
 ?>
 <script type="text/javascript">
 Ea_JS = function()
@@ -421,7 +421,6 @@ var ea=new Ea_JS;
 window.onload=function(){ea.onload();};
 </script>
 <?php
-			$this->addRawHeader(ob_get_clean());
 		}
 	}
 	

@@ -15,7 +15,7 @@
 
 require_once 'Ea/Model/Data/Record.php';
 require_once 'Ea/Model/Layout.php';
-require_once 'Ea/Layout/Record/Table.php';
+require_once 'Ea/Layout/Grid.php';
 require_once 'Ea/Model/Layout/Header/Adapter/Link.php';
 require_once 'Ea/Layout/Record/Config/Modifier/Row/Alternate.php';
 
@@ -58,7 +58,7 @@ class Module_Index extends Ea_Module_Abstract
 		$model1->setColumnHeaderAdapter('*', $sortAdapter);
 		
 		// define a table layout
-		$table1=new Ea_Layout_Record_Table;
+		$table1=new Ea_Layout_Grid;
 
 		// construct columns from model
 		$table1->applyModel($model1);

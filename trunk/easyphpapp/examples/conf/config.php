@@ -41,6 +41,15 @@ define('DB_NAME',     		 'test');
 define('DB_USER_NAME',       'user');
 define('DB_USER_PASSWORD',   'xxxxxxxxx');
 
+define('PROXY_HOST',         'my.proxy.com');
+define('PROXY_PORT',         8080);
+define('PROXY_USER',         'user');
+define('PROXY_PASSWORD',     'xxxxxxxxx');
+
+// google map api key
+define('GMAP_API_KEY', 'xxxxxxxxx');
+
+
 error_reporting(E_ALL|E_STRICT);
 
 date_default_timezone_set('Europe/Paris');

@@ -7,7 +7,7 @@
  * @package     Tools
  * @subpackage  Xml
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081127
+ * @version     0.4.2-20091222
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -15,46 +15,83 @@
 /**
  * SimpleXMLElement extended class to manage encoding.
  * SimpleXMLElement always needs UTF-8. With Ea_Xml_Element you can specify an input encoding. 
- *
+ * Do not use new Ea_Xml_Element(...) but use load_... static methods.
+ * 
  */
 class Ea_Xml_Element extends SimpleXMLElement
 {
-	protected static $_encoding=null;
+	protected static $_defaultEncoding=null;
 	
-	public static function set_encoding($encoding)
+	public static function setDefaultEncoding($encoding)
 	{
-		if(strtoupper($encoding)=='UTF-8') self::$_encoding=null;
-		else self::$_encoding=$encoding;
+		if(strtoupper($encoding)=='UTF-8') self::$_defaultEncoding=null;
+		else self::$_defaultEncoding=$encoding;
 	}
 	
-	public static function get_encoding()
+	public static function getDefaultEncoding()
 	{
-		if(self::$_encoding) return self::$_encoding;
-		else return 'UTF-8';
+		if(self::$_defaultEncoding) return self::$_defaultEncoding;
+		return 'UTF-8';
+	}
+	
+	protected $_encoding=null;
+	public function setEncoding($encoding)
+	{
+		if(strtoupper($encoding)=='UTF-8') $this->_encoding=null;
+		else $this->_encoding=$encoding;
+	}
+	
+	public function getEncoding()
+	{
+		if($this->_encoding) return $this->_encoding;
+		return 'UTF-8';
 	}
 	
 	/**
 	 * User encoding to UTF-8.
 	 * 
 	 * @param $string
+	 * @param $encoding
 	 * @return unknown_type
 	 */
-	public static function utf8_encode($string)
+	public static function utf8_encode($string, $encoding=null)
 	{
 		if($string===null)return null;
-		//if(!is_string($string)) return $string;
-		if(self::$_encoding) return mb_convert_encoding($string, 'UTF-8', self::$_encoding);
+		if(!$encoding) $encoding=self::$_defaultEncoding;
+		else
+		{
+			if(strtoupper($encoding)=='UTF-8') $encoding=null;
+		}
+		if($encoding) return mb_convert_encoding($string, 'UTF-8', $encoding);
 		return $string;
 	}
 
-	public static function utf8_unencode($string)
+	public static function utf8_unencode($string, $encoding=null)
 	{
 		if($string===null)return null;
-		//if(!is_string($string)) return $string;
-		if(self::$_encoding) return mb_convert_encoding($string, self::$_encoding, 'UTF-8');
+		if(!$encoding) $encoding=self::$_defaultEncoding;
+		else
+		{
+			if(strtoupper($encoding)=='UTF-8') $encoding=null;
+		}
+		if($encoding) return mb_convert_encoding($string, $encoding, 'UTF-8');
 		return $string;
 	}
 
+	public function utf8Encode($string)
+	{
+		if($string===null)return null;
+		if($this->_encoding) return mb_convert_encoding($string, 'UTF-8', $this->_encoding);
+		return $string;
+	}
+
+	public function utf8Unencode($string)
+	{
+		if($string===null)return null;
+		if($this->_encoding) return mb_convert_encoding($string, $this->_encoding, 'UTF-8');
+		return $string;
+	}
+	
 	/**
 	 * Return unencoded value of node.
 	 * 
@@ -63,7 +100,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	public function toString()
 	{
 		$string=(string)$this;
-		return self::utf8_unencode($string);
+		return $this->utf8Unencode($string);
 	}
 	
 	/**
@@ -99,7 +136,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function xpath(string $path)
 	{
-		return parent::xpath(self::utf8_encode($path));
+		return parent::xpath($this->utf8Encode($path));
 	}
 	
 	/**
@@ -111,7 +148,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function registerXPathNamespace($prefix, $ns)
 	{
-		return parent::registerXPathNamespace(self::utf8_encode($prefix), self::utf8_encode($ns));
+		return parent::registerXPathNamespace($this->utf8Encode($prefix), $this->utf8Encode($ns));
 	}
 	
 	/**
@@ -123,7 +160,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function attributes($ns = null, $is_prefix = null)
 	{
-		return parent::attributes(self::utf8_encode($ns), $is_prefix);
+		return parent::attributes($this->utf8Encode($ns), $is_prefix);
 	}
 
 	/**
@@ -135,7 +172,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function children($ns = null, $is_prefix = null)
 	{
-		return parent::children(self::utf8_encode($ns), $is_prefix);
+		return parent::children($this->utf8Encode($ns), $is_prefix);
 	}
 
 	static protected function recursive_utf8_unencode($string)
@@ -185,7 +222,7 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function addChild($name, $value = null, $namespace = null)
 	{
-		return parent::addChild( self::utf8_encode($name), self::utf8_encode($value), self::utf8_encode($namespace));
+		return parent::addChild( $this->utf8Encode($name), $this->utf8Encode($value), $this->utf8Encode($namespace));
 	}
 	
 	/**
@@ -194,34 +231,43 @@ class Ea_Xml_Element extends SimpleXMLElement
 	 */
 	public function addAttribute($name, $value, $namespace=null)
 	{
-		parent::addAttribute(self::utf8_encode($name), self::utf8_encode($value), self::utf8_encode($namespace));
+		parent::addAttribute($this->utf8Encode($name), $this->utf8Encode($value), $this->utf8Encode($namespace));
 	}
 	
 	/**
 	 * Create node from string.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function load_string($data, $options = null, string $ns = null, $is_prefix = false )
+	public static function load_string($data, $options = null, string $ns = null, $is_prefix = false, $encoding=null )
 	{
-		return simplexml_load_string(self::utf8_encode($data), self::$_class, $options, self::utf8_encode($ns), $is_prefix);
+		if(!$encoding) $encoding=self::$_defaultEncoding;
+		$xml=simplexml_load_string(self::utf8_encode($data, $encoding), self::$_class, $options, self::utf8_encode($ns, $encoding), $is_prefix);
+		$xml->setEncoding($encoding);
+		return $xml;
 	}
 
 	/**
 	 * Create node from file.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function load_file($filename, $options = null, string $ns = null, $is_prefix = false )
+	public static function load_file($filename, $options = null, string $ns = null, $is_prefix = false, $encoding=null )
 	{
-		return simplexml_load_file(self::utf8_encode($filename), self::$_class, $options, self::utf8_encode($ns), $is_prefix);
+		if(!$encoding) $encoding=self::$_defaultEncoding;
+		$xml=simplexml_load_file(self::utf8_encode($filename, $encoding), self::$_class, $options, self::utf8_encode($ns, $encoding), $is_prefix);
+		$xml->setEncoding($encoding);
+		return $xml;
 	}
 
 	/**
 	 * Create node from Dom.
 	 * @return Ea_Xml_Element 
 	 */
-	public static function import_dom(DOMNode $node)
+	public static function import_dom(DOMNode $node, $encoding=null)
 	{
-		return simplexml_import_dom($node, self::$_class);
+		if(!$encoding) $encoding=self::$_defaultEncoding;
+		$xml=simplexml_import_dom($node, self::$_class);
+		$xml->setEncoding($encoding);
+		return $xml;
 	}
 	
 }
