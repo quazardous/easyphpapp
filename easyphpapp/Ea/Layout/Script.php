@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.5.20081020
+ * @version     0.4.3-20091223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -63,14 +63,18 @@ class Ea_Layout_Script extends Ea_Layout_Single
 	 * @param string $type
 	 * @param array $config
 	 */
-	public function __construct($src, $script=null, $onload=false, $type='text/javascript', $config=null)
+	public function __construct($script=null, $onload=false, $type='text/javascript', $config=null)
 	{
 		parent::__construct(null, $config);
 		$this->setScript($script);
-		if($src)$this->setAttribute('src', $src);
 		$this->setAttribute('type', $type);
 		$this->setOnload($onload);
 	} 
+	
+	public function setSrc($src)
+	{
+		$this->setAttribute('src', $src);
+	}
 	
 	protected $_script=null;
 	public function setScript($script)

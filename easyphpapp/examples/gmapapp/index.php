@@ -33,6 +33,19 @@ $app->setModuleClassPrefix('Module');
 // show a simple box with version info
 $app->showVersion();
 
+require_once 'Ea/Service/GMap/Geocoder.php';
+Ea_Service_GMap_Geocoder::setApiKey(GMAP_API_KEY);
+if(defined('PROXY_HOST')&&PROXY_HOST)
+{
+	Ea_Service_GMap_Geocoder::setDefaultHttpAdapter('Zend_Http_Client_Adapter_Proxy', array(
+		'proxy_host' => PROXY_HOST,
+    	'proxy_port' => PROXY_PORT,
+    	'proxy_user' => PROXY_USER,
+    	'proxy_pass' => PROXY_PASSWORD,
+	));
+}
+
+
 // call the dispath()
 $app->dispatch();
 

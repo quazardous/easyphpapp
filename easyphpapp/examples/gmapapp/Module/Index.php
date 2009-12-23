@@ -16,6 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/GMap.php';
 require_once 'Ea/Layout/Script.php';
+require_once 'Ea/Service/GMap/Geocoder.php';
 
 /**
  * My basic Google Map module.
@@ -32,18 +33,24 @@ class Module_Index extends Ea_Module_Abstract
 	public function actionIndex()
 	{
 		$this->add($gmap=new Ea_Layout_GMap(500, 400, 'gmap_test'));
+
+		$geo=new Ea_Service_GMap_Geocoder;
 		
-		$gmap->setCenter(-34.397, 150.644);
+		$address='31, av Brancolar, 06100, Nice, France';
 		
-		for($i=0;$i<10;$i++)
+		$res=$geo->geocode($address);
+		
+		$gmap->setCenter($res);
+		
+		for($i=-5;$i<5;$i++)
 		{
-			$marker=$gmap->addMarker(-34.397+$i*0.1, 150.644+$i*0.1, "Hello World $i");
+			$marker=$gmap->addMarker(array($res->getLat()+$i*0.1, $res->getLng()+$i*0.1+0.1), "Hello World $i");
 			$marker->setOption('icon', 'icon');
 		}
+		$gmap->addMarker($res, $address);
 		
 		$gmap->initScript('var icon="http://www.google.com/uds/samples/places/temp_marker.png";');
 		
-		// application will call render
 	}
 }
 ?>

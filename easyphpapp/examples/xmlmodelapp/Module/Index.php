@@ -15,7 +15,7 @@
 
 require_once 'Ea/Model/Data/Xml.php';
 require_once 'Ea/Model/Layout.php';
-require_once 'Ea/Layout/Record/Table.php';
+require_once 'Ea/Layout/Grid.php';
 
 /**
  * My basic module.
@@ -42,7 +42,7 @@ class Module_Index extends Ea_Module_Abstract
 		$model1=new Ea_Model_Layout(new Ea_Model_Data_Xml('model/myrecord.xml'));
 		
 		// define a table layout
-		$table1=new Ea_Layout_Record_Table;
+		$table1=new Ea_Layout_Grid;
 
 		// construct columns from model
 		$table1->applyModel($model1);

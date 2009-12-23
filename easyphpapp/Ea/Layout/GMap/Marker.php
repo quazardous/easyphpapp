@@ -46,10 +46,10 @@ class Ea_Layout_GMap_Marker extends Ea_Layout_GMap_Point
 		$this->_title = $title;
 	}
 	
-	public function __construct($lat, $lng, $title=null)
+	public function __construct($lat=null, $lng=null, $title=null)
 	{
 		parent::__construct($lat, $lng);
-		$this->setTitle($title);
+		if($title!==null)$this->setTitle($title);
 	}
 	
 	/**

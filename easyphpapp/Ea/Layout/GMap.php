@@ -39,17 +39,23 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	 * @param Ea_Layout_GMap_Point|float $lat
 	 * @param float $lng
 	 */
-	public function setCenter($lat=0, $lng=0)
+	public function setCenter($point)
 	{
-		if($lat instanceof Ea_Layout_GMap_Point)
+		if($point instanceof Ea_Layout_GMap_Point)
 		{
-			$this->_center=$lat;
+			$this->_center=clone $point;
 		}
-		else
+		else if($point instanceof Ea_Service_GMap_Point)
 		{
-			if(!$this->_center) $this->_center=new Ea_Layout_GMap_Point;
-			$this->_center->setLat($lat);
-			$this->_center->setLng($lng);
+			$this->_center=new Ea_Layout_GMap_Point($point->getLat(), $point->getLng());
+		}
+		else if(is_array($point))
+		{
+			$this->_center=new Ea_Layout_GMap_Point($point[0], $point[1]);
+		}
+		else if(is_object($point))
+		{
+			$this->_center=new Ea_Layout_GMap_Point($point->lat, $point->lng);
 		}
 	}
 	
@@ -417,7 +423,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		$this->protectedAttribute('width');
 		$this->protectedAttribute('height');
 		$this->protectedAttribute('id');
-		$this->setCenter();
+		$this->setCenter(array(0 ,0));
 	} 
 	
 	protected $_id=null;
@@ -546,7 +552,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		
 		$script.=$this->_postInitScript;
 		// TODO : think about it vs add()
-		$script=new Ea_Layout_Script(null, $script, true);
+		$script=new Ea_Layout_Script($script, true);
 		$script->display();
 	}
 	
@@ -559,19 +565,23 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	 * @param float $lng
 	 * @return Ea_Layout_GMap_Marker
 	 */
-	public function addMarker($lat, $lng=0, $title=null)
+	public function addMarker($point, $title=null)
 	{
-		if($lat instanceof Ea_Layout_GMap_Marker)
+		if($point instanceof Ea_Layout_GMap_Marker)
 		{
-			$marker=$lat;
+			$marker=$point;
 		}
-		else if($lat instanceof Ea_Layout_GMap_Point)
+		else if($point instanceof Ea_Service_GMap_Point)
 		{
-			$marker=new Ea_Layout_GMap_Marker($lat->getLat(), $lat->setLng(), $title);
+			$marker=new Ea_Layout_GMap_Marker($point->getLat(), $point->getLng(), $title);
 		}
-		else
+		else if(is_array($point))
 		{
-			$marker=new Ea_Layout_GMap_Marker($lat, $lng, $title);
+			$marker=new Ea_Layout_GMap_Marker($point[0], $point[1], $title);
+		}
+		else if(is_object($point))
+		{
+			$marker=new Ea_Layout_GMap_Marker($point->lat, $point->lng, $title);
 		}
 		$marker->setMap($this);
 		$this->_markers[]=$marker;

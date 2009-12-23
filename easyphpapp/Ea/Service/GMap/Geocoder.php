@@ -13,6 +13,7 @@
  */
 
 require_once 'Ea/Service/Abstract.php';
+require_once 'Ea/Service/GMap/Geocoder/Result.php';
 
 /**
  * Google Map Geocoder service.
@@ -21,5 +22,30 @@ require_once 'Ea/Service/Abstract.php';
  */
 class Ea_Service_GMap_Geocoder extends Ea_Service_Abstract
 {
-
+	static protected $_baseUri='http://maps.google.com/maps/geo';
+	
+	static protected $_apiKey=null;
+	
+	static public function setApiKey($key)
+	{
+		self::$_apiKey=$key;
+	}
+	
+	/**
+	 * Geocode given address with Google Geocoder.
+	 * 
+	 * @param string $string
+	 * @return Ea_Service_GMap_Geocoder_Result
+	 */
+	public function geocode($string)
+	{
+		$ret=$this->request(self::$_baseUri, array(
+			'output'=>'json',
+			'sensor'=>'false',
+			'key'=>self::$_apiKey,
+			'q'=>$string,
+		));
+		if(!$ret) return false;
+		return new Ea_Service_GMap_Geocoder_Result($this->getHttpResponseJSON());
+	}
 }
