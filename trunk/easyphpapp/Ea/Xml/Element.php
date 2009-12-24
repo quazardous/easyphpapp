@@ -26,7 +26,25 @@ require_once 'Ea/Encoding/Interface.php';
  */
 class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 {
-	static protected $_propertyHackIdAttributeName='property:id';
+	/**
+	 * Use to store the uniqid() in the xml top node.
+	 * 
+	 * @var string
+	 */
+	static protected $_propertyHackIdAttributeName='prophack:id';
+	
+	/**
+	 * Add the correct namespace for the above attribute.
+	 * 
+	 * @param self $xml
+	 */
+	static protected function addPropertyHackNamespace(self $xml)
+	{
+		if(preg_match('/^([^:]+)[:]/', self::$_propertyHackIdAttributeName, $matches))
+		{
+			$xml['xmlns:'.$matches[1]]='http://code.google.com/p/easyphpapp/';
+		}
+	}
 	
 	/**
 	  * Return the uniqid string for this object.
@@ -260,8 +278,12 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	{
 		if(!$encoding) $encoding=self::getDefaultXmlEncoding();
 		$xml=simplexml_load_string(self::utf8_encode($data, $encoding), self::$_class, $options, self::utf8_encode($ns, $encoding), $is_prefix);
-		$xml->setXmlEncoding($encoding);
-		$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		if($xml)
+		{
+			self::addPropertyHackNamespace($xml);
+			$xml->setXmlEncoding($encoding);
+			$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		}
 		return $xml;
 	}
 
@@ -273,8 +295,12 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	{
 		if(!$encoding) $encoding=self::getDefaultXmlEncoding();
 		$xml=simplexml_load_file(self::utf8_encode($filename, $encoding), self::$_class, $options, self::utf8_encode($ns, $encoding), $is_prefix);
-		$xml->setXmlEncoding($encoding);
-		$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		if($xml)
+		{
+			self::addPropertyHackNamespace($xml);
+			$xml->setXmlEncoding($encoding);
+			$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		}
 		return $xml;
 	}
 
@@ -286,8 +312,12 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	{
 		if(!$encoding) $encoding=self::getDefaultXmlEncoding();
 		$xml=simplexml_import_dom($node, self::$_class);
-		$xml->setXmlEncoding($encoding);
-		$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		if($xml)
+		{
+			self::addPropertyHackNamespace($xml);
+			$xml->setXmlEncoding($encoding);
+			$xml->setInternalEncoding(self::getDefaultInternalEncoding());
+		}
 		return $xml;
 	}
 
