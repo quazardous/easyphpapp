@@ -167,12 +167,12 @@ class Ea_Service_Abstract extends Ea_Encoding_Abstract
 	
 	static public function setDefaultRequestEncoding($encoding)
 	{
-		self::setTargetEncoding($encoding);
+		self::setDefaultTargetEncoding($encoding);
 	}
 	
 	static public function getDefaultRequestEncoding()
 	{
-		return self::getTargetEncoding();
+		return self::getDefaultTargetEncoding();
 	}
 	
 	/**
@@ -214,7 +214,7 @@ class Ea_Service_Abstract extends Ea_Encoding_Abstract
 		// try to load the response in XML with UTF-8 (used internaly by Ea_Xml_Element)
 		$xml=Ea_Xml_Element::load_string($this->getHttpResponse()->getBody(), null, null, null, $encoding);
 		// now set the input encoding
-		$xml->setEncoding($this->getInternalEncoding());
+		$xml->setInternalEncoding($this->getInternalEncoding());
 		return $xml;
 	}
 	

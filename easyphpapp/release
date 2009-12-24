@@ -1,5 +1,7 @@
 *** 0.4.3-maki ***
-- Change *Record_Table* to *Grid*
+- Rename *Record_Table* classes to *Grid* classes
+- TODO Add number input layout
+- Fix Ea_Xml_Element encoding issue (SimpleXmlElement cannot be easily extended ;p) and implement encoding interface
 
 *** 0.4.2-maki ***
 - Fix minor bugs for not session stored forms

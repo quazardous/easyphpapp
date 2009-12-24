@@ -74,7 +74,7 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 	 */
 	static public function setDefaultTargetEncoding($encoding)
 	{
-		self::$_defaultTargetEncoding=$encoding;
+		self::$_defaultTargetEncoding=strtoupper($encoding);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 	 */
 	public function setTargetEncoding($encoding)
 	{
-		$this->_targetEncoding=$encoding;
+		$this->_targetEncoding=strtoupper($encoding);
 	}
 	
 	/**
@@ -121,10 +121,11 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 		if($string===null) return $string;
 		if(!$encoding) $encoding=$this->getTargetEncoding();
 		if(!$encoding) return $string;
-		if(strtoupper($encoding)==$this->getInternalEncoding()) return $string;
-		return mb_convert_encoding($string, $encoding, $this->getInternalEncoding());
+		$internal=$this->getInternalEncoding();
+		if(strtoupper($encoding)==$internal) return $string;
+		return mb_convert_encoding($string, $encoding, $internal);
 	}
-	
+		
 	/**
 	 * Decode from specified to internal encoding.
 	 * 
@@ -136,10 +137,11 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 	{
 		if($string===null) return $string;
 		if(!$encoding) $encoding=$this->getTargetEncoding();
-		if(!$this->getInternalEncoding()) return $string;
-		if(strtoupper($encoding)==$this->getInternalEncoding()) return $string;
-		if($encoding) return mb_convert_encoding($string, $this->getInternalEncoding(), $encoding);
-		return mb_convert_encoding($string, $this->getInternalEncoding());
+		$internal=$this->getInternalEncoding();
+		if(!$internal) return $string;
+		if(strtoupper($encoding)==$internal) return $string;
+		if($encoding) return mb_convert_encoding($string, $internal, $encoding);
+		return mb_convert_encoding($string, $internal);
 	}
 	
 	/**

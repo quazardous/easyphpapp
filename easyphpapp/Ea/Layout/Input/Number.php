@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.4.3-20091223
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -15,24 +15,16 @@
 require_once 'Ea/Layout/Input/Abstract.php';
 
 /**
- * Date input layout class.
+ * Number input layout class.
  */
-class Ea_Layout_Input_Date extends Ea_Layout_Input_Abstract
+class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 {
 	protected $_type='text';
-	/**
-	 * Date format for getting/setting value.
-	 * 
-	 * @var string
-	 * @see strftime()
-	 */
-	protected $_format='%Y-%m-%d';
 	
 	/**
-	 * Date format for rendering/submitting value.
+	 * Number format for rendering/submitting value.
 	 * 
 	 * @var string
-	 * @see strftime()
 	 */
 	protected $_formFormat=null; // null = same as $_format;
 	
