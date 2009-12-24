@@ -35,4 +35,50 @@ class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
 		$this->setLat($json->Placemark[0]->Point->coordinates[1]);
 		$this->setLng($json->Placemark[0]->Point->coordinates[0]);
 	}
+	
+	/**
+	 * Return the Google Map Geocoder Status code.
+	 * @see http://code.google.com/intl/fr-FR/apis/maps/documentation/reference.html#GGeoStatusCode
+	 * 
+	 * @return int
+	 */
+	public function getStatusCode()
+	{
+		if($this->_json) return $this->_json->Status->code;
+		return null;
+	}
+	
+	/**
+	 * Return true if result is correct.
+	 * 
+	 * @return boolean
+	 */
+	public function isCorrect()
+	{
+		return $this->getStatusCode()==200;
+	}
+	
+	/**
+	 * Return placemark info.
+	 * 
+	 * @param int $i index of result il multiple
+	 * @return object info
+	 */
+	public function getPlacemark($i=0)
+	{
+		if(!isset($this->_json->Placemark[$i])) return null;
+		return $this->_json->Placemark[$i];
+	}
+	
+	/**
+	 * Return the number of matching results.
+	 * 
+	 * @return boolean|number
+	 */
+	public function getNbMatchingResults()
+	{
+		if(!isset($this->_json)) return false;
+		return count($this->_json->Placemark);
+	}
+	
 }
