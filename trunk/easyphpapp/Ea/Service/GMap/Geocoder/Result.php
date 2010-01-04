@@ -49,11 +49,11 @@ class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
 	}
 	
 	/**
-	 * Return true if result is correct.
+	 * Return true if request is successfull.
 	 * 
 	 * @return boolean
 	 */
-	public function isCorrect()
+	public function isSuccess()
 	{
 		return $this->getStatusCode()==200;
 	}

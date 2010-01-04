@@ -17,6 +17,7 @@ require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Text.php';
 require_once 'Ea/Layout/Input/Date.php';
+require_once 'Ea/Layout/Input/Number.php';
 require_once 'Ea/Layout/Input/Textarea.php';
 require_once 'Ea/Layout/Input/Select.php';
 require_once 'Ea/Layout/Input/Submit.php';
@@ -141,6 +142,19 @@ class Module_Index extends Ea_Module_Abstract
 		}
 		
 		$table->addRow();
+		$table->addHeader('number');
+		$table->addCell($input=new Ea_Layout_Input_Number('number1'));
+		$input->setFormat('%09.2f', ',', ' ');
+		$input->rememberValue(rand(0, 100));
+		// if session, it means we hit send last time...
+		if(isset($_SESSION['number1']))
+		{
+			$table->addCell($_SESSION['number1']);
+			// clean up
+			unset($_SESSION['number1']);
+		}
+		
+		$table->addRow();
 		$table->addHeader('submit');
 		$table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
 		if(isset($_SESSION['submit']))
@@ -174,6 +188,7 @@ class Module_Index extends Ea_Module_Abstract
 		$_SESSION['textarea1']=(string)$form['textarea1'];
 		$_SESSION['radio1']=$form['radio1']->getValue();
 		$_SESSION['date1']=(string)$form['date1'];
+		$_SESSION['number1']=(string)$form['number1'];
 		$this->addMessage('onSubmitIndex()');
 	}
 	

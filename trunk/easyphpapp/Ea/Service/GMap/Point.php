@@ -61,4 +61,5 @@ class Ea_Service_GMap_Point
 	{
 		return $this->_lng;
 	}
+	
 }
