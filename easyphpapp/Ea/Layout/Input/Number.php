@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.3-20091223
+ * @version     0.4.3-20100104
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -25,104 +25,27 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 	 * Number format for rendering/submitting value.
 	 * 
 	 * @var string
+	 * @see sprintf()
 	 */
-	protected $_formFormat=null; // null = same as $_format;
+	protected $_formFormat=null; // null = no format
+	protected $_formFormatDecPoint=null;
+	protected $_formFormatThousandSep='';
 	
-	/**
-	 * Get value.
-	 * @param string $format
-	 * 
-	 * @return string|NULL
-	 * @see Ea/Layout/Input/Ea_Layout_Input_Abstract#getValue()
-	 */
-	public function getValue($format=null)
-	{
-		if($this->_value)
-		{
-			if(!$format) $format=$this->_format;
-			return strftime($format, $this->_value);
-		}
-		return null;
-	}
-	
-	public function getDate($format=null)
-	{
-		return $this->getValue($format);
-	}
-
-	/**
-	 * Set the input value.
-	 *
-	 * @param string $value
-	 * 
-	 * @see $_value
-	 */
-	public function setValue($value)
-	{
-		if($value)
-		{
-			$d=strptime($value, $this->_format);
-			if($d)
-			{
-				$this->setTimestamp(mktime(
-					$d['tm_hour'],
-					$d['tm_min'],
-					$d['tm_sec'],
-					$d['tm_mon']+1,
-					$d['tm_mday'],
-					$d['tm_year']+1900));
-			}
-			else
-			{
-				$this->setTimestamp(null);
-			}
-		}
-		else
-		{
-			$this->setTimestamp(null);
-		}
-	}
-	
-	/**
-	 * Return the timestamp for the current value.
-	 * 
-	 * @return NULL|timestamp
-	 */
-	public function getTimestamp()
-	{
-		return $this->_value;
-	}
-
-	/**
-	 * Set the timestamp.
-	 * 
-	 * @param timestamp $timestamp
-	 */
-	public function setTimestamp($timestamp)
-	{
-		$this->_value=$timestamp;
-	}	
-	
-	/**
-	 * Set the formats in strftime() format.
-	 * 
-	 * @param string $format
-	 * @param string $formFormat
-	 * 
-	 * @see strptime(), strftime()
-	 */
-	public function setFormat($format, $formFormat=false)
-	{
-		$this->_format=$format;
-		if($formFormat!==false)
-		{
-			$this->setFormFormat($formFormat);
-		}
-	}
-	
-	public function setFormFormat($format)
+	public function setFormat($format, $decPoint=null, $thousandSep=null)
 	{
 		$this->_formFormat=$format;
+		if($decPoint!==null)$this->setDecPoint($decPoint);
+		if($thousandSep!==null)$this->setThousandSep($thousandSep);
+	}
+	
+	public function setDecPoint($decPoint)
+	{
+		$this->_formFormatDecPoint=$decPoint;
+	}
+	
+	public function setThousandSep($thousandSep)
+	{
+		$this->_formFormatThousandSep=$thousandSep;
 	}
 	
 	/**
@@ -134,10 +57,10 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 	 * @param unknown_type $formFormat form date format
 	 * @param unknown_type $config
 	 */
-	public function __construct($id=null, $value=null, $format=null, $formFormat=null, $config=null)
+	public function __construct($id=null, $value=null, $formFormat=null, $decPoint=null, $thousandSep=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
-		if($format) $this->setFormat($format, $formFormat);
+		$this->setFormat($formFormat, $decPoint, $thousandSep);
 	}
 	
 	/**
@@ -151,27 +74,19 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 		if($value===null) $value=$this->getForm()->getValueFromPost($this->getId());
 		if($value)
 		{
-			$format=$this->_formFormat;
-			if(!$format) $format=$this->_format;
-			$d=strptime($value, $format);
-			if($d)
+			if($this->_formFormatThousandSep!==null)
 			{
-				$this->setTimestamp(mktime(
-					$d['tm_hour'],
-					$d['tm_min'],
-					$d['tm_sec'],
-					$d['tm_mon']+1,
-					$d['tm_mday'],
-					$d['tm_year']+1900));
+				$value=str_replace($this->_formFormatThousandSep, '', $value);
 			}
-			else
+			if($this->_formFormatDecPoint!==null)
 			{
-				$this->setTimestamp(null);
+				$value=str_replace($this->_formFormatDecPoint, '.', $value);
 			}
+			$this->setValue(floatval($value));
 		}
 		else
 		{
-			$this->setTimestamp(null);
+			$this->setValue(null);
 		}
 	}
 	
@@ -182,12 +97,47 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 	 */
 	public function getValueForForm()
 	{
-		return $this->getDate($this->_formFormat);
+		return $this->getNumber();
+	}
+	
+	public function getNumber($format=null, $decPoint=null, $thousandSep=null)
+	{
+		if($format===null)$format=$this->_formFormat;
+		if(!$decPoint)$decPoint=$this->_formFormatDecPoint;
+		if($thousandSep===null)$thousandSep=$this->_formFormatThousandSep;
+		$value=$this->getValue();
+		if($format) $value=sprintf($format, $value);
+		if(preg_match('/^([^.]+)[.]([^.]+)$/', (string)$value, $matches))
+		{
+			$int=$matches[1];
+			$point='.';
+			$dec=$matches[2];
+		}
+		else
+		{
+			$int=(string)$value;
+			$point='';
+			$dec='';
+		}
+			
+		if($thousandSep!==null)
+		{
+			$int=strrev(implode($thousandSep, str_split(strrev($int), 3)));
+		}
+		
+		if($decPoint) $point=$decPoint;
+		
+		$value=$int;
+		if($dec)
+		{
+			$value.=$point.$dec;
+		}
+		return $value;
 	}
 	
 	public function __sleep()
     {
-        return array_merge(parent::__sleep(), array('_format', '_formFormat'));
+        return array_merge(parent::__sleep(), array('_formFormat', '_formFormatDecPoint', '_formFormatThousandSep'));
     }
 	
 }
