@@ -49,7 +49,7 @@ class Ea_Service_GMap_Point
 	
 	public function getLat()
 	{
-		return $this->_lat;
+		return (float)$this->_lat;
 	}
 
 	public function setLng($lng)
@@ -59,7 +59,7 @@ class Ea_Service_GMap_Point
 	
 	public function getLng()
 	{
-		return $this->_lng;
+		return (float)$this->_lng;
 	}
 	
 }
