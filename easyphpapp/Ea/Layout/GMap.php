@@ -569,15 +569,23 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	{
 		if($point instanceof Ea_Layout_GMap_Marker)
 		{
-			$marker=$point;
+			$marker=clone $point;
 		}
 		else if($point instanceof Ea_Service_GMap_Point)
 		{
 			$marker=new Ea_Layout_GMap_Marker($point->getLat(), $point->getLng(), $title);
 		}
-		else if(is_array($point))
+		else if(is_array($point)&&count($point)==2&&isset($point[0])&&is_numeric($point[0])&&isset($point[1])&&is_numeric($point[1]))
 		{
 			$marker=new Ea_Layout_GMap_Marker($point[0], $point[1], $title);
+		}
+		else if(is_array($point)||$point instanceof Iterator)
+		{
+			foreach($point as $ipoint)
+			{
+				$this->addMarker($ipoint, $title);
+			}
+			return;
 		}
 		else if(is_object($point))
 		{
