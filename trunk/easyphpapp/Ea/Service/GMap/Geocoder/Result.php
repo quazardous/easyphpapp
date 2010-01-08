@@ -32,8 +32,11 @@ class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
 	public function setFromJSON($json)
 	{
 		$this->_json=$json;
-		$this->setLat($json->Placemark[0]->Point->coordinates[1]);
-		$this->setLng($json->Placemark[0]->Point->coordinates[0]);
+		if($this->isSuccess())
+		{
+			$this->setLat($json->Placemark[0]->Point->coordinates[1]);
+			$this->setLng($json->Placemark[0]->Point->coordinates[0]);
+		}
 	}
 	
 	/**
