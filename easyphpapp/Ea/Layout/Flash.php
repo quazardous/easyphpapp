@@ -151,7 +151,7 @@ class Ea_Layout_Flash extends Ea_Layout_Container
 		$p->setAttribute('name', 'movie');
 		$p->setAttribute('value', $this->getMovie());
 		$embed=new Ea_Layout_Single('embed');
-		$embed->setAttribute('src', $this->getMovie);
+		$embed->setAttribute('src', $this->getMovie());
 		$embed->setAttribute('type', 'application/x-shockwave-flash');
 		
 		if($this->getWidth()!==null)

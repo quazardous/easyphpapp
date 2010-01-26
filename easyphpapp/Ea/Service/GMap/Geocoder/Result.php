@@ -13,75 +13,52 @@
  */
 
 require_once 'Ea/Service/GMap/Point.php';
+require_once 'Ea/Service/GMap/Geocoder/ResultSet.php';
 
 class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
 {
-	protected $_json=null;
+	/**
+	 * The parent result set.
+	 * 
+	 * @var Ea_Service_GMap_Geocoder_ResultSet
+	 */
+	protected $_resultSet=null;
+	protected $_i=null;
 	
-	public function __construct($data=null)
+	public function __construct(Ea_Service_GMap_Geocoder_ResultSet $resultSet, $i)
 	{
+		$this->_resultSet=$resultSet;
+		$this->_i=$i;
 		parent::__construct();
-		$this->setFromJSON($data);
 	}
-	
-	/**
-	 * Set from Google Geocoder JSON format.
-	 * 
-	 * @param json $json
-	 */
-	public function setFromJSON($json)
+
+	public function getPlacemark()
 	{
-		$this->_json=$json;
-		if($this->isSuccess())
-		{
-			$this->setLat($json->Placemark[0]->Point->coordinates[1]);
-			$this->setLng($json->Placemark[0]->Point->coordinates[0]);
-		}
+		return $this->_resultSet->getPlacemark($this->_i);
 	}
 	
-	/**
-	 * Return the Google Map Geocoder Status code.
-	 * @see http://code.google.com/intl/fr-FR/apis/maps/documentation/reference.html#GGeoStatusCode
-	 * 
-	 * @return int
-	 */
-	public function getStatusCode()
+	public function getLat()
 	{
-		if($this->_json) return $this->_json->Status->code;
-		return null;
+		return (float)$this->getPlacemark()->Point->coordinates[1];
 	}
 	
-	/**
-	 * Return true if request is successfull.
-	 * 
-	 * @return boolean
-	 */
-	public function isSuccess()
+	public function getLng()
 	{
-		return $this->getStatusCode()==200;
-	}
+		return (float)$this->getPlacemark()->Point->coordinates[0];
+	}	
 	
-	/**
-	 * Return placemark info.
-	 * 
-	 * @param int $i index of result il multiple
-	 * @return object info
-	 */
-	public function getPlacemark($i=0)
+	public function setLat($lat)
 	{
-		if(!isset($this->_json->Placemark[$i])) return null;
-		return $this->_json->Placemark[$i];
+		throw new Ea_Service_GMap_Geocoder_Exception("setLat() is not allowed");
 	}
 	
-	/**
-	 * Return the number of matching results.
-	 * 
-	 * @return boolean|number
-	 */
-	public function getNbMatchingResults()
+	public function setLng($lng)
 	{
-		if(!isset($this->_json)) return false;
-		return count($this->_json->Placemark);
+		throw new Ea_Service_GMap_Geocoder_Exception("setLng() is not allowed");
 	}
 	
+	public function getId()
+	{
+	
+	}
 }

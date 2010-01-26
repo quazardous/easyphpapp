@@ -13,7 +13,7 @@
  */
 
 require_once 'Ea/Service/Abstract.php';
-require_once 'Ea/Service/GMap/Geocoder/Result.php';
+require_once 'Ea/Service/GMap/Geocoder/ResultSet.php';
 
 /**
  * Google Map Geocoder service.
@@ -46,6 +46,6 @@ class Ea_Service_GMap_Geocoder extends Ea_Service_Abstract
 			'q'=>$string,
 		));
 		if(!$ret) return false;
-		return new Ea_Service_GMap_Geocoder_Result($this->getHttpResponseJSON());
+		return new Ea_Service_GMap_Geocoder_ResultSet($this->getHttpResponseJSON());
 	}
 }

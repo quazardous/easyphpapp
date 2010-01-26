@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  basicapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.4.3-20100122
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -40,11 +40,11 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$res=$geo->geocode($address);
 		
-		$gmap->setCenter($res);
+		$gmap->setCenter($res[0]);
 		
 		for($i=-5;$i<5;$i++)
 		{
-			$marker=$gmap->addMarker(array($res->getLat()+$i*0.1, $res->getLng()+$i*0.1+0.1), "Hello World $i");
+			$marker=$gmap->addMarker(array($res[0]->getLat()+$i*0.1, $res[0]->getLng()+$i*0.1+0.1), "Hello World $i");
 			$marker->setOption('icon', 'icon');
 		}
 		$gmap->addMarker($res, $address);
