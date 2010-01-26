@@ -7,7 +7,7 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091223
+ * @version     0.4.3-20100122
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -28,6 +28,11 @@ class Ea_Service_GMap_Point
 		if($lat instanceof self)
 		{
 			$this->copy($lat);
+		}
+		else if(is_array($lat))
+		{
+			$this->setLat($lat[0]);
+			$this->setLng($lat[1]);
 		}
 		else
 		{

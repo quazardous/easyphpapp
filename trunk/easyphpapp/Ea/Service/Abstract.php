@@ -111,6 +111,7 @@ class Ea_Service_Abstract extends Ea_Encoding_Abstract
 	 * @param string $uri
 	 * @param array $params
 	 * @param string $method
+	 * @param string $encoding 
 	 */
 	public function prepareRequest($uri, array $params=array(), $method=self::method_GET, $encoding=null)
 	{
@@ -129,6 +130,7 @@ class Ea_Service_Abstract extends Ea_Encoding_Abstract
 	 * @param string $uri if not null prepare the request
 	 * @param array $params
 	 * @param string $method
+	 * @param string $encoding
 	 * @return boolean
 	 */
 	public function request($uri=null, array $params=array(), $method=self::method_GET, $encoding=null)
@@ -199,7 +201,23 @@ class Ea_Service_Abstract extends Ea_Encoding_Abstract
 	 */
 	public function getHttpResponseJSON($encoding=null)
 	{
-		return json_decode($this->utf8Encode($this->getHttpResponse()->getBody(), $encoding));
+		if(!$encoding) $encoding=$this->getInternalEncoding();
+		$json=json_decode($this->utf8Encode($this->getHttpResponse()->getBody(), $encoding));
+		if(strtoupper($encoding)=='UTF-8'||!$encoding) return $json;
+		$this->recursiveWalkEncode($json, array($this, 'utf8Decode'), $encoding);
+		return $json;
+	}
+	
+	protected function recursiveWalkEncode(&$arr, $callback, $encoding)
+	{
+		if(is_array($arr)||$arr instanceof Iterator||$arr instanceof stdClass)
+		{
+			foreach($arr as &$item)
+			{
+				$this->recursiveWalkEncode($item, $callback, $encoding);
+			}
+		}
+		else $arr=call_user_func($callback, $arr, $encoding);
 	}
 
 	/**
