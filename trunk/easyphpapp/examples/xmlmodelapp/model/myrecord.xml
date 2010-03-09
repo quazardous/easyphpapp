@@ -6,7 +6,11 @@
 			<metadata name="label">Name</metadata>
 		</column>
 		<column name="gender">
-			<metadata name="type">string</metadata>
+			<metadata name="type">enum</metadata>
+			<metadata name="enum"><array>
+				<item index="M">Male</item>
+				<item index="F">Female</item>
+			</array></metadata>
 		</column>
 		<column name="age">
 			<metadata name="type">integer</metadata>

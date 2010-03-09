@@ -70,6 +70,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	protected $_defaultRecordAdapterName = 'String';
 	protected $_defaultRecordAdapterNameByType=array(
 		'string' => 'String',
+		'enum' => 'Enum',
 	);
 
 	protected $_defaultDateFormat='%Y-%m-%d';
