@@ -1,5 +1,6 @@
 *** 0.4.4-maki ***
 - add enum string mapping to model layout.
+- fix little bug in "non session stored" forms.
 
 *** 0.4.3-maki ***
 - Rename *Record_Table* classes to *Grid* classes

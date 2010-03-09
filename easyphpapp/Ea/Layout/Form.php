@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091205
+ * @version     0.4.4-20100308
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -359,12 +359,12 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			if(!$do) continue;
 			foreach($callbacks as $callback)
 			{
+				$func=$callback['callback'];
 				if($callback['module']&&!is_array($callback['callback']))
 				{
-					$callback['callback']=array($this->getPage()->getModule(), $callback['callback']);
+					$func=array($this->getPage()->getModule(), $callback['callback']);
 				}
-				//echo "call_user_func({$callback['callback'][1]}, \$this, $id)";
-				call_user_func($callback['callback'], $this, $id);
+				call_user_func($func, $this, $id);
 				$n++;
 			}
 		}
@@ -776,9 +776,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				if(!array_key_exists($magicId, $_POST)) return false;
 				if($_POST[$magicId]!=$this->getId()) return false;
 				if($this->isStore()) $this->restore();
-				if(count($this->_items)==0)
+				else
 				{
-					// special not initialized mode
+					// simple "not session stored" mode ;p
 					$this->_post=$_POST;
 					unset($this->_post[$magicId]);
 					return true;
@@ -847,10 +847,8 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  		if($this->usePostData())
  		{
  			return self::array_get_from_id($this->_post, $offset);
- 			//return $this->_post[$offset];
  		}
  		return self::array_get_from_id($this->_items, $offset);
- 		//return parent::offsetGet($offset);
  	}
  	 	
  	public function offsetSet($offset, $value)
