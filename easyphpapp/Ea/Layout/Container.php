@@ -107,7 +107,7 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 	 */
 	protected function open()
 	{
-		echo "\n<";
+		echo "<";
 		echo $this->_tag;
 		$this->renderAttributes();
 		echo ">";

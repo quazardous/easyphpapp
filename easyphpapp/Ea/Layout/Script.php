@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.3-20091223
+ * @version     0.4.4-20100311
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -41,7 +41,7 @@ class Ea_Layout_Script extends Ea_Layout_Single
 	/**
 	 * Set Onload.
 	 * 
-	 * @param type onload
+	 * @param boolean onload
 	 */
 	public function setOnload($onload=true)
 	{
@@ -67,7 +67,7 @@ class Ea_Layout_Script extends Ea_Layout_Single
 	{
 		parent::__construct(null, $config);
 		$this->setScript($script);
-		$this->setAttribute('type', $type);
+		$this->setAttribute('type', $type?$type:'text/javascript');
 		$this->setOnload($onload);
 	} 
 	
@@ -88,29 +88,41 @@ class Ea_Layout_Script extends Ea_Layout_Single
 		
 	protected function render()
 	{
-		echo '<';
+		echo "\n<";
 		echo $this->_tag;
 		$this->renderAttributes();
 		echo '>';
 	
 		if($this->getOnload())
 		{
-			echo '
-			ea.addOnload(function(){
-			';
+			if(($this->getPage() instanceof Ea_Page)&&(!$this->getPage()->getApp()->getJQuery()))
+			{
+				echo '
+ea.addOnload(function(){
+	';
+			}
+			else
+			{
+				// by default try jQuery ready() :p
+				echo '
+$(document).ready(function(){
+	';
+			}
 		}
 		
 		echo $this->getScript();
 
 		if($this->getOnload())
 		{
-			echo ' });';
+			echo '
+});
+';
 		
 		}		
 		
 		echo '</';
 		echo $this->_tag;
-		echo '>';
+		echo ">";
 	}
 	
 	public function setPage($page)

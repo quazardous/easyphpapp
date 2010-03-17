@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091201
+ * @version     0.4.4-20100310
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -1417,5 +1417,66 @@ class Ea_App
 		}
 		return $dbTable;
 	}
+
+	/**
+	 * Set jQuery support.
+	 * 
+	 * @var string
+	 */
+	protected $_jQuery=null;
+	
+	/**
+	 * Set jQuery support.
+	 * 
+	 * @param string $js path for the jquery file.
+	 */
+	public function jQuery($js='jquery.js')
+	{
+		$this->_jQuery=$js;
+	}
+	
+	/**
+	 * Get jQuery support.
+	 * 
+	 * @return string $js path for the jquery file.
+	 */
+	public function getJQuery()
+	{
+		return $this->_jQuery;
+	}
+	
+	protected $_jQueryUi=null;
+	
+	/**
+	 * Set jQueryUI support.
+	 * 
+	 * @param string|array(string) $js *.js
+	 */
+	public function jQueryUi($js='jquery-ui.js', $css=null)
+	{
+		if($js)
+		{
+			if(!is_array($js))
+			{
+				$js=array($js);
+			}
+			if($css)
+			{
+				if(!is_array($css))
+				{
+					$css=array($css);
+				}			
+			}
+			$this->_jQueryUi=(object)array(
+				'css'=>$css,
+				'js'=>$js,
+			);
+		}
+		else $this->_jQueryUi=null;
+	}
+	
+	public function getJQueryUi()
+	{
+		return $this->_jQueryUi;
+	}
 }
-?>

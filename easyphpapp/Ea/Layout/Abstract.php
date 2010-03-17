@@ -267,4 +267,3 @@ abstract class Ea_Layout_Abstract
     }
     
 }
-?>

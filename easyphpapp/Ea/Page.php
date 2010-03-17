@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091221
+ * @version     0.4.4-20100312
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -175,6 +175,21 @@ class Ea_Page implements Ea_Page_Interface
 		 * Can be usefull to make difference between top layout and main layout (where to add new content)
 		 */
 		$this->_main=$this->_top;
+		
+		if($js=$this->getApp()->getJQuery())
+		{
+			$this->addScript($js);
+		}
+		
+		if($ui=$this->getApp()->getJQueryUi())
+		{
+			foreach($ui->js as $js)	$this->addScript($js);
+			if($ui->css)
+			{
+				foreach($ui->css as $css) $this->addStyle($css);
+			}
+		}
+		
 	} 
 	
 	/**
@@ -272,17 +287,19 @@ class Ea_Page implements Ea_Page_Interface
 	 */
 	public function addScript($src, $script=null, $type='text/javascript', $replace=true)
 	{
-		$layout=new Ea_Layout_Script($script, false, $type);
-		$layout->setSrc($src);
+		$script=(object)array(
+			'src'=>$src,
+			'script'=>$script,
+			'type'=>$type,
+		);
 		if($replace&&$src)
 		{
-			$this->_scripts[$src]=$layout;
+			$this->_scripts[$src]=$script;
 		}
 		else
 		{
-			$this->_scripts[]=$layout;
+			$this->_scripts[]=$script;
 		}
-		$layout->setPage($this);
 	}
 	
 	protected $_onloadSupport=false;
@@ -337,9 +354,13 @@ class Ea_Page implements Ea_Page_Interface
 			echo $this->getDefaultStyle();
 		}
 		$this->internalScripts();
+		
 		foreach($this->_scripts as $script)
 		{
-			$script->display();
+			$layout=new Ea_Layout_Script($script->script, false, $script->type);
+			$layout->setSrc($script->src);
+			$layout->setPage($this);
+			$layout->display();
 		}
 		foreach($this->_rawHeaders as $header)
 		{
@@ -399,6 +420,8 @@ class Ea_Page implements Ea_Page_Interface
 	{
 		if($this->getOnloadSupport())
 		{
+			if(!$this->getApp()->getJQuery())
+			{
 ?>
 <script type="text/javascript">
 Ea_JS = function()
@@ -421,6 +444,7 @@ var ea=new Ea_JS;
 window.onload=function(){ea.onload();};
 </script>
 <?php
+			}
 		}
 	}
 	
@@ -550,5 +574,3 @@ body
 		return $this->getApp()->redirect($this->getApp()->getRoute($params, $action, $module, $script, $fragment), $exit);
 	}
 }
-
-?>

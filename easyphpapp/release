@@ -1,6 +1,9 @@
 *** 0.4.4-maki ***
 - add enum string mapping to model layout.
 - fix little bug in "non session stored" forms.
+- fix PHP crash (on wampserver) when adding js scripts in Page constructor.
+- add some jQuery support.
+- add jQuery UI Tabs Layout.
 
 *** 0.4.3-maki ***
 - Rename *Record_Table* classes to *Grid* classes
