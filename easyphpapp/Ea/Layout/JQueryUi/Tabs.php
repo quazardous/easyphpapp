@@ -74,8 +74,8 @@ class Ea_Layout_JQueryUi_Tabs extends Ea_Layout_JQueryUi_Abstract
 	{
 		parent::render();
 		$id=$this->getId();
-		$script="$(function() { $('#{$id}').tabs(); });";
-		$script=new Ea_Layout_Script($script);
+		$script="$('#{$id}').tabs();";
+		$script=new Ea_Layout_Script($script, true);
 		$script->display();
 	}
 }
