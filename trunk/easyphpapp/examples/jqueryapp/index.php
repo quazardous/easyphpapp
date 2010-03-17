@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  basicapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091009
+ * @version     0.4.4-20100317
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -42,8 +42,12 @@ $app->jQuery('jquery-ui-1.8rc3/jquery-1.4.2.js');
 $app->jQueryUi(
 		array(
 			'jquery-ui-1.8rc3/ui/jquery.ui.js',
+			'jquery-ui-1.8rc3/ui/jquery.ui.core.js',
 			'jquery-ui-1.8rc3/ui/jquery.ui.widget.js',
 			'jquery-ui-1.8rc3/ui/jquery.ui.tabs.js',
+			'jquery-ui-1.8rc3/ui/jquery.ui.datepicker.js',
+			'jquery-ui-1.8rc3/ui/i18n/jquery-ui-i18n.js',
+			'jquery-ui-1.8rc3/ui/i18n/jquery.ui.datepicker-fr.js',
 		),
 		array(
 			'jquery-ui-1.8rc3/themes/base/jquery-ui.css',

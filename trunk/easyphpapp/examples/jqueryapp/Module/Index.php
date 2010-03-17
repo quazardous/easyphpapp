@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  basicapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.4.4-20100317
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -15,7 +15,10 @@
 
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Script.php';
-require_once 'Ea/Layout/JQueryUi/Tabs.php';
+require_once 'Ea/Layout/Tabs.php';
+require_once 'Ea/Layout/Table.php';
+require_once 'Ea/Layout/Form.php';
+require_once 'Ea/Layout/Input/DatePicker.php';
 
 /**
  * My basic module.
@@ -34,7 +37,7 @@ class Module_Index extends Ea_Module_Abstract
 		// add the text 'Hello World' to the page
 		
 		
-		$this->add($tabs=new Ea_Layout_JQueryUi_Tabs('tabs'));
+		$this->add($tabs=new Ea_Layout_Tabs('tabs'));
 		
 		$texts=array(
 			'one'=>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -46,6 +49,16 @@ class Module_Index extends Ea_Module_Abstract
 		{
 			$tabs->addTab($title, $text);
 		}
+		
+		$this->add($form=new Ea_Layout_Form('form'));
+		
+		$form->add($table=new Ea_Layout_Table);
+		
+		// draw the form
+		$table->addRow();
+		$table->addHeader('date1');
+		$table->addCell($input=new Ea_Layout_Input_DatePicker('date1'));
+		
 	}
 }
 ?>

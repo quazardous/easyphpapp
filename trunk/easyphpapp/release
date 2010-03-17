@@ -4,6 +4,7 @@
 - fix PHP crash (on wampserver) when adding js scripts in Page constructor.
 - add some jQuery support.
 - add jQuery UI Tabs Layout.
+- add jQuery DatePicker Input.
 
 *** 0.4.3-maki ***
 - Rename *Record_Table* classes to *Grid* classes

@@ -105,7 +105,7 @@ ea.addOnload(function(){
 			{
 				// by default try jQuery ready() :p
 				echo '
-$(document).ready(function(){
+$(function(){
 	';
 			}
 		}
