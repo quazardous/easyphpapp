@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  config
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.4-20100317
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -54,4 +54,5 @@ error_reporting(E_ALL|E_STRICT);
 
 date_default_timezone_set('Europe/Paris');
 
-?>
+// You can define this if you want "modern" behaviours (jQuery UI, etc)
+define('EA_RICH', true);
