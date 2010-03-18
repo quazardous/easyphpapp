@@ -14,6 +14,7 @@
 
 require_once 'Ea/Layout/Record/Adapter/Field/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Date.php';
+require_once 'Ea/Layout/Input/DatePicker.php';
 
 /**
  * Field value date input from record (array or object).
@@ -56,10 +57,12 @@ class Ea_Layout_Record_Adapter_Field_Input_Date extends Ea_Layout_Record_Adapter
 	 * This function must return content from record.
 	 * 
 	 * @param array $record
-	 * @return string
+	 * @return string|Ea_Layout_Abstract
 	 */
 	public function getContent($record, $i)
 	{
+		if(defined('EA_RICH')&&EA_RICH)
+			return new Ea_Layout_Input_DatePicker($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
 		return new Ea_Layout_Input_Date($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
 	}
 }
