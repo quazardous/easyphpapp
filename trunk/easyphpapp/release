@@ -1,3 +1,6 @@
+*** 0.4.5-maki ***
+- Add Google Map Geocoder v3 service
+
 *** 0.4.4-maki ***
 - add enum string mapping to model layout.
 - fix little bug in "non session stored" forms.

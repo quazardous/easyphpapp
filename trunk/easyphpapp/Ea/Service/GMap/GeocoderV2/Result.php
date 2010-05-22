@@ -13,19 +13,19 @@
  */
 
 require_once 'Ea/Service/GMap/Point.php';
-require_once 'Ea/Service/GMap/Geocoder/ResultSet.php';
+require_once 'Ea/Service/GMap/GeocoderV2/ResultSet.php';
 
-class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
+class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
 {
 	/**
 	 * The parent result set.
 	 * 
-	 * @var Ea_Service_GMap_Geocoder_ResultSet
+	 * @var Ea_Service_GMap_GeocoderV2_ResultSet
 	 */
 	protected $_resultSet=null;
 	protected $_i=null;
 	
-	public function __construct(Ea_Service_GMap_Geocoder_ResultSet $resultSet, $i)
+	public function __construct(Ea_Service_GMap_GeocoderV2_ResultSet $resultSet, $i)
 	{
 		$this->_resultSet=$resultSet;
 		$this->_i=$i;
@@ -49,12 +49,12 @@ class Ea_Service_GMap_Geocoder_Result extends Ea_Service_GMap_Point
 	
 	public function setLat($lat)
 	{
-		throw new Ea_Service_GMap_Geocoder_Exception("setLat() is not allowed");
+		throw new Ea_Service_GMap_GeocoderV2_Exception("setLat() is not allowed");
 	}
 	
 	public function setLng($lng)
 	{
-		throw new Ea_Service_GMap_Geocoder_Exception("setLng() is not allowed");
+		throw new Ea_Service_GMap_GeocoderV2_Exception("setLng() is not allowed");
 	}
 	
 	public function getId()
