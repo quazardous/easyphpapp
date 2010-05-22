@@ -59,6 +59,6 @@ class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
 	
 	public function getId()
 	{
-	
+		//FIXME I don't remember what todo here ...
 	}
 }
