@@ -16,7 +16,7 @@
  * Exception class.
  * 
  */
-class Ea_Service_GMap_Geocoder_Exception extends Exception
+class Ea_Service_GMap_GeocoderV2_Exception extends Exception
 {
 	
 }
