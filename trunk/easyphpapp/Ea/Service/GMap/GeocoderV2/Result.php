@@ -7,25 +7,25 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091223
+ * @version     0.4.5-20100524
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Service/GMap/Point.php';
-require_once 'Ea/Service/GMap/GeocoderV2/ResultSet.php';
+require_once 'Ea/Service/GMap/GeocoderV3/ResultSet.php';
 
-class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
+class Ea_Service_GMap_GeocoderV3_Result extends Ea_Service_GMap_Point
 {
 	/**
 	 * The parent result set.
 	 * 
-	 * @var Ea_Service_GMap_GeocoderV2_ResultSet
+	 * @var Ea_Service_GMap_GeocoderV3_ResultSet
 	 */
 	protected $_resultSet=null;
 	protected $_i=null;
 	
-	public function __construct(Ea_Service_GMap_GeocoderV2_ResultSet $resultSet, $i)
+	public function __construct(Ea_Service_GMap_GeocoderV3_ResultSet $resultSet, $i)
 	{
 		$this->_resultSet=$resultSet;
 		$this->_i=$i;
@@ -49,12 +49,12 @@ class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
 	
 	public function setLat($lat)
 	{
-		throw new Ea_Service_GMap_GeocoderV2_Exception("setLat() is not allowed");
+		throw new Ea_Service_GMap_GeocoderV3_Exception("setLat() is not allowed");
 	}
 	
 	public function setLng($lng)
 	{
-		throw new Ea_Service_GMap_GeocoderV2_Exception("setLng() is not allowed");
+		throw new Ea_Service_GMap_GeocoderV3_Exception("setLng() is not allowed");
 	}
 	
 	public function getId()
