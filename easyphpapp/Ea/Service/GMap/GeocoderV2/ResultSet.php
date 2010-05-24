@@ -7,14 +7,14 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.3-20100122
+ * @version     0.4.5-20100524
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Service/GMap/GeocoderV2/Result.php';
+require_once 'Ea/Service/GMap/GeocoderV3/Result.php';
 
-class Ea_Service_GMap_GeocoderV2_ResultSet implements ArrayAccess, Iterator, Countable
+class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Countable
 {
 	protected $_json=null;
 	protected $_points=array();
@@ -37,7 +37,7 @@ class Ea_Service_GMap_GeocoderV2_ResultSet implements ArrayAccess, Iterator, Cou
 			$this->_points=array();
 			foreach($this->_json->Placemark as $i=>$placemark)
 			{
-				$this->_points[]=new Ea_Service_GMap_GeocoderV2_Result($this, $i);
+				$this->_points[]=new Ea_Service_GMap_GeocoderV3_Result($this, $i);
 			}
 		}
 	}
@@ -85,14 +85,14 @@ class Ea_Service_GMap_GeocoderV2_ResultSet implements ArrayAccess, Iterator, Cou
  	{
  		if(!array_key_exists($offset, $this->_points))
  		{
- 			throw new Ea_Service_GMap_GeocoderV2_Exception("'$offset' offset does not exist");
+ 			throw new Ea_Service_GMap_GeocoderV3_Exception("'$offset' offset does not exist");
  		}
  		return $this->_points[$offset];
  	}
  	
  	public function offsetSet($offset, $value)
  	{
-		throw new Ea_Service_GMap_GeocoderV2_Exception("offsetSet() is not allowed");
+		throw new Ea_Service_GMap_GeocoderV3_Exception("offsetSet() is not allowed");
  	}
  	
  	public function offsetUnset($offset)
