@@ -16,7 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/GMap.php';
 require_once 'Ea/Layout/Script.php';
-require_once 'Ea/Service/GMap/Geocoder.php';
+require_once 'Ea/Service/GMap/GeocoderV3.php';
 
 /**
  * My basic Google Map module.
@@ -34,7 +34,7 @@ class Module_Index extends Ea_Module_Abstract
 	{
 		$this->add($gmap=new Ea_Layout_GMap(500, 400, 'gmap_test'));
 
-		$geo=new Ea_Service_GMap_Geocoder;
+		$geo=new Ea_Service_GMap_GeocoderV3;
 		
 		$address='31, av Brancolar, 06100, Nice, France';
 		
