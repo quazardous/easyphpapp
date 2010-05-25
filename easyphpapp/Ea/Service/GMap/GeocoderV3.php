@@ -22,28 +22,56 @@ require_once 'Ea/Service/GMap/GeocoderV3/ResultSet.php';
  */
 class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 {
-	static protected $_baseUri='http://maps.google.com/maps/api/geocode/output';
-	
-	static protected $_apiKey=null;
-	
-	static public function setApiKey($key)
+	public function __construct($language=null, $region=null)
 	{
-		self::$_apiKey=$key;
+		$this->setLanguage($language);
+		$this->setLanguage($region);
+	}
+	
+	static protected $_baseUri='http://maps.google.com/maps/api/geocode/json';
+	
+	/**
+	 * The bounding box of the viewport within which to bias geocode results more prominently.
+	 * @var unknown_type
+	 */
+	protected $_bounds=null;
+	
+	/**
+	 * The language in which to return results.
+	 * @var string
+	 */
+	protected $_language=null;
+	
+	public function setLanguage($language)
+	{
+		$this->_language=$language;
+	}
+
+	/**
+	 * The region codes.
+	 * @var string
+	 */
+	protected $_region=null;
+	
+	public function setRegion($region)
+	{
+		$this->_region=$region;
 	}
 	
 	/**
 	 * Geocode given address with Google Geocoder.
 	 * 
-	 * @param string $string
+	 * @param string $address
 	 * @return Ea_Service_GMap_GeocoderV3_Result
 	 */
-	public function geocode($string)
+	public function geocode($address)
 	{
 		$ret=$this->request(self::$_baseUri, array(
 			'output'=>'json',
 			'sensor'=>'false',
-			'key'=>self::$_apiKey,
-			'q'=>$string,
+			'language'=>$this->_language,
+			'region'=>$this->_region,
+			'address'=>$address,
 		));
 		if(!$ret) return false;
 		return new Ea_Service_GMap_GeocoderV3_ResultSet($this->getHttpResponseJSON());
