@@ -7,13 +7,18 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.5-20100524
+ * @version     0.4.5-20100525
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Service/GMap/GeocoderV3/Result.php';
 
+/**
+ * Google map geocoder v3 service.
+ * @see http://code.google.com/intl/fr/apis/maps/documentation/geocoding/
+ *
+ */
 class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Countable
 {
 	protected $_json=null;
@@ -35,7 +40,7 @@ class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Cou
 		if($this->isSuccess())
 		{
 			$this->_points=array();
-			foreach($this->_json->Placemark as $i=>$placemark)
+			foreach($this->_json->results as $i=>$result)
 			{
 				$this->_points[]=new Ea_Service_GMap_GeocoderV3_Result($this, $i);
 			}
@@ -44,13 +49,13 @@ class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Cou
 	
 	/**
 	 * Return the Google Map Geocoder Status code.
-	 * @see http://code.google.com/intl/fr-FR/apis/maps/documentation/reference.html#GGeoStatusCode
+	 * @see http://code.google.com/intl/fr/apis/maps/documentation/geocoding/#StatusCodes
 	 * 
 	 * @return int
 	 */
-	public function getStatusCode()
+	public function getStatus()
 	{
-		if($this->_json) return $this->_json->Status->code;
+		if($this->_json) return $this->_json->status;
 		return null;
 	}
 	
@@ -61,19 +66,19 @@ class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Cou
 	 */
 	public function isSuccess()
 	{
-		return $this->getStatusCode()==200;
+		return $this->getStatus()=='OK';
 	}
 	
 	/**
-	 * Return placemark info.
+	 * Return results info.
 	 * 
-	 * @param int $i index of result il multiple
+	 * @param int $i index of result (if multiple)
 	 * @return object info
 	 */
-	public function getPlacemark($i=0)
+	public function getResult($i=0)
 	{
-		if(!isset($this->_json->Placemark[$i])) return null;
-		return $this->_json->Placemark[$i];
+		if(!isset($this->_json->results[$i])) return null;
+		return $this->_json->results[$i];
 	}
 	
 	public function offsetExists($offset)
@@ -129,6 +134,5 @@ class Ea_Service_GMap_GeocoderV3_ResultSet implements ArrayAccess, Iterator, Cou
  	{
  		return count($this->_points);
  	}
- 	
-	
+
 }

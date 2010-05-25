@@ -13,6 +13,7 @@
  */
 
 require_once 'Ea/Service/Abstract.php';
+require_once 'Ea/Service/GMap/Point.php';
 require_once 'Ea/Service/GMap/GeocoderV3/ResultSet.php';
 
 /**
@@ -25,7 +26,7 @@ class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 	public function __construct($language=null, $region=null)
 	{
 		$this->setLanguage($language);
-		$this->setLanguage($region);
+		$this->setRegion($region);
 	}
 	
 	static protected $_baseUri='http://maps.google.com/maps/api/geocode/json';
@@ -33,6 +34,7 @@ class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 	/**
 	 * The bounding box of the viewport within which to bias geocode results more prominently.
 	 * @var unknown_type
+	 * @see http://code.google.com/intl/fr/apis/maps/documentation/geocoding/#Viewports
 	 */
 	protected $_bounds=null;
 	
@@ -62,7 +64,7 @@ class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 	 * Geocode given address with Google Geocoder.
 	 * 
 	 * @param string $address
-	 * @return Ea_Service_GMap_GeocoderV3_Result
+	 * @return Ea_Service_GMap_GeocoderV3_ResultSet
 	 */
 	public function geocode($address)
 	{
@@ -76,4 +78,37 @@ class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 		if(!$ret) return false;
 		return new Ea_Service_GMap_GeocoderV3_ResultSet($this->getHttpResponseJSON());
 	}
+	
+	/**
+	 * Reverse geocode the given point with Google Geocoder.
+	 * 
+	 * @param float|array|Ea_Service_GMap_Point $pointOrLat
+	 * @param float $lng
+	 * @return Ea_Service_GMap_GeocoderV3_ResultSet
+	 * http://code.google.com/intl/fr/apis/maps/documentation/geocoding/#ReverseGeocoding
+	 */
+	public function reverseGeocode($pointOrLat, $lng=null)
+	{
+		if($pointOrLat instanceof Ea_Service_GMap_Point)
+		{
+			$point=$pointOrLat;
+		}
+		else
+		{
+			$point=new Ea_Service_GMap_Point($pointOrLat, $lng);
+		}
+		$lat=$point->getLat();
+		$lng=$point->getLng();
+
+		$ret=$this->request(self::$_baseUri, array(
+			'output'=>'json',
+			'sensor'=>'false',
+			'language'=>$this->_language,
+			'region'=>$this->_region,
+			'latlng'=>sprintf("%f,%f", $lat, $lng),
+		));
+		if(!$ret) return false;
+		return new Ea_Service_GMap_GeocoderV3_ResultSet($this->getHttpResponseJSON());
+	}
+	
 }

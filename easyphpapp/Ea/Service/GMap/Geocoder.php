@@ -16,7 +16,7 @@ require_once 'Ea/Service/GMap/GeocoderV2.php';
 
 /**
  * Google Map Geocoder service.
- * 
+ * For compatibilty.
  */
 class Ea_Service_GMap_Geocoder extends Ea_Service_GMap_GeocoderV2
 {
