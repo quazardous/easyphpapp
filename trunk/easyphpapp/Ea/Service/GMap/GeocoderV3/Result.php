@@ -32,19 +32,19 @@ class Ea_Service_GMap_GeocoderV3_Result extends Ea_Service_GMap_Point
 		parent::__construct();
 	}
 
-	public function getPlacemark()
+	public function getResult()
 	{
-		return $this->_resultSet->getPlacemark($this->_i);
+		return $this->_resultSet->getResult($this->_i);
 	}
 	
 	public function getLat()
 	{
-		return (float)$this->getPlacemark()->Point->coordinates[1];
+		return (float)$this->getResult()->geometry->location->lat;
 	}
 	
 	public function getLng()
 	{
-		return (float)$this->getPlacemark()->Point->coordinates[0];
+		return (float)$this->getResult()->geometry->location->lng;
 	}	
 	
 	public function setLat($lat)

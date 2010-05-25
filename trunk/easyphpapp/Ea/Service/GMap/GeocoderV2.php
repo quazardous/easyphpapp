@@ -7,7 +7,7 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091222
+ * @version     0.4.5-20100525
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -18,7 +18,8 @@ require_once 'Ea/Service/GMap/GeocoderV2/ResultSet.php';
 /**
  * Google Map Geocoder service.
  * You will need a Google Map Api Key to use it.
- * 
+ * @deprecated
+ * @see Ea_Service_GMap_GeocoderV3
  */
 class Ea_Service_GMap_GeocoderV2 extends Ea_Service_Abstract
 {
