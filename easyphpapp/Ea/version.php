@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  define
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.5-20100522
+ * @version     0.4.4-20100309
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
