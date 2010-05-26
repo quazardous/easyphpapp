@@ -49,7 +49,7 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 	}
 	
 	/**
-	 * Number input constructor.
+	 * Date input constructor.
 	 * 
 	 * @param string $id
 	 * @param string $value
