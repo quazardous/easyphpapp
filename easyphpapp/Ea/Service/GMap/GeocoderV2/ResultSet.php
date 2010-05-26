@@ -13,6 +13,7 @@
  */
 
 require_once 'Ea/Service/GMap/GeocoderV2/Result.php';
+require_once 'Ea/Service/GMap/GeocoderV2/Exception.php';
 
 class Ea_Service_GMap_GeocoderV2_ResultSet implements ArrayAccess, Iterator, Countable
 {

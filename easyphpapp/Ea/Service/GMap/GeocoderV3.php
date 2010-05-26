@@ -23,6 +23,9 @@ require_once 'Ea/Service/GMap/GeocoderV3/ResultSet.php';
  */
 class Ea_Service_GMap_GeocoderV3 extends Ea_Service_Abstract
 {
+	
+	protected $_targetEncoding='UTF-8';
+
 	public function __construct($language=null, $region=null)
 	{
 		$this->setLanguage($language);

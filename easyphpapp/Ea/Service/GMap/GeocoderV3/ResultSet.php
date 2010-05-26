@@ -13,6 +13,7 @@
  */
 
 require_once 'Ea/Service/GMap/GeocoderV3/Result.php';
+require_once 'Ea/Service/GMap/GeocoderV3/Exception.php';
 
 /**
  * Google map geocoder v3 service.
