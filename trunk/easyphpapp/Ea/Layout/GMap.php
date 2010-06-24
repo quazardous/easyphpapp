@@ -474,9 +474,9 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		$render=parent::preRender();
 		$this->_setAttribute('id', $this->getId());
 		$width=$this->getWidth();
-		if($width==intval($width)) $width.='px';
+		if(is_numeric($width)) $width.='px';
 		$height=$this->getHeight();
-		if($height==intval($height)) $height.='px';
+		if(is_numeric($height)) $height.='px';
 		$this->addAttribute('style', 'width: '.$width.';');
 		$this->addAttribute('style', 'height: '.$height.';');
 		return $render;
