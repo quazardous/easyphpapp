@@ -193,4 +193,3 @@ class Module_Index extends Ea_Module_Abstract
 	}
 	
 }
-?>
