@@ -21,7 +21,7 @@ require '../conf/config.php';
 require_once 'Ea/App.php';
 
 // instance of application with application Name
-$app=Ea_App::singleton('jqueryapp');
+$app=Ea_App::singleton('basicapp');
 // on 2nd parameter you can specify a version
 
 // the appname and the version can be retrieve from a APPNAME and a VERSION file or constant.
@@ -34,23 +34,6 @@ $app->setModuleClassPrefix('Module');
 $app->showVersion();
 
 $app->applyDefaultStyle();
-
-// set jQuery
-$app->jQuery('jquery-ui-1.8rc3/jquery-1.4.2.js');
-
-// set jQuery UI
-$app->jQueryUi(
-		array(
-			'jquery-ui-1.8rc3/ui/jquery.ui.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.widget.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.tabs.js',
-		),
-		array(
-			'jquery-ui-1.8rc3/themes/base/jquery-ui.css',
-			'jquery-ui-1.8rc3/themes/base/jquery.ui.all.css',
-			'jquery-ui-1.8rc3/themes/base/jquery.ui.tabs.css',
-		)
-	);
 
 // call the dispath()
 $app->dispatch();
