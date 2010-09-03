@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  basicapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.4-20100317
+ * @version     0.4.6-20100903
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -36,23 +36,23 @@ $app->showVersion();
 $app->applyDefaultStyle();
 
 // set jQuery
-$app->jQuery('jquery-ui-1.8rc3/jquery-1.4.2.js');
+$app->jQuery('jquery-ui/jquery-1.4.2.js');
 
 // set jQuery UI
 $app->jQueryUi(
 		array(
-			'jquery-ui-1.8rc3/ui/jquery.ui.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.core.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.widget.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.tabs.js',
-			'jquery-ui-1.8rc3/ui/jquery.ui.datepicker.js',
-			'jquery-ui-1.8rc3/ui/i18n/jquery-ui-i18n.js',
-			'jquery-ui-1.8rc3/ui/i18n/jquery.ui.datepicker-fr.js',
+			'jquery-ui/ui/jquery.ui.js',
+			'jquery-ui/ui/jquery.ui.core.js',
+			'jquery-ui/ui/jquery.ui.widget.js',
+			'jquery-ui/ui/jquery.ui.tabs.js',
+			'jquery-ui/ui/jquery.ui.datepicker.js',
+			'jquery-ui/ui/i18n/jquery-ui-i18n.js',
+			'jquery-ui/ui/i18n/jquery.ui.datepicker-fr.js',
 		),
 		array(
-			'jquery-ui-1.8rc3/themes/base/jquery-ui.css',
-			'jquery-ui-1.8rc3/themes/base/jquery.ui.all.css',
-			'jquery-ui-1.8rc3/themes/base/jquery.ui.tabs.css',
+			'jquery-ui/themes/base/jquery-ui.css',
+			'jquery-ui/themes/base/jquery.ui.all.css',
+			'jquery-ui/themes/base/jquery.ui.tabs.css',
 		)
 	);
 
