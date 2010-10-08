@@ -6,11 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Table
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091020
+ * @author      berlioz [$Author]
+ * @version     0.4.6-20101007 [$Id]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
+
+require_once 'Ea/Layout/Grid.php';
 
 /**
  * Adapter used to manage the row and cell population.

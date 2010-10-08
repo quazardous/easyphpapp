@@ -157,4 +157,3 @@ abstract class Ea_Security_User_Abstract
 	}
 	
 }
-?>

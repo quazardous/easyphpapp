@@ -22,4 +22,3 @@ class Ea_Security_Exception extends Exception
 {
 	
 }
-?>

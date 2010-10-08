@@ -97,4 +97,3 @@ class Ea_Layout_Text extends Ea_Layout_Abstract
 		else echo $this->_text;
 	}
 }
-?>

@@ -21,6 +21,7 @@ require_once 'Ea/Layout/Grid.php';
 require_once 'Zend/Session.php';
 require_once 'Ea/Layout/Form.php';
 require_once 'Ea/Layout/Input/Submit.php';
+require_once 'Ea/Module/Abstract.php';
 
 /**
  * My basic module.
@@ -30,10 +31,7 @@ class Module_Index extends Ea_Module_Abstract
 {
 	public function init()
 	{
-		// we will use session to display our inputs
-		// do not use session_start()
-		Zend_Session::start();
-		
+	
 		// set the page title
 		$this->getPage()->setTitle('Basic data model');
 	}
@@ -131,4 +129,3 @@ class Module_Index extends Ea_Module_Abstract
 		
 	}
 }
-?>

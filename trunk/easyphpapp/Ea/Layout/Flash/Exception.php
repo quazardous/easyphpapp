@@ -22,4 +22,3 @@ class Ea_Layout_GMap_Exception  extends Exception
 {
 	
 }
-?>

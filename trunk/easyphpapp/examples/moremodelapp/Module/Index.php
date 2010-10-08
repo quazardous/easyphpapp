@@ -18,6 +18,7 @@ require_once 'Ea/Model/Layout.php';
 require_once 'Ea/Layout/Grid.php';
 require_once 'Ea/Model/Layout/Header/Adapter/Link.php';
 require_once 'Ea/Layout/Record/Config/Modifier/Row/Alternate.php';
+require_once 'Ea/Module/Abstract.php';
 
 /**
  * My basic module.
@@ -77,4 +78,3 @@ class Module_Index extends Ea_Module_Abstract
 		// application will call render
 	}
 }
-?>

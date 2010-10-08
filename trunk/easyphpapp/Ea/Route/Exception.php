@@ -21,4 +21,3 @@ class Ea_Route_Exception extends Exception
 {
 	
 }
-?>

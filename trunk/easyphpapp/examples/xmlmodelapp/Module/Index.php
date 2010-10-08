@@ -7,15 +7,13 @@
  * @package     examples
  * @subpackage  modelapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.3.2-20081209
+ * @version     0.4.6-20101008
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
  */
 
-require_once 'Ea/Model/Data/Xml.php';
-require_once 'Ea/Model/Layout.php';
-require_once 'Ea/Layout/Grid.php';
+require_once 'Ea/Module/Abstract.php';
 
 /**
  * My basic module.
@@ -38,9 +36,12 @@ class Module_Index extends Ea_Module_Abstract
 			array('name'=>'Mia',   'age'=>21, 'gender'=>'F'),
 		);
 		
+		require_once 'Ea/Model/Data/Xml.php';
+		require_once 'Ea/Model/Layout.php';
 		// build the layout model
 		$model1=new Ea_Model_Layout(new Ea_Model_Data_Xml('model/myrecord.xml'));
 		
+		require_once 'Ea/Layout/Grid.php';
 		// define a table layout
 		$table1=new Ea_Layout_Grid;
 
@@ -55,4 +56,3 @@ class Module_Index extends Ea_Module_Abstract
 		// application will call render
 	}
 }
-?>

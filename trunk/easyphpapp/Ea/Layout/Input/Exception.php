@@ -21,4 +21,3 @@ class Ea_Layout_Input_Exception extends Exception
 {
 	
 }
-?>

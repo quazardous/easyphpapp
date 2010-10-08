@@ -7,19 +7,12 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Select/Exception.php';
 require_once 'Ea/Model/Data/Abstract.php';
-require_once 'Zend/Db/Adapter/Abstract.php';
-require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
-require_once 'Zend/Db/Adapter/Pdo/Oci.php';
-require_once 'Zend/Db/Statement.php';
-require_once 'Zend/Db/Select.php';
-require_once 'Zend/Db/Statement/Pdo.php';
 
 /**
  * Select statement Data model class.
@@ -69,6 +62,7 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 		}
 		if((!$this->_statement)||$this->_statement->columnCount()==0)
 		{
+			require_once 'Ea/Model/Data/Select/Exception.php';
 			throw new Ea_Model_Data_Select_Exception('You must provide a select query');
 		}
 		$this->_analyzeDbStatement();
@@ -111,6 +105,7 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 
 	protected function _analyzeDbStatementPdoOci()
 	{
+		require_once 'Ea/Model/Data/Select/Exception.php';
 		throw new Ea_Model_Data_Select_Exception('Sorry PDO_OCI does not support getColumnMeta()');
 		/*
 		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
@@ -215,6 +210,5 @@ class Ea_Model_Data_Select extends Ea_Model_Data_Abstract
 				trigger_error("{$meta['native_type']}: unsupported type");
 		}
 	}
-	
 	
 }

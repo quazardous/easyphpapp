@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2_20091218
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -83,6 +83,7 @@ class Ea_Layout_Link extends Ea_Layout_Container
 			$page=$this->getPage();
 			if(!$page instanceof Ea_Page)
 			{
+				require_once 'Ea/Layout/Link/Exception.php';
 				throw new Ea_Layout_Link_Exception('Cannot use route outside EasyPhpApp application engine !');
 			}
 			return $page->getApp()->url($this->_url);
@@ -98,4 +99,3 @@ class Ea_Layout_Link extends Ea_Layout_Container
 	}
 	
 }
-?>

@@ -6,14 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  jQueryUi
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.4-20100315
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/JQueryUi/Abstract.php';
-require_once 'Ea/Layout/Link.php';
 
 /**
  * jQuery UI Tabs element layout class.
@@ -48,6 +47,8 @@ class Ea_Layout_JQueryUi_Tabs extends Ea_Layout_JQueryUi_Abstract
 	 */
 	public function addTab($title, $content, $id=null)
 	{
+		require_once 'Ea/Layout/Link.php';
+		require_once 'Ea/Layout/Container.php';
 		if(!$id) $id=$this->nextAutoId('jq-tab');
 		if(!$this->_ul)
 		{
@@ -75,6 +76,7 @@ class Ea_Layout_JQueryUi_Tabs extends Ea_Layout_JQueryUi_Abstract
 		parent::render();
 		$id=$this->getId();
 		$script="$('#{$id}').tabs();";
+		require_once 'Ea/Layout/Script.php';
 		$script=new Ea_Layout_Script($script, true);
 		$script->display();
 	}

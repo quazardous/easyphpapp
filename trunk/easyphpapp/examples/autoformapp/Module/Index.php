@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  formapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.4.6-20101008
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -44,7 +44,7 @@ class Module_Index extends Ea_Module_Abstract
 				
 		// add a submit callback for the send button
 		// by default the callback is a method of the module
-		$form->addSubmitCallback('onSubmitIndexSend', 'send');
+		$form->addSubmitCallback('onSubmitIndexSend', 'send2');
 
 		// add a submit callback for any submit
 		// by default the callback is a method of the module
@@ -112,15 +112,15 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addRow();
 		$table->addHeader('submit');
 		$table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
+		
+		$table->addRow();
+		$table->addHeader('submit 2');
+		$table->addCell(new Ea_Layout_Input_Submit('send2', 'Send 2'));
 		if(isset($_SESSION['submit']))
 		{
 			$table->addCell($_SESSION['submit']);
 			unset($_SESSION['submit']);
 		}
-		
-		$table->addRow();
-		$table->addHeader('submit 2');
-		$table->addCell(new Ea_Layout_Input_Submit('send2', 'Send 2'));
 		
 		// add the form to the page
 		$this->getPage()->add($form);
@@ -144,4 +144,3 @@ class Module_Index extends Ea_Module_Abstract
 	}
 	
 }
-?>

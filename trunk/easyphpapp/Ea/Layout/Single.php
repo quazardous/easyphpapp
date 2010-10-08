@@ -52,4 +52,3 @@ class Ea_Layout_Single extends Ea_Layout_Element_Abstract
 		echo " />";
 	}
 }
-?>

@@ -7,15 +7,10 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091202
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
-
-require_once 'Ea/Module/Exception.php';
-require_once 'Ea/Layout/Form.php';
-require_once 'Ea/Layout/Messages.php';
-
 
 /**
  * Abstract module class.
@@ -222,6 +217,8 @@ abstract class Ea_Module_Abstract
 		if(!$this->_page)
 		{
 			$c=$this->getPageClass();
+			require_once 'Zend/Loader.php';
+			Zend_Loader::loadClass($c);
 			$this->setPage(new $c($this));
 		}
 		return $this->_page;
@@ -504,4 +501,3 @@ abstract class Ea_Module_Abstract
 	}	
 	
 }
-?>

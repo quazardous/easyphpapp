@@ -6,14 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091205
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Single.php';
-require_once 'Ea/Layout/Input/Exception.php';
 
 /**
  * Abstract input layout class.
@@ -144,6 +143,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	
 	public function setName($value)
 	{
+	    require_once 'Ea/Layout/Input/Exception.php';
 		throw new Ea_Layout_Input_Exception("name : forbidden attribute for input");
 	}
 	
@@ -206,6 +206,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		if(!is_array($id)) $id=self::get_id_from_name($id);
 		if(count($id)<1)
 		{
+		    require_once 'Ea/Layout/Input/Exception.php';
 			throw new Ea_Layout_Input_Exception("Empty id");
 		}
 		$first=true;
@@ -215,6 +216,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			{
 				if(!preg_match('|^[a-z][a-z0-9_-]*$|i', $pid))
 				{
+					require_once 'Ea/Layout/Input/Exception.php';
 					throw new Ea_Layout_Input_Exception("'$pid' incorrect first value for input id");
 				}
 			}
@@ -222,6 +224,7 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 			{
 				if(!($pid===null||is_numeric($pid)||preg_match('/^[a-z][a-z0-9_-]*$/i', $pid)))
 				{
+				    require_once 'Ea/Layout/Input/Exception.php';
 					throw new Ea_Layout_Input_Exception("'$pid' incorrect value for input id");
 				}
 			}
@@ -409,4 +412,3 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
     	}
     }
 }
-?>

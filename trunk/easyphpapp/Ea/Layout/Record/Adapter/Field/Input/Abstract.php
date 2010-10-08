@@ -34,6 +34,7 @@ abstract class Ea_Layout_Record_Adapter_Field_Input_Abstract extends Ea_Layout_R
 	public function __construct($field, $baseId=null, $indexColumn=null, $config=null)
 	{
 		$this->_field=$field;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		if($baseId)$this->_baseId=Ea_Layout_Input_Abstract::get_id_from_name($baseId);
 		$this->_indexColumn=$indexColumn;
 		$this->_config=$config;
@@ -73,4 +74,3 @@ abstract class Ea_Layout_Record_Adapter_Field_Input_Abstract extends Ea_Layout_R
 	}
 }
 
-?>

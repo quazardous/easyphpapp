@@ -18,7 +18,7 @@ INSTALL :
 
 QUICKSTART :
  - Look at the ./examples folder.
- - Just set up the ./examples/conf/config.php.
+ - Just copy ./examples/conf/config-dist.php to ./examples/conf/config.php and set up the includes path.
  - Play with the examples (autoformapp is a good start).
  
 CONTACT :

@@ -34,5 +34,3 @@ $app->dispatch();
 
 // so calling url index.php will tell the application to target module 'index' and action 'index' (the default).
 // application will try to call Module_Index::actionIndex().
-
-?>

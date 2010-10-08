@@ -6,8 +6,8 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.4-20100317
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -24,6 +24,7 @@ class Ea_Layout_Input_DatePicker extends Ea_Layout_Input_JQueryUi_DatePicker
 		parent::render();
 		$id=$this->getAttributeId();
 		$script="$('#{$id}').datepicker();";
+		require_once 'Ea/Layout/Script.php';
 		$script=new Ea_Layout_Script($script, true);
 		$script->display();
 	}

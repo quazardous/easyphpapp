@@ -6,14 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Table
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.5-20090209
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Record/Adapter/Field/Input/Abstract.php';
-require_once 'Ea/Layout/Input/Select.php';
 
 /**
  * Field value select input from record.
@@ -36,8 +35,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Select extends Ea_Layout_Record_Adapt
 	 */
 	public function getContent($record, $i)
 	{
+		require_once 'Ea/Layout/Input/Select.php';
 		return new Ea_Layout_Input_Select($this->getId($record, $i), $this->_options, $this->getRawValue($record), $this->_config);
 	}
 }
-
-?>

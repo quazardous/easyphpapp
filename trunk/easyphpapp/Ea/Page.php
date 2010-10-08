@@ -7,16 +7,12 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20100831
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Page/Interface.php';
-require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Module/Abstract.php';
-require_once 'Ea/Layout/Script.php';
-require_once 'Ea/Layout/Text.php';
 
 /**
  * Page class.
@@ -169,6 +165,7 @@ class Ea_Page implements Ea_Page_Interface
 			if(array_key_exists('title', $config)) $this->setTitle($config['title']);
 		}
 		
+		require_once 'Ea/Layout/Container.php';
 		$this->_top=new Ea_Layout_Container('body', $this);
 
 		/*
@@ -355,6 +352,7 @@ class Ea_Page implements Ea_Page_Interface
 		}
 		$this->internalScripts();
 		
+		require_once 'Ea/Layout/Script.php';
 		foreach($this->_scripts as $script)
 		{
 			$layout=new Ea_Layout_Script($script->script, false, $script->type);
@@ -395,6 +393,7 @@ class Ea_Page implements Ea_Page_Interface
 <span class="ea"><?php echo $this->escape(EA_VERSION); ?></span>
 </div>
 		<?php
+		require_once 'Ea/Layout/Text.php';
 		return new Ea_Layout_Text(ob_get_clean(), false);
 	}
 	

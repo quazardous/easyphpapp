@@ -7,17 +7,12 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.3-20091223
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Table.php';
-require_once 'Ea/Layout/Record/Adapter/Interface.php';
-require_once 'Ea/Layout/Record/Config/Modifier/Interface.php';
-require_once 'Ea/Model/Layout.php';
-require_once 'Ea/Layout/Grid/Exception.php';
-require_once 'Ea/Layout/Grid/Populate/Adapter/Default.php';
 
 /**
  * Table of records layout class.
@@ -265,6 +260,7 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 			case 'before': case 'after':
 				if((!array_key_exists($seekCol, $this->_columns))||($seekCol===null))
 				{
+					require_once 'Ea/Layout/Grid/Exception.php';
 					throw new Ea_Layout_Grid_Exception("$seekCol : column does not exist");
 				}
 				$cols=array();
@@ -319,6 +315,7 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
+			require_once 'Ea/Layout/Grid/Exception.php';
 			throw new Ea_Layout_Grid_Exception("$idCol : unknown column");
 		}
 		$this->_columns[$idCol]['record']=array('adapter'=>$column);
@@ -329,6 +326,7 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
+			require_once 'Ea/Layout/Grid/Exception.php';
 			throw new Ea_Layout_Grid_Exception("$idCol : unknown column");
 		}
 		$this->_columns[$idCol]['record']['adapter']=$adapter;
@@ -345,6 +343,7 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	{
 		if(!array_key_exists($idCol, $this->_columns))
 		{
+			require_once 'Ea/Layout/Grid/Exception.php';
 			throw new Ea_Layout_Grid_Exception("$idCol : unknown column");
 		}
 		$this->_columns[$idCol]['header']['content']=$content;
@@ -422,10 +421,12 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	{
 		if(!$adapter)
 		{
+			require_once 'Ea/Layout/Grid/Populate/Adapter/Default.php';
 			$adapter=new Ea_Layout_Grid_Populate_Adapter_Default;
 		}
 		if(!$adapter instanceof Ea_Layout_Grid_Populate_Adapter_Interface)
 		{
+			require_once 'Ea/Layout/Grid/Exception.php';
 			throw new Ea_Layout_Grid_Exception("adapter must implements Ea_Layout_Grid_Populate_Adapter_Interface");
 		}
 		$adapter->acknowledge($this);
@@ -485,5 +486,3 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 		return $render;
 	}
 }
-
-?>

@@ -6,15 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Table
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.7-20090702
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Record/Adapter/Field.php';
-require_once 'Ea/Route.php';
-require_once 'Ea/Layout/Link.php';
 
 /**
  * Field link from record (array or object).
@@ -151,8 +149,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 		{
 			$label=$this->_label;
 		}
+		require_once 'Ea/Layout/Link.php';
 		return new Ea_Layout_Link($route, $label, $this->_target, $this->_config);
 	}
 }
-
-?>

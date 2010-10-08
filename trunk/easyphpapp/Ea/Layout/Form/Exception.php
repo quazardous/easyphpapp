@@ -22,4 +22,3 @@ class Ea_Layout_Form_Exception extends Exception
 {
 	
 }
-?>

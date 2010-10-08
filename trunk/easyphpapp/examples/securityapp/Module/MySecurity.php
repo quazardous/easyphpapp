@@ -22,6 +22,7 @@ require_once 'Security/User.php';
 require_once 'Ea/Module/Security/Interface.php';
 require_once 'Ea/Layout/Link.php';
 require_once 'Ea/Layout/Single.php';
+require_once 'Ea/Module/Abstract.php';
 
 /**
  * Security module.

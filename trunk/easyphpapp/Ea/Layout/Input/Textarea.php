@@ -55,4 +55,3 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 		echo '>';
 	}
 }
-?>

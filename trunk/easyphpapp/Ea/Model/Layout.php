@@ -7,17 +7,12 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091201
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Model/Abstract.php';
-require_once 'Ea/Model/Data.php';
-require_once 'Ea/Model/Data/Abstract.php';
-require_once 'Ea/Model/Layout/Exception.php';
-require_once 'Zend/Loader.php';
-require_once 'Ea/Model/Layout/Header/Adapter/Interface.php';
 
 /**
  * Layout model class.
@@ -133,14 +128,18 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	 * @return unknown_type
 	 */
 	public function __construct($config=null)
-	{
+	{	
 		if(is_string($config))
 		{
 			$config=array('xml'=>$config);
 		}
-		else if($model=Ea_Model_Data::factory($config))
+		else
 		{
-			$config=array('data_model'=>$model);
+			require_once 'Ea/Model/Data.php';
+			if($model=Ea_Model_Data::factory($config))
+			{
+				$config=array('data_model'=>$model);
+			}
 		}
 		if(is_array($config))
 		{
@@ -201,6 +200,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		}
 		else
 		{
+			require_once 'Ea/Model/Layout/Exception.php';
 			throw new Ea_Model_Layout_Exception('No valid adapter');
 		}
 	}
@@ -225,6 +225,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			}
 			$class=$this->getAdapterClassFromName($name);
 		}
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$instance=new $class($column, $this);
 		$this->setColumnAdapterInstance($column, $instance);
@@ -316,4 +317,3 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	
 	
 }
-?>

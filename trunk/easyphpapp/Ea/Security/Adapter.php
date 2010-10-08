@@ -7,14 +7,12 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.2.6.20081022
+ * @version     0.4.6.20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Zend/Auth/Adapter/Interface.php';
-require_once 'Ea/Security/User/Abstract.php';
-require_once 'Zend/Auth/Result.php';
 
 /**
  * Adapter between Ea_Security_User_Abstract and Zend_Auth.
@@ -60,6 +58,7 @@ class Ea_Security_Adapter implements Zend_Auth_Adapter_Interface
      */
     public function authenticate()
     {
+    	require_once 'Zend/Auth/Result.php';
         if($this->_user->authenticate())
         {
         	$code=Zend_Auth_Result::SUCCESS;
@@ -78,4 +77,3 @@ class Ea_Security_Adapter implements Zend_Auth_Adapter_Interface
         return new Zend_Auth_Result($code, array('login'=>$this->_user->getLogin(), 'roles'=>$this->_user->getRoles(), 'attributes'=>$this->_user->getAttributes()), (array)$this->_user->getAuthMessage());
     }	
 }
-?>

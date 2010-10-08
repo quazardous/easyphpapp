@@ -6,15 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Table
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091201
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Record/Adapter/Field/Input/Abstract.php';
-require_once 'Ea/Layout/Input/Date.php';
-require_once 'Ea/Layout/Input/DatePicker.php';
 
 /**
  * Field value date input from record (array or object).
@@ -62,9 +60,11 @@ class Ea_Layout_Record_Adapter_Field_Input_Date extends Ea_Layout_Record_Adapter
 	public function getContent($record, $i)
 	{
 		if(defined('EA_RICH')&&EA_RICH)
+		{
+			require_once 'Ea/Layout/Input/DatePicker.php';
 			return new Ea_Layout_Input_DatePicker($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
+		}
+		require_once 'Ea/Layout/Input/Date.php';
 		return new Ea_Layout_Input_Date($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
 	}
 }
-
-?>

@@ -7,14 +7,10 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
-
-require_once 'Ea/Page/Interface.php';
-require_once 'Ea/Page.php';
-require_once 'Ea/Layout/Container.php';
 
 /**
  * Abstract layout class.

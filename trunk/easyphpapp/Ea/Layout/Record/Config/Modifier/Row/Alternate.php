@@ -48,4 +48,3 @@ class Ea_Layout_Record_Config_Modifier_Row_Alternate implements Ea_Layout_Record
 		return $config;
 	}
 }
-?>

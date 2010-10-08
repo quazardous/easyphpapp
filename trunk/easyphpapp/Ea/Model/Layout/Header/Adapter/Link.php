@@ -7,13 +7,12 @@
  * @package     Model
  * @subpackage  Layout
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090223
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Model/Layout/Header/Adapter/Interface.php';
-require_once 'Ea/Layout/Link.php';
 
 /**
  * Basic adapter to get sorting header cell content from field.
@@ -87,7 +86,8 @@ class Ea_Model_Layout_Header_Adapter_Link implements Ea_Model_Layout_Header_Adap
 				(isset($urlv["query"])?"?".$urlv["query"]:"").
 				(isset($urlv["fragment"])?"#".$urlv["fragment"]:"");
 		}
+		require_once 'Zend/Loader.php';
+		Zend_Loader::loadClass($class);
 		return new $class($url, $model->getColumnLabel($column), $this->_target, $this->_config);
 	}
 }
-?>

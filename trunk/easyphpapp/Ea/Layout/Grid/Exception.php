@@ -22,4 +22,3 @@ class Ea_Layout_Grid_Exception extends Exception
 {
 	
 }
-?>

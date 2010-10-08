@@ -7,15 +7,12 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091203
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Table/Exception.php';
 require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/Table/Row.php';
-require_once 'Ea/Layout/Table/Cell.php';
 
 /**
  * Table layout class.
@@ -56,6 +53,7 @@ class Ea_Layout_Table extends Ea_Layout_Container
 		}
 		if(($this->_assertRow)&&(!$content instanceof Ea_Layout_Table_Row))
 		{
+			require_once 'Ea/Layout/Table/Exception.php';
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Row");
 		}
 		$this->_currentRow=$content;
@@ -91,6 +89,7 @@ class Ea_Layout_Table extends Ea_Layout_Container
 	 */
 	public function addRow($config=null, $append=true, $class='Ea_Layout_Table_Row')
 	{
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($config);
 		$this->add($row, $append);
@@ -127,5 +126,3 @@ class Ea_Layout_Table extends Ea_Layout_Container
 		return $this->_currentRow->addHeader($content, $config, $append, $class);
 	}
 }
-
-?>

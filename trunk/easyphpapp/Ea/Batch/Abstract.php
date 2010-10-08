@@ -6,13 +6,11 @@
  * @category    EasyPhpApp
  * @package     Batch
  * @subpackage  Page
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.4-20090202
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
-
-require_once 'Ea/Batch/Exception.php';
 
 /**
  * Little batch class.
@@ -104,6 +102,7 @@ abstract class Ea_Batch_Abstract
 		}
 		catch(Ea_Batch_Exception $e)
 		{
+			require_once 'Ea/Batch/Exception.php';
 			if($e->getCode()==Ea_Batch_Exception::stop)
 			{
 				$this->cleanup();
@@ -146,6 +145,7 @@ abstract class Ea_Batch_Abstract
 			if(is_array($this->_params[$name])) return $this->_params[$name]['value'];
 			return $this->_params[$name];
 		}
+		require_once 'Ea/Batch/Exception.php';
 		throw new Ea_Batch_Exception("{$name} : invalid param", Ea_Batch_Exception::invalid_param);
 	}
 
@@ -155,7 +155,11 @@ abstract class Ea_Batch_Abstract
 		{
 			$this->_params[$name]['value']=$value;
 		}
-		else throw new Ea_Batch_Exception("{$name} : invalid param", Ea_Batch_Exception::invalid_param);
+		else
+		{
+		    require_once 'Ea/Batch/Exception.php';
+		    throw new Ea_Batch_Exception("{$name} : invalid param", Ea_Batch_Exception::invalid_param); 
+		}
 	}
 	
 	public function __construct($logfile=null)
@@ -207,6 +211,7 @@ abstract class Ea_Batch_Abstract
 	protected function stop($code, $string="")
 	{
 		$this->log(sprintf("STOP [code=%u] %s", $code, $string), self::log_error);
+		require_once 'Ea/Batch/Exception.php';
 		throw new Ea_Batch_Exception('stop', Ea_Batch_Exception::stop, intval($code));
 	}
 	

@@ -40,4 +40,3 @@ interface Ea_Module_Security_Interface
 	public function securityDeny();
 	
 }
-?>

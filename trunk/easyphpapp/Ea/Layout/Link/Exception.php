@@ -21,4 +21,3 @@ class Ea_Layout_Link_Exception extends Exception
 {
 	
 }
-?>

@@ -45,6 +45,7 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	public function setBaseId($baseId)
 	{
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$this->_baseId=Ea_Layout_Input_Abstract::get_id_from_name($baseId);
 	}
 	

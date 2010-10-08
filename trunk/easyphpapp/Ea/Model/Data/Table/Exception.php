@@ -22,4 +22,3 @@ class Ea_Model_Data_Table_Exception extends Exception
 {
 	
 }
-?>

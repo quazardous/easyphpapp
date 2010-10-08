@@ -21,4 +21,3 @@ class Ea_App_Exception extends Exception
 {
 	
 }
-?>

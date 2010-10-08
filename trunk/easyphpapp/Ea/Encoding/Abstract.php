@@ -7,7 +7,7 @@
  * @package     Encoding
  * @subpackage  abstract
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091223
+ * @version     0.4.6-20101008
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -123,7 +123,8 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 		if(!$encoding) return $string;
 		$internal=$this->getInternalEncoding();
 		if(strtoupper($encoding)==$internal) return $string;
-		return mb_convert_encoding($string, $encoding, $internal);
+		if($internal) return mb_convert_encoding($string, $encoding, $internal);
+		return mb_convert_encoding($string, $encoding);
 	}
 		
 	/**

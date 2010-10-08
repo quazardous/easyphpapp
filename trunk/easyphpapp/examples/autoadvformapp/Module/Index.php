@@ -14,16 +14,9 @@
  */
 
 require_once 'Ea/Module/Abstract.php';
-require_once 'Ea/Layout/Form.php';
-require_once 'Ea/Layout/Input/Text.php';
-require_once 'Ea/Layout/Input/Date.php';
-require_once 'Ea/Layout/Input/Number.php';
-require_once 'Ea/Layout/Input/Textarea.php';
-require_once 'Ea/Layout/Input/Select.php';
-require_once 'Ea/Layout/Input/Submit.php';
-require_once 'Ea/Layout/Input/Radio.php';
-require_once 'Ea/Layout/Table.php';
-require_once 'Ea/Layout/Messages.php';
+
+
+
 
 /**
  * My basic module.
@@ -39,14 +32,27 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
+		require_once 'Ea/Layout/Messages.php';
+		// put a nice message area
 		$this->add(new Ea_Layout_Messages);
+		
+		require_once 'Ea/Layout/Form.php';
+		require_once 'Ea/Layout/Input/Text.php';
+		require_once 'Ea/Layout/Input/Date.php';
+		require_once 'Ea/Layout/Input/Number.php';
+		require_once 'Ea/Layout/Input/Textarea.php';
+		require_once 'Ea/Layout/Input/Select.php';
+		require_once 'Ea/Layout/Input/Submit.php';
+		require_once 'Ea/Layout/Input/Radio.php';
+		require_once 'Ea/Layout/Table.php';
+		// NB you can use Ea_Autoloader
 		
 		// declare new form
 		$form=new Ea_Layout_Form('form4');
 		
 		// add a submit callback for the send button
 		// by default the callback is a method of the module
-		$form->addSubmitCallback('onSubmitIndexSend', 'send');
+		$form->addSubmitCallback('onSubmitIndexSend', 'send2');
 
 		// add a submit callback for any submit
 		// by default the callback is a method of the module
@@ -157,15 +163,15 @@ class Module_Index extends Ea_Module_Abstract
 		$table->addRow();
 		$table->addHeader('submit');
 		$table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
+
+		$table->addRow();
+		$table->addHeader('submit 2');
+		$table->addCell(new Ea_Layout_Input_Submit('send2', 'Send 2'));
 		if(isset($_SESSION['submit']))
 		{
 			$table->addCell($_SESSION['submit']);
 			unset($_SESSION['submit']);
 		}
-
-		$table->addRow();
-		$table->addHeader('submit 2');
-		$table->addCell(new Ea_Layout_Input_Submit('send2', 'Send 2'));
 		
 		// add the form to the page
 		$this->getPage()->add($form);

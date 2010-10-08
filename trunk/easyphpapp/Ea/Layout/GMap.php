@@ -7,15 +7,12 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091221
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/GMap/Exception.php';
-require_once 'Ea/Layout/GMap/Point.php';
-require_once 'Ea/Layout/GMap/Marker.php';
 
 /**
  * Google map layout class.
@@ -41,6 +38,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	 */
 	public function setCenter($point)
 	{
+		require_once 'Ea/Layout/GMap/Point.php';
 		if($point instanceof Ea_Layout_GMap_Point)
 		{
 			$this->_center=clone $point;
@@ -484,6 +482,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	
 	public function add($content, $append=true)
 	{
+		require_once 'Ea/Layout/GMap/Exception.php';
 		throw new Ea_Layout_GMap_Exception('Adding sub layout is not allowed');
 	}
 	
@@ -552,6 +551,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		
 		$script.=$this->_postInitScript;
 		// TODO : think about it vs add()
+		require_once 'Ea/Layout/Script.php';
 		$script=new Ea_Layout_Script($script, true);
 		$script->display();
 	}
@@ -567,6 +567,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	 */
 	public function addMarker($point, $title=null)
 	{
+		require_once 'Ea/Layout/GMap/Marker.php';
 		if($point instanceof Ea_Layout_GMap_Marker)
 		{
 			$marker=clone $point;
@@ -612,4 +613,3 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		$this->_postInitScript=$postInit;
 	}
 }
-?>

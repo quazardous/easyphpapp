@@ -1,6 +1,10 @@
-*** 0.4.6-maki ***
+*** XXX ***
 - Todo : Add PDF support from TCPDF
+
+*** 0.4.6-maki ***
 - HTML charset is now UTF-8
+- Refactor require_once logic to avoid loops
+- Use Zend_Loader_Autoloader to avoid object/session trouble 
 
 *** 0.4.5-maki ***
 - Add Google Map Geocoder v3 service

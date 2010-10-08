@@ -7,14 +7,12 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Flash/Exception.php';
 require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/Single.php';
 
 /**
  * Simple flash object layout.
@@ -144,6 +142,7 @@ class Ea_Layout_Flash extends Ea_Layout_Container
 	
 	protected function preRender()
 	{
+		require_once 'Ea/Layout/Single.php';
 		//TODO optimize for multiple rendering
 		$render=parent::preRender();
 		$this->resetSubLayouts();
@@ -184,8 +183,8 @@ class Ea_Layout_Flash extends Ea_Layout_Container
 	
 	public function add($content, $append=true)
 	{
+		require_once 'Ea/Layout/Flash/Exception.php';
 		throw new Ea_Layout_Flash_Exception('Adding sub layout is not allowed');
 	}
 	
 }
-?>

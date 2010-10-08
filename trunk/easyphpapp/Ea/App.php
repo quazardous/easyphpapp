@@ -7,19 +7,12 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.4-20100310
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/version.php';
-require_once 'Ea/App/Exception.php';
-require_once 'Ea/Route.php';
-require_once 'Ea/Page.php';
-require_once 'Ea/Module/Abstract.php';
-require_once 'Ea/Layout/Abstract.php';
-require_once 'Zend/Loader.php';
-require_once 'Zend/Session/Namespace.php';
 
 /**
  * Application (ex Router) class.
@@ -269,6 +262,7 @@ class Ea_App
 			}
 			if(!$appName)
 			{
+				require_once 'Ea/App/Exception.php';
 				throw new Ea_App_Exception("No app name given for first call to singleton()");
 			}
 			self::$_singleton=new self($appName, $version);
@@ -434,6 +428,7 @@ class Ea_App
 			{
 				if($name==$this->_moduleParamName||$name==$this->_actionParamName)
 				{
+					require_once 'Ea/App/Exception.php';
 					throw new Ea_App_Exception("{$name} invalid param name");
 				}
 				$get[$name]=$value;
@@ -443,6 +438,7 @@ class Ea_App
 		{
 			if($name==$this->_moduleParamName||$name==$this->_actionParamName)
 			{
+				require_once 'Ea/App/Exception.php';
 				throw new Ea_App_Exception("{$name} invalid raw param name");
 			}
 			$get[$name]=$value;
@@ -631,10 +627,12 @@ class Ea_App
 			$this->_runningModule=$module;
 			$moduleClasse=$this->getModuleClassName($module);
 			$actionMethod=$this->getActionMethodName($action, $prefix);
+			require_once 'Zend/Loader.php';
 			Zend_Loader::loadClass($moduleClasse);
 			$obj=new $moduleClasse(array('application'=>$this, 'name'=>$module));
 			if(!($obj instanceof Ea_Module_Abstract))
 			{
+				require_once 'Ea/App/Exception.php';
 				throw new Ea_App_Exception("{$moduleClasse} does not extend Ea_Module_Abstract");
 			}
 		}
@@ -642,11 +640,13 @@ class Ea_App
 		$m=get_class_methods($moduleClasse);
 		if(! in_array( $actionMethod, $m))
 		{
+			require_once 'Ea/App/Exception.php';
 			throw new Ea_App_Exception("{$actionMethod} does not exists in {$moduleClasse}");
 		}
 		$this->_runningAction=$action;
 		
 		// by default all layouts will try get a page
+		require_once 'Ea/Layout/Abstract.php';
 		Ea_Layout_Abstract::addRegisterCallback(array($obj, 'registerLayout'));
 		
 		// tells the module if application manage forms by default
@@ -701,6 +701,7 @@ class Ea_App
 			if(!$module) $module=$this->_runningModule;
 			if(!$module)
 			{
+				require_once 'Ea/App/Exception.php';
 				throw new Ea_App_Exception("no module");
 			}
 		}
@@ -785,6 +786,7 @@ class Ea_App
 			}
 		}
 		//TODO : et les params ?
+		require_once 'Ea/Route.php';
 		return new Ea_Route($this, $script, $module, $action, $params, $fragment);
 	}
 	
@@ -847,6 +849,7 @@ class Ea_App
 	{
 		if(!$this->_security)
 		{
+			require_once 'Ea/App/Exception.php';
 			throw new Ea_App_Exception("security is not initialized");
 		}
 		return $this->_security;
@@ -884,10 +887,12 @@ class Ea_App
 		if(!$this->isConnectedUser())
 		{
 			$c=$this->getModuleClassName($this->_securityModule);
+			require_once 'Zend/Loader.php';
 			Zend_Loader::loadClass($c);
 			$module=new $c($this);
 			if(!(($module instanceof Ea_Module_Abstract)&&($module instanceof Ea_Module_Security_Interface)))
 			{
+				require_once 'Ea/App/Exception.php';
 				throw new Ea_App_Exception("{$c} does not extend Ea_Module_Abstract or implements Ea_Module_Security_Interface");
 			}
 			$module->init();
@@ -1018,10 +1023,12 @@ class Ea_App
 	 */
 	public function getInputId($param, $module=null)
 	{
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$param=Ea_Layout_Input_Abstract::get_id_from_name($param);
 		if(!$module) $module=$this->_runningModule;
 		if(!$module)
 		{
+			require_once 'Ea/App/Exception.php';
 			throw new Ea_App_Exception("no module");
 		}
 		$module=array($module);
@@ -1047,7 +1054,6 @@ class Ea_App
 		$this->_registers[$name]['store']=$store;
 		if($store)
 		{
-			Zend_Session::start();
 			if(!isset($this->getSession()->registers))
 			{
 				$this->getSession()->registers=array();
@@ -1098,7 +1104,13 @@ class Ea_App
 	 */
 	public function getSession()
 	{
-		if(!$this->_session) $this->_session=new Zend_Session_Namespace($this->getNamespace());
+		if(!$this->_session)
+		{
+			require_once 'Ea/Autoloader.php';
+			Ea_Autoloader::autoload();
+			require_once 'Zend/Session/Namespace.php';
+			$this->_session=new Zend_Session_Namespace($this->getNamespace());
+		}
 		return $this->_session;
 	}
 	
@@ -1112,7 +1124,6 @@ class Ea_App
 	public function &getRegister($name)
 	{
 		static $null=null; // FIXME ugly trick
-		Zend_Session::start();
 		if(isset($this->getSession()->registers[$name]))
 		{
 			$this->_registers[$name]['store']=true;
@@ -1210,6 +1221,7 @@ class Ea_App
 			case 'exlusive':
 				if(count($this->_callbacksQueues[$queue]['callbacks'])>0)
 				{
+					require_once 'Ea/App/Exception.php';
 					throw new Ea_App_Exception("Failed to 'exclusive' add callback to '{$queue}' queue");
 				}
 				array_push($this->_callbackQueues[$queue]['callbacks'], $callback);

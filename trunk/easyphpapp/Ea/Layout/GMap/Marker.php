@@ -6,8 +6,8 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  GMap
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091222
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -106,6 +106,7 @@ class Ea_Layout_GMap_Marker extends Ea_Layout_GMap_Point
 		{
 			case 'title': $this->setTitle($name); break;
 			case 'position': case 'map':
+			    require_once 'Ea/Layout/GMap/Exception.php';
 				throw new Ea_Layout_GMap_Exception("$name : option not allowed !");
 			default:
 				$this->_options[]=(object)array(

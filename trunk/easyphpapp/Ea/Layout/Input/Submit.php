@@ -86,4 +86,3 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 		}
 	}
 }
-?>

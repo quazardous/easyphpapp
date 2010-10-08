@@ -21,4 +21,3 @@ class Ea_Module_Exception extends Exception
 {
 	
 }
-?>
