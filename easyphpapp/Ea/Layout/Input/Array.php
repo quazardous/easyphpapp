@@ -6,15 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/Input/Array/Exception.php';
-require_once 'Ea/Layout/Input/Abstract.php';
 
 /**
  * Generic array of inputs or subarrays.
@@ -35,6 +33,7 @@ class Ea_Layout_Input_Array extends Ea_Layout_Container implements ArrayAccess, 
  	{
  		if(!array_key_exists($offset, $this->_items))
  		{
+ 			require_once 'Ea/Layout/Input/Array/Exception.php';
  			throw new Ea_Layout_Input_Array_Exception("'$offset' offset does not exist");
  		}
  		return $this->_items[$offset];
@@ -45,10 +44,12 @@ class Ea_Layout_Input_Array extends Ea_Layout_Container implements ArrayAccess, 
  	{
  		if(!array_key_exists($offset, $this->_items))
  		{
+ 			require_once 'Ea/Layout/Input/Array/Exception.php';
  			throw new Ea_Layout_Input_Array_Exception("'$offset' offset does not exist - direct assignation is not allowed");
  		}
 		if(!($this->_items[$offset] instanceof Ea_Layout_Input_Abstract))
 		{
+			require_once 'Ea/Layout/Input/Array/Exception.php';
 			throw new Ea_Layout_Input_Array_Exception("'$offset' offset is not an Ea_Layout_Input_Abstract");
 		}
 		$this->_items[$offset]->setValue($value);

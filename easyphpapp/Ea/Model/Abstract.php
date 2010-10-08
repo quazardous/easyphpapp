@@ -189,6 +189,7 @@ abstract class Ea_Model_Abstract
 	 */
 	public function loadFromXmlFile($filename)
 	{
+		require_once 'Ea/Xml/Element.php';
 		$this->loadFromXml(Ea_Xml_Element::load_file($filename));
 	}
 	
@@ -287,7 +288,11 @@ abstract class Ea_Model_Abstract
 				else $arr[$pid]=$value;
 				return;
 			}
-			if($pid===null) throw new Exception('incorrect input id');
+			if($pid===null)
+			{
+				require_once 'Ea/Model/Exception.php';
+				throw new Ea_Model_Exception('incorrect input id');
+			}
 			if(!isset($arr[$pid]))
 			{
 				$arr[$pid]=array();

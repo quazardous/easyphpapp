@@ -28,4 +28,3 @@ class Ea_Layout_Input_Text extends Ea_Layout_Input_Abstract
 		if($maxlength!==null) $this->setAttribute('maxlength', $maxlength);
 	}
 }
-?>

@@ -117,4 +117,3 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 	}
 
 }
-?>

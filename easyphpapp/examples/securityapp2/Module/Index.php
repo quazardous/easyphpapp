@@ -34,7 +34,7 @@ class Module_Index extends Ea_Module_Abstract
 		$this->getPage()->add('Hello '.$this->getApp()->getSecurity()->getConnectedUserLogin().', your are in common stuff.');
 
 		// by the way, how to add non escaped code
-		$this->getPage()->add(array('text'=>'<br/>', 'escape'=>false));
+		$this->getPage()->add(new Ea_Layout_Text('<br/>', false));
 		
 		// add a link to the 'admin' action
 		$this->getPage()->add(new Ea_Layout_Link($this->getApp()->getRoute(null, 'admin'), 'Admin stuff'));

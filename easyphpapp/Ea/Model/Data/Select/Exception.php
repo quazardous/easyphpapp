@@ -22,4 +22,3 @@ class Ea_Model_Data_Select_Exception extends Exception
 {
 	
 }
-?>

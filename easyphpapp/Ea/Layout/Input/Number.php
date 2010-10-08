@@ -141,4 +141,3 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
     }
 	
 }
-?>

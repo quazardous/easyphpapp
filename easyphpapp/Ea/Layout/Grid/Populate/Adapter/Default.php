@@ -6,15 +6,14 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Table
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-20091020
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Grid.php';
 require_once 'Ea/Layout/Grid/Populate/Adapter/Interface.php';
-require_once 'Ea/Layout/Table/Row.php';
 
 /**
  * Default implementation for row/cell populate adapter.
@@ -140,6 +139,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 			$config=$modifier->modify($config, $record, $i);
 		}
 		$class=$this->_recordRowClass;
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($config);
 		
@@ -160,6 +160,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 	public function getHeaderRow()
 	{
 		$class=$this->_headerRowClass;
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($this->_headerRowConfig);
 		foreach($this->getTable()->getListColumns() as $idCol)
@@ -182,6 +183,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 	public function getColRow($idCol, $records)
 	{
 		$class=$this->_headerRowClass;
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($this->_headerRowConfig);
 		
@@ -220,6 +222,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 			return $adapter->getRecordCell($idCol, $record, $i, $spread);
 		}
 		$class=$this->_recordCellClass;
+		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$config=$this->_recordCellConfig;
 		foreach($this->getTable()->getRecordConfigCellModifiers() as $modifier)

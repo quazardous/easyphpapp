@@ -37,4 +37,3 @@ class Ea_Batch_Exception extends Exception
 		return $this->_exitCode;
 	}
 }
-?>

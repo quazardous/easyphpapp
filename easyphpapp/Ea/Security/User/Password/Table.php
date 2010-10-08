@@ -12,7 +12,6 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Security/User/Password/Table/Exception.php';
 require_once 'Ea/Security/User/Abstract.php';
 require_once 'Zend/Db/Table/Abstract.php';
 require_once 'Zend/Db/Table/Row/Abstract.php';
@@ -135,6 +134,7 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 			$this->_dbTable=$config['db_table'];
 			if(!($this->_dbTable instanceof Zend_Db_Table_Abstract))
 			{
+				require_once 'Ea/Security/User/Password/Table/Exception.php';
 				throw new Ea_Security_User_Password_Table_Exception("db_table is not an instance of Zend_Db_Table_Abstract");
 			}
 		}
@@ -150,13 +150,15 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 			$this->_row=$config['row'];
 			if(!($this->_row instanceof Zend_Db_Table_Row_Abstract))
 			{
+				require_once 'Ea/Security/User/Password/Table/Exception.php';
 				throw new Ea_Security_User_Password_Table_Exception("row is not an instance of Zend_Db_Table_Row_Abstract");
 			}
 		}
 		if(!$this->_passwordCol)
 		{
+			require_once 'Ea/Security/User/Password/Table/Exception.php';
 			// at least user must provide the password col
-			throw new Ea_Security_User_Table_Exception("no password col");
+			throw new Ea_Security_User_Password_Table_Exception("no password col");
 		}
 	}
 	
@@ -183,6 +185,7 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 				// if row given try to set the login with login_col
 				if(!$this->_loginCol)
 				{
+					require_once 'Ea/Security/User/Password/Table/Exception.php';
 					throw new Ea_Security_User_Password_Table_Exception("no login col");
 				}
 				$loginCol=$this->_loginCol;
@@ -195,11 +198,13 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 			
 			if(!$this->_loginCol)
 			{
+				require_once 'Ea/Security/User/Password/Table/Exception.php';
 				throw new Ea_Security_User_Password_Table_Exception("no login col");
 			}
 			
 			if(!$this->_login)
 			{
+				require_once 'Ea/Security/User/Password/Table/Exception.php';
 				throw new Ea_Security_User_Password_Table_Exception("no login");
 			}
 			
@@ -207,6 +212,7 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 			{
 				if(!$this->_dbTableClass)
 				{
+					require_once 'Ea/Security/User/Password/Table/Exception.php';
 					throw new Ea_Security_User_Password_Table_Exception("no db_table_class given");
 				}
 				$c=$this->_dbTableClass;
@@ -214,6 +220,7 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 				$this->_dbTable=new $c();
 				if(!($this->_dbTable instanceof Zend_Db_Table_Abstract))
 				{
+					require_once 'Ea/Security/User/Password/Table/Exception.php';
 					throw new Ea_Security_User_Password_Table_Exception("$c does not extend Zend_Db_Table_Abstract");
 				}
 			}	
@@ -281,4 +288,3 @@ class Ea_Security_User_Password_Table extends Ea_Security_User_Abstract
 	}
 	
 }
-?>

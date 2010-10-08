@@ -16,6 +16,7 @@
 require_once 'Ea/Module/Abstract.php';
 require_once 'Ea/Layout/Grid.php';
 require_once 'Ea/Layout/Record/Adapter/Field.php';
+require_once 'Ea/Layout/Grid/Populate/Adapter/Default.php';
 
 /**
  * My basic module.
@@ -84,4 +85,3 @@ class Module_Index extends Ea_Module_Abstract
 		// application will call preRender() and render()
 	}
 }
-?>

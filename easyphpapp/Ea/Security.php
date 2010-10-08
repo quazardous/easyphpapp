@@ -7,18 +7,10 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091215
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
-
-require_once 'Zend/Acl.php';
-require_once 'Zend/Acl/Role.php';
-require_once 'Zend/Acl/Resource.php';
-require_once 'Zend/Auth.php';
-require_once 'Zend/Auth/Result.php';
-require_once 'Zend/Auth/Storage/Session.php';
-require_once 'Ea/Security/Adapter.php';
 
 /**
  * Security layer class.
@@ -60,6 +52,7 @@ class Ea_Security
 	 */
 	protected function __construct()
 	{
+		require_once 'Zend/Auth.php';
 		$this->_auth=Zend_Auth::getInstance();
 		$this->addRole('anonymous');
 		$this->addRole('public');
@@ -125,6 +118,7 @@ class Ea_Security
 	protected function init()
 	{
 		$this->_init=true;
+		require_once 'Zend/Auth/Storage/Session.php';
 		$this->_auth->setStorage(new Zend_Auth_Storage_Session($this->getNamespace()));
 	}
 	
@@ -140,6 +134,7 @@ class Ea_Security
 	public function authenticate(Ea_Security_User_Abstract $user)
 	{
 		$this->init();
+		require_once 'Ea/Security/Adapter.php';
 		$this->_result=$this->_auth->authenticate(new Ea_Security_Adapter($user));
 		return $this->_result->isValid();
 	}
@@ -337,6 +332,7 @@ class Ea_Security
 	{
 		if(!array_key_exists($resourceId, $this->_resources))
 		{
+			require_once 'Zend/Acl/Resource.php';
 			$this->_resources[$resourceId]=new Zend_Acl_Resource($resourceId);
 		}
 		return $this->_resources[$resourceId];
@@ -360,8 +356,8 @@ class Ea_Security
 	{
 		if(!array_key_exists($roleId, $this->_roles))
 		{
+			require_once 'Zend/Acl/Role.php';
 			$this->_roles[$roleId]=new Zend_Acl_Role($roleId);
-			
 		}
 		return $this->_roles[$roleId];
 	}
@@ -373,7 +369,11 @@ class Ea_Security
 	 */
 	protected function initAcl()
 	{
-		if(!$this->_acl) $this->_acl=new Zend_Acl();
+		if(!$this->_acl)
+		{
+			require_once 'Zend/Acl.php';
+			$this->_acl=new Zend_Acl();
+		}
 	}
 	
 	/**
@@ -404,6 +404,7 @@ class Ea_Security
 		{
 			if(!array_key_exists($roleId, $this->_roles))
 			{
+				require_once 'Zend/Acl/Role.php';
 				$this->_roles[$roleId]=new Zend_Acl_Role($roleId);
 				$this->_acl->addRole($this->_roles[$roleId], $parents);
 				$ret++;
@@ -440,6 +441,7 @@ class Ea_Security
 		{
 			if(!array_key_exists($resourceId, $this->_resources))
 			{
+				require_once 'Zend/Acl/Resource.php';
 				$this->_resources[$resourceId]=new Zend_Acl_Resource($resourceId);
 				$this->_acl->add($this->_resources[$resourceId], $parents);
 				$ret++;
@@ -525,4 +527,3 @@ class Ea_Security
 		return $allowed;
 	}
 }
-?>

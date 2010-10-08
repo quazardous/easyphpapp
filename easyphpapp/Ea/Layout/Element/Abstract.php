@@ -6,14 +6,13 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Base
- * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @author      berlioz [$Author$]
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Abstract.php';
-require_once 'Ea/Layout/Element/Exception.php';
 
 /**
  * Abstract tag element layout class.
@@ -309,6 +308,7 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 			/*
 			 * Cannot render tag without $_tag
 			 */
+		    require_once 'Ea/Layout/Element/Exception.php';
 			throw new Ea_Layout_Element_Exception("no tag defined");
 		}
 		return $render;
@@ -338,4 +338,3 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 		echo ' '.$name.'="'.$this->escape($value).'"';
 	}
 }
-?>

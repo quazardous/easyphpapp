@@ -24,4 +24,3 @@ interface Ea_Page_Interface
 	function escape($string);
 }
 
-?>

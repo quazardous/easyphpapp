@@ -14,7 +14,6 @@
 
 require_once 'Ea/Layout/Record/Adapter/Field/Input/Select.php';
 require_once 'Ea/Model/Layout/Record/Adapter/Interface.php';
-require_once 'Ea/Model/Layout/Form.php';
 
 /**
  * Select input for column.
@@ -31,6 +30,7 @@ class Ea_Model_Layout_Record_Adapter_Input_Enum extends Ea_Layout_Record_Adapter
 	{
 		if(!$model instanceof Ea_Model_Layout_Form)
 		{
+			require_once 'Ea/Model/Layout/Exception.php';
 			throw new Ea_Model_Layout_Exception('Must be an Ea_Model_Layout_Form');
 		}
 		$options=$model->getColumnEnum($column);
@@ -42,5 +42,3 @@ class Ea_Model_Layout_Record_Adapter_Input_Enum extends Ea_Layout_Record_Adapter
 		$this->_filter=array($model, 'filterRecordValue');
 	}	
 }
-
-?>

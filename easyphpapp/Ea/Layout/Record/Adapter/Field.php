@@ -75,4 +75,3 @@ class Ea_Layout_Record_Adapter_Field implements Ea_Layout_Record_Adapter_Interfa
 	}
 }
 
-?>

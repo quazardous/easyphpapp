@@ -62,4 +62,3 @@ class Ea_Layout_Record_Config_Modifier_Column implements Ea_Layout_Record_Config
 		return $config;
 	}
 }
-?>

@@ -7,13 +7,12 @@
  * @package     Service
  * @subpackage  GMap
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.5-20100524
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Service/GMap/Point.php';
-require_once 'Ea/Service/GMap/GeocoderV2/ResultSet.php';
 
 class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
 {
@@ -49,11 +48,13 @@ class Ea_Service_GMap_GeocoderV2_Result extends Ea_Service_GMap_Point
 	
 	public function setLat($lat)
 	{
+		require_once 'Ea/Service/GMap/GeocoderV2/Exception.php';
 		throw new Ea_Service_GMap_GeocoderV2_Exception("setLat() is not allowed");
 	}
 	
 	public function setLng($lng)
 	{
+		require_once 'Ea/Service/GMap/GeocoderV2/Exception.php';
 		throw new Ea_Service_GMap_GeocoderV2_Exception("setLng() is not allowed");
 	}
 	

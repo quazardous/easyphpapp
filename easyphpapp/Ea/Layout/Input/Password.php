@@ -21,4 +21,3 @@ class Ea_Layout_Input_Password extends Ea_Layout_Input_Abstract
 {
 	protected $_type='password';
 }
-?>

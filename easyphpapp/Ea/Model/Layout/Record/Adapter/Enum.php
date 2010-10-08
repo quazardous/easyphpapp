@@ -27,4 +27,3 @@ class Ea_Model_Layout_Record_Adapter_Enum extends Ea_Layout_Record_Adapter_Field
 	}
 }
 
-?>

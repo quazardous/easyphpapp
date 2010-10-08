@@ -21,4 +21,3 @@ class Ea_Security_User_Password_Table_Exception extends Exception
 {
 	
 }
-?>

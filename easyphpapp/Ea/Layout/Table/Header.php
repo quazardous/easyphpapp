@@ -24,4 +24,3 @@ class Ea_Layout_Table_Header extends Ea_Layout_Table_Cell
 	protected $_tag='th';
 }
 
-?>

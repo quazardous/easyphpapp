@@ -30,4 +30,3 @@ interface Ea_Model_Layout_Header_Adapter_Interface
 	 */
 	function getHeader($column, Ea_Model_Layout $model);
 }
-?>

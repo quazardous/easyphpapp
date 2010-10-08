@@ -199,4 +199,3 @@ class Ea_Layout_Input_Date extends Ea_Layout_Input_Abstract
     }
 	
 }
-?>

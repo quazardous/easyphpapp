@@ -7,20 +7,12 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.4-20100308
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/Input/Abstract.php';
 require_once 'Ea/Layout/Input/Array.php';
-require_once 'Ea/Layout/Input/Hidden.php';
-require_once 'Ea/Layout/Input/Radio.php';
-require_once 'Ea/Layout/Input/File.php';
-require_once 'Ea/Layout/Input/Submit.php';
-require_once 'Ea/Layout/Form/Exception.php';
-require_once 'Zend/Session/Namespace.php';
 
 /**
  * Form layout class.
@@ -105,6 +97,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	
 	public function setName($value)
 	{
+		require_once 'Ea/Layout/Form/Exception.php';
 		throw new Ea_Layout_Form_Exception("name : forbidden attribute for form");
 	}
 	
@@ -115,6 +108,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	
 	public function setEnctype($value)
 	{
+		require_once 'Ea/Layout/Form/Exception.php';
 		throw new Ea_Layout_Form_Exception("enctype : forbidden attribute for form");
 	}
 	
@@ -133,6 +127,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if($layout instanceof Ea_Layout_Form)
 		{
+			require_once 'Ea/Layout/Form/Exception.php';
 			throw new Ea_Layout_Form_Exception('Form cannot contain form');
 		}
 		else if($layout instanceof Ea_Layout_Input_Abstract)
@@ -206,6 +201,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					//must be an input
 					if(!($arr[$pid] instanceof Ea_Layout_Input_Abstract))
 					{
+						require_once 'Ea/Layout/Form/Exception.php';
 						throw new Ea_Layout_Form_Exception('Not an input');
 					}
 					// special case four radio buttons
@@ -237,6 +233,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 					//must be an array
 					if(!($arr[$pid] instanceof Ea_Layout_Input_Array))
 					{
+						require_once 'Ea/Layout/Form/Exception.php';
 						throw new Ea_Layout_Form_Exception('Not an array');
 					}
 					$arr=&$arr[$pid]->_items;
@@ -290,13 +287,18 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function addSubmitCallback($callback, $id=null, $module=true)
 	{
-		if($this->getMethod()!='post') throw new Ea_Layout_Form_Exception('Only for post form');
+		if($this->getMethod()!='post')
+		{
+			require_once 'Ea/Layout/Form/Exception.php';
+			throw new Ea_Layout_Form_Exception('Only for post form');
+		}
 		if(!$id)
 		{
 			$id = '*'; //general callback
 		}
 		else
 		{
+			require_once 'Ea/Layout/Input/Abstract.php';
 			$id = Ea_Layout_Input_Abstract::get_name_from_id($id);
 		}
 		if(!array_key_exists($id, $this->_submitCallbacks)) $this->_submitCallbacks[$id]=array();
@@ -320,7 +322,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function triggerSubmitCallbacks($triggeringId=null)
 	{
-		if($this->getMethod()!='post') throw new Ea_Layout_Form_Exception('Only for post form');
+		if($this->getMethod()!='post')
+		{
+			require_once 'Ea/Layout/Form/Exception.php';
+			throw new Ea_Layout_Form_Exception('Only for post form');
+		}
 		if($this->_submitCallbacksTriggered) return true;
 		$this->_submitCallbacksTriggered=true;
 		if(!$this->catchInput()) return false;
@@ -328,6 +334,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		{
 			$triggeringId=$this->_submittingInputId;
 		}
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$triggeringId = Ea_Layout_Input_Abstract::get_name_from_id($triggeringId);
 		$n=0;
 
@@ -413,6 +420,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			$page=$this->getPage();
 			if(!$page instanceof Ea_Page)
 			{
+				require_once 'Ea/Layout/Form/Exception.php';
 				throw new Ea_Layout_Form_Exception('Cannot use route outside EasyPhpApp application engine !');
 			}
 			return $page->getApp()->url($this->getAction());
@@ -442,6 +450,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				$this->_method=$method;
 				break;
 			default:
+				require_once 'Ea/Layout/Form/Exception.php';
 				throw new Ea_Layout_Form_Exception("$method: unknown method");
 		}
 	}
@@ -472,6 +481,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if(!$id)
 		{
+			require_once 'Ea/Layout/Form/Exception.php';
 			throw new Ea_Layout_Form_Exception('Empty Id');
 		}
 		$this->_id=$id;
@@ -484,6 +494,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	public function getId($string=true)
 	{
+		require_once 'Ea/Layout/Input/Abstract.php';
 		if($string) Ea_Layout_Input_Abstract::get_name_from_id($this->_id);
 		return $this->_id;
 	}
@@ -538,6 +549,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 		{
 			if($this->getMethod()=='post')
 			{
+				require_once 'Ea/Layout/Input/Hidden.php';
 				//magic input for post
 				$this->add(new Ea_Layout_Input_Hidden($this->getMagicName('id'), $this->getId()));
 			}
@@ -564,6 +576,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 							$tmp=explode('=',$string);
 							if(!self::array_get_from_id($this, $tmp[0]))
 							{
+								require_once 'Ea/Layout/Input/Hidden.php';
 								$this->add(new Ea_Layout_Input_Hidden($tmp[0], $tmp[1]), false);
 							}
 						}
@@ -640,14 +653,21 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	static public function array_reset_from_id(&$array, $id, $value)
 	{
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$id=Ea_Layout_Input_Abstract::get_id_from_name($id);
 		$arr=&$array;
 		$i=0;
 		foreach($id as $pid)
 		{
 			// can't be null part of id
-			if($pid===null) throw new Ea_Layout_Form_Exception('incorrect input id');
-			if(!isset($arr[$pid])) throw new Ea_Layout_Form_Exception('incorrect input id');
+			if($pid===null)
+			{
+				throw new Ea_Layout_Form_Exception('incorrect input id');
+			}
+			if(!isset($arr[$pid]))
+			{
+				throw new Ea_Layout_Form_Exception('incorrect input id');
+			}
 			if(($i+1)==count($id))
 			{
 				$arr[$pid]=$value;
@@ -668,6 +688,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	static public function array_exist_from_id(&$array, $id)
 	{
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$id=Ea_Layout_Input_Abstract::get_id_from_name($id);
 		$arr=&$array;
 		$i=0;
@@ -791,6 +812,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				return true;
 				break;
 			default:
+				require_once 'Ea/Layout/Form/Exception.php';
 				throw new Ea_Layout_Form_Exception('Use Ea_App::getParam()');
 		}
 	}
@@ -822,6 +844,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				}
 				break;
 			default:
+				require_once 'Ea/Layout/Form/Exception.php';
 				throw new Ea_Layout_Form_Exception('Cannot do that !');
 		}
 	}
@@ -855,11 +878,13 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	{
  		if($this->usePostData())
  		{
+ 			require_once 'Ea/Layout/Form/Exception.php';
  			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
  		}
  		$input=self::array_get_from_id($this->_items, $offset);
  		if(!($input instanceof Ea_Layout_Input_Abstract))
  		{
+ 			require_once 'Ea/Layout/Form/Exception.php';
  			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
  		}
  		$input->setValue($value);
@@ -870,6 +895,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
  	{
  		if($this->usePostData())
  		{
+ 			require_once 'Ea/Layout/Form/Exception.php';
  			throw new Ea_Layout_Form_Exception('Data update not allowed here !');
  		}
  		$this->offsetSet($offset, null);
@@ -967,17 +993,19 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	protected function getSession()
 	{
+		$page=$this->getPage();
+		if($page instanceof Ea_Page)
+		{
+			return $this->getPage()->getApp()->getSession();
+		}
 		if(!$this->_session)
 		{
-			$page=$this->getPage();
+			require_once 'Ea/Autoloader.php';
+			Ea_Autoloader::autoload();
+			
+			require_once 'Zend/Session/Namespace.php';
 			if($page instanceof Ea_Page)
-			{
-				$this->_session=new Zend_Session_Namespace($this->getPage()->getApp()->getNamespace().'.forms');
-			}
-			else
-			{
-				$this->_session=new Zend_Session_Namespace($this->_namespace);
-			}
+			$this->_session=new Zend_Session_Namespace($this->_namespace);
 		}
 		return $this->_session;
 	}
@@ -991,7 +1019,6 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	 */
 	protected function useStore($use=true)
 	{
-		Zend_Session::start();
 		$this->_useStore=$use;
 	}
 	
@@ -1009,6 +1036,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	{
 		if(!$this->isStore())
 		{
+			require_once 'Ea/Layout/Form/Exception.php';
 			throw new Ea_Layout_Form_Exception('No storage define : use Ea_Module_Abstract::registerForm()');
 		}
 	}
@@ -1122,7 +1150,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileName($inputId)
 	{
 		if(!isset($_FILES)) return null;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return self::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'name'));
 	}
 
@@ -1135,7 +1165,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileType($inputId)
 	{
 		if(!isset($_FILES)) return null;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return Ea_Layout_Form::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'type'));
 	}
 
@@ -1148,7 +1180,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileTmpName($inputId)
 	{
 		if(!isset($_FILES)) return null;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return Ea_Layout_Form::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'tmp_name'));
 	}
 
@@ -1161,7 +1195,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileSize($inputId)
 	{
 		if(!isset($_FILES)) return null;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return Ea_Layout_Form::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'size'));
 	}
 
@@ -1174,7 +1210,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileError($inputId)
 	{
 		if(!isset($_FILES)) return -1;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return Ea_Layout_Form::array_get_from_id($_FILES, Ea_Layout_Input_File::get_reordered_field_id($inputId,'error'));
 	}
 	
@@ -1187,7 +1225,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function isUploadedFile($inputId)
 	{
 		if(!isset($_FILES)) return false;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return is_uploaded_file($this->getUploadedFileTmpName($inputId));
 	}
 
@@ -1201,7 +1241,9 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function moveUploadedFile($inputId, $destination)
 	{
 		if(!isset($_FILES)) return false;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
+		require_once 'Ea/Layout/Input/File.php';
 		return move_uploaded_file($this->getUploadedFileTmpName($inputId), $destination);
 	}
 
@@ -1218,6 +1260,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 	public function getUploadedFileContents($inputId, $maxlen=null, $offset=null, $flags=null)
 	{
 		if(!isset($_FILES)) return null;
+		require_once 'Ea/Layout/Input/Abstract.php';
 		$inputId=Ea_Layout_Input_Abstract::get_id_from_name($inputId);
 		return file_get_contents($this->getUploadedFileTmpName($inputId), $flags, null, $offset, $maxlen);
 	}

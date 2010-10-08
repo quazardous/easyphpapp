@@ -22,4 +22,3 @@ class Ea_Layout_Table_Exception extends Exception
 {
 	
 }
-?>

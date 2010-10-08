@@ -33,4 +33,3 @@ class Ea_Layout_Br extends Ea_Layout_Single
 		parent::__construct(null, $config);
 	}
 }
-?>

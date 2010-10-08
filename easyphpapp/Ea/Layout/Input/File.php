@@ -144,4 +144,3 @@ class Ea_Layout_Input_File extends Ea_Layout_Input_Abstract
 		return $this->getFileName();
 	}
 }
-?>

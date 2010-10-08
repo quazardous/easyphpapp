@@ -36,4 +36,3 @@ class Ea_Layout_Table_Cell extends Ea_Layout_Container
 	
 }
 
-?>

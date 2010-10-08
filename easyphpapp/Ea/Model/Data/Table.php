@@ -7,15 +7,12 @@
  * @package     Model
  * @subpackage  Data
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Model/Data/Table/Exception.php';
 require_once 'Ea/Model/Data/Abstract.php';
-require_once 'Zend/Db/Table/Abstract.php';
-require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
 
 /**
  * Table Data model class.
@@ -126,6 +123,8 @@ class Ea_Model_Data_Table extends Ea_Model_Data_Abstract
 				$dbTableConfig=$config['db_table_config'];
 			}
 			$dbTableClass=$this->_dbTableClass;
+			require_once 'Zend/Loader.php';
+			Zend_Loader::loadClass($dbTableClass);
 			$this->setDbTable(new $dbTableClass($dbTableConfig));
 		}
 		$this->_analyzeDbTable();

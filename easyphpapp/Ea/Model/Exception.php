@@ -4,20 +4,21 @@
  * A simple form application framework
  * 
  * @category    EasyPhpApp
- * @package     Layout
- * @subpackage  Form
+ * @package     Model
+ * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.4.6-20101007
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 /**
- * Exception class for Ea_Layout_Input_Array.
+ * Exception class for Ea_Model_Abstract.
  * 
- * @see Ea_Layout_Input_Array
+ * @see Ea_Model_Abstract
  */
-class Ea_Layout_Input_Array_Exception extends Exception
+
+class Ea_Model_Exception extends Exception
 {
 	
 }

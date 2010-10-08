@@ -7,14 +7,12 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.0-2001015
+ * @version     0.4.6-20101007 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Layout/Container.php';
-require_once 'Ea/Layout/Table/Cell.php';
-require_once 'Ea/Layout/Table/Header.php';
 
 /**
  * Table row layout class.
@@ -53,6 +51,7 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 		}
 		if(!($content instanceof Ea_Layout_Table_Cell))
 		{
+			require_once 'Ea/Layout/Table/Exception.php';
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Cell");
 		}
 		parent::add($content, $append);
@@ -74,6 +73,7 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 		$cell=new $class($config);
 		if(!$cell instanceof Ea_Layout_Table_Cell)
 		{
+			require_once 'Ea/Layout/Table/Exception.php';
 			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Cell");
 		}
 		$this->add($cell, $append);
@@ -97,6 +97,7 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 		$cell=new $class($config);
 		if(!$cell instanceof Ea_Layout_Table_Header)
 		{
+			require_once 'Ea/Layout/Table/Exception.php';
 			throw new Ea_Layout_Table_Exception("$class not an instance of Ea_Layout_Table_Header");
 		}
 		$this->add($cell, $append);
@@ -105,5 +106,3 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	}
 
 }
-
-?>
