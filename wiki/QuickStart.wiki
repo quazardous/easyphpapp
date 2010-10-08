@@ -19,7 +19,7 @@ Look at the *./examples* folder.
 
 [http://code.google.com/p/easyphpapp/source/browse/#svn/trunk/easyphpapp/examples/routeapp routeapp] shows how to make internal URLs.
 
-Just set up the *./examples/conf/config.php*.
+Just copy *./examples/conf/config-dist.php*. to *./examples/conf/config.php* and modify the path.
 
 Play with the examples.
 
