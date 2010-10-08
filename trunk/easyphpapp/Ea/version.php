@@ -13,4 +13,4 @@
  */
 
 // current version
-define('EA_VERSION', '0.4.6-maki');
+define('EA_VERSION', '0.5.0-pink');
