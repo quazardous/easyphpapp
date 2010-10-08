@@ -41,18 +41,17 @@ $app->jQuery('jquery-ui/jquery-XXX.js');
 // set jQuery UI
 $app->jQueryUi(
 		array(
-			'jquery-ui/ui/jquery.ui.js',
-			'jquery-ui/ui/jquery.ui.core.js',
-			'jquery-ui/ui/jquery.ui.widget.js',
-			'jquery-ui/ui/jquery.ui.tabs.js',
-			'jquery-ui/ui/jquery.ui.datepicker.js',
-			'jquery-ui/ui/i18n/jquery-ui-i18n.js',
-			'jquery-ui/ui/i18n/jquery.ui.datepicker-fr.js',
+			'contrib/jquery-ui/js/jquery-1.4.2.min.js',
+			//'contrib/jquery-ui/js/jquery-ui-1.8.5.custom.min.js',
+			'contrib/jquery-ui/development-bundle/ui/jquery.ui.core.js',
+			'contrib/jquery-ui/development-bundle/ui/jquery.ui.widget.js',
+			'contrib/jquery-ui/development-bundle/ui/jquery.ui.tabs.js',
+			'contrib/jquery-ui/development-bundle/ui/jquery.ui.datepicker.js',
+			'contrib/jquery-ui/development-bundle/ui/i18n/jquery-ui-i18n.js',
+			'contrib/jquery-ui/development-bundle/ui/i18n/jquery.ui.datepicker-fr.js',
 		),
 		array(
-			'jquery-ui/themes/base/jquery-ui.css',
-			'jquery-ui/themes/base/jquery.ui.all.css',
-			'jquery-ui/themes/base/jquery.ui.tabs.css',
+			'contrib/jquery-ui/development-bundle/themes/base/jquery.ui.all.css',
 		)
 	);
 
