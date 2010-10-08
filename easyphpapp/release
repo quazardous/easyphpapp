@@ -1,6 +1,8 @@
 *** XXX ***
 - Todo : Add PDF support from TCPDF
 
+*** 0.5.0-pink ***
+
 *** 0.4.6-maki ***
 - HTML charset is now UTF-8
 - Refactor require_once logic to avoid loops
