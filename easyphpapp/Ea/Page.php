@@ -30,7 +30,7 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 	 * @var string
 	 */
 	protected $_internalEncoding='UTF-8';
-	protected $_targetEncoding=null;
+	protected $_targetEncoding='UTF-8';
 	
 	/**
 	 * Top layout.
@@ -390,7 +390,7 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 		?>
 </html><?php
 		$this->_rendered=true;
-		echo ob_get_clean();
+		echo $this->encode(ob_get_clean());
 	}
 	
 	public function getVersionLayout()
@@ -533,7 +533,7 @@ body
 	 */
 	public function escape($string)
 	{
-		return $this->encode(htmlentities($string, ENT_COMPAT, $this->getInternalEncoding()));
+		return htmlentities($string, ENT_COMPAT, $this->getInternalEncoding());
 	}
 
 	/**
