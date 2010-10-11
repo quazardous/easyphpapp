@@ -7,12 +7,13 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20101007
+ * @version     0.5.0-20101011
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
 require_once 'Ea/Page/Interface.php';
+require_once 'Ea/Encoding/Abstract.php';
 
 /**
  * Page class.
@@ -21,8 +22,16 @@ require_once 'Ea/Page/Interface.php';
  * @see Ea_Layout_Abstract
  * 
  */
-class Ea_Page implements Ea_Page_Interface
+class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 {
+	
+	/**
+	 * Encoding is UTF-8
+	 * @var string
+	 */
+	protected $_internalEncoding='UTF-8';
+	protected $_targetEncoding=null;
+	
 	/**
 	 * Top layout.
 	 * The top layout is where the page starts to render content.
@@ -333,7 +342,7 @@ class Ea_Page implements Ea_Page_Interface
 <?php
 		?><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->getTargetEncoding(); ?>" />
 <?php
 		$isStyle=false;
 		foreach($this->_styles as $style)
@@ -524,21 +533,9 @@ body
 	 */
 	public function escape($string)
 	{
-		return htmlentities($string);
+		return $this->encode(htmlentities($string, ENT_COMPAT, $this->getInternalEncoding()));
 	}
 
-	/**
-	 * Does nothing fot now.
-	 * 
-	 * @param string $string
-	 * @return string
-	 */
-	public function encode($string)
-	{
-		return $string;
-	}
-	
-	
 	/**
 	 * Get an url.
 	 * @see Ea_App::getRoute()

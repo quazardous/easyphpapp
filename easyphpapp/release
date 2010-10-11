@@ -2,6 +2,7 @@
 - Todo : Add PDF support from TCPDF
 
 *** 0.5.0-pink ***
+- Ea_Page extends Ea_Encoding_Abstract to fix special chars trouble
 
 *** 0.4.6-maki ***
 - HTML charset is now UTF-8
