@@ -161,7 +161,7 @@ abstract class Ea_Security_User_Abstract
 	 */
 	public function resetAuthMessages()
 	{
-		$this->_authMessages[]=$message;
+		$this->_authMessages=array();
 	}
 	
 }

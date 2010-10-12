@@ -432,7 +432,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function addMessage($content, $type=Ea_Layout_Messages::notice, $id='default')
 	{
-		if(is_array($content))
+		if(is_array($content)&&!is_object($content))
 		{
 			foreach($content as $contentItem)
 			{
@@ -444,6 +444,7 @@ abstract class Ea_Module_Abstract
 				'content'=>$content,
 				'type'=>$type,
 			));
+
 	}
 	
 	protected function &getMessagesRegister($id='default')

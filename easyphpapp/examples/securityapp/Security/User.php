@@ -72,14 +72,30 @@ class Security_User extends Ea_Security_User_Abstract
 	 */
 	public function authenticate()
 	{
-		// doeas this login exists ?
-		if(!array_key_exists($this->_login, $this->_users)) return false;
+		if(!$this->_login)
+		{
+			$this->addAuthMessage("enter a login !");
+			return false;
+		}
+		
+		// does this login exists ?
+		if(!array_key_exists($this->_login, $this->_users))
+		{
+			$this->addAuthMessage("{$this->_login} : user unknown !");
+			return false;
+		}
 		
 		// yes !
 		$this->_user=$this->_users[$this->_login];
 		
 		// the test :)
-		return $this->_users[$this->_login]['password']==$this->_password;
+		if($this->_users[$this->_login]['password']!=$this->_password)
+		{
+			$this->addAuthMessage("{$this->_login} : bad password !");
+			return false;
+		}
+		$this->addAuthMessage("connected !");
+		return true;
 	}
 
 	/**

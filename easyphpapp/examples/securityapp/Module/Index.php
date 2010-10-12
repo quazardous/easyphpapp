@@ -25,6 +25,12 @@ require_once 'Ea/Layout/Single.php';
 class Module_Index extends Ea_Module_Abstract
 {
 
+	public function init()
+	{
+		require_once 'Ea/Layout/Messages.php';
+		$this->add(new Ea_Layout_Messages());		
+	}
+	
 	public function actionIndex()
 	{
 		// set the page title
@@ -122,5 +128,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		// redirect to action 'index'
 		$this->getApp()->requestRedirect($this->getApp()->getRoute(null, 'index'));
+		
+		$this->addMessage('disconnected !');
 	}
 }

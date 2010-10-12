@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @version     0.5.0-20101012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -84,6 +84,20 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 		return $this->_id;
 	}
 	
+	/**
+	 * Add a message.
+	 * 
+	 * @param string|Ea_Layout_Abstract $content
+	 * @param string $type
+	 */
+	public function addMessage($content, $type=self::notice)
+	{
+		$div=new Ea_Layout_Container('div');
+		$div->addAttribute('class', $type);
+		$div->add($content);
+		$this->add($div);
+	}
+	
 	protected function preRender()
 	{
 		$render=parent::preRender();
@@ -96,10 +110,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 			$ismsg=false;
 			foreach($this->getPage()->getModule()->getMessages($this->getId()) as $message)
 			{
-				$div=new Ea_Layout_Container('div');
-				$div->addAttribute('class', $message->type);
-				$div->add($message->content);
-				$this->add($div);
+				$this->addMessage($message->content, $message->type);
 				$ismsg=true;
 			}
 			return $render&&$ismsg;
