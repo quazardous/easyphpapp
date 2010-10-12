@@ -7,22 +7,14 @@
  * @package     examples
  * @subpackage  securityapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.0.1
+ * @version     0.5.0-20101012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
  */
 
-require_once 'Ea/Layout/Form.php';
-require_once 'Ea/Layout/Table.php';
-require_once 'Ea/Layout/Input/Text.php';
-require_once 'Ea/Layout/Input/Password.php';
-require_once 'Ea/Layout/Input/Submit.php';
-require_once 'Security/User.php';
-require_once 'Ea/Module/Security/Interface.php';
-require_once 'Ea/Layout/Link.php';
-require_once 'Ea/Layout/Single.php';
 require_once 'Ea/Module/Abstract.php';
+require_once 'Ea/Module/Security/Interface.php';
 
 /**
  * Security module.
@@ -40,9 +32,20 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
         {
                 // set the page title
                 $this->getPage()->setTitle('Login form');
-                
+        	
+        		require_once 'Ea/Layout/Form.php';
+				require_once 'Ea/Layout/Table.php';
+				require_once 'Ea/Layout/Input/Text.php';
+				require_once 'Ea/Layout/Input/Password.php';
+				require_once 'Ea/Layout/Input/Submit.php';
+				require_once 'Ea/Layout/Messages.php';
+
+				$this->add(new Ea_Layout_Messages());
+				
                 // declare the form
                 $form=new Ea_Layout_Form('login');
+                // add the form to the page
+                $this->add($form);               
                 
                 // build the form
                 
@@ -63,9 +66,6 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
                 $table->addHeader();
                 $table->addCell(new Ea_Layout_Input_Submit('send', 'Send'));
                 
-                // add the form to the page
-                $this->add($form);
-                
                 $this->add("Valid users are john/doe (user) and aero/smith (admin).");
                 
                 // application will call render
@@ -77,11 +77,17 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
          */
         public function securityDeny()
         {
+        		require_once 'Ea/Layout/Link.php';
+				require_once 'Ea/Layout/Single.php';
                 // set the page title
                 $this->getPage()->setTitle('Security error');
                 
+                require_once 'Ea/Layout/Messages.php';
+
+				$this->add($messages=new Ea_Layout_Messages());
+				
                 // add a cool deny message
-                $this->add($this->getApp()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getApp()->getTargetModule()."::".$this->getApp()->getTargetAction());
+                $messages->addMessage($this->getApp()->getSecurity()->getConnectedUserLogin()." you are not allowed to access ".$this->getApp()->getTargetModule()."::".$this->getApp()->getTargetAction());
                 
                 // classic <br/>
                 $this->getPage()->add(new Ea_Layout_Single('br'));
@@ -99,18 +105,29 @@ class Module_MySecurity extends Ea_Module_Abstract implements Ea_Module_Security
         public function getSecurityUser()
         {
                 // declare the form
+                require_once 'Ea/Layout/Form.php';
                 $form=new Ea_Layout_Form('login');
         
                 if($form->catchInput())
                 {
-                        // instanciate our user with form data and return it to security layer
-                        return new Security_User($form['login'], $form['password']);
-                        // if the user match, the user will be registered and the targeted module and action will be triggered.
+                	require_once 'Security/User.php';
+                    // instanciate our user with form data and return it to security layer
+                    return new Security_User($form['login'], $form['password']);
+                    // if the user match, the user will be registered and the targeted module and action will be triggered.
                 }
                 
                 // returning null means 'no informations'.
                 // security layer will call securityChallenge()
                 return null;
+        }
+
+        public function complete()
+        {
+          $messages=$this->getRouter()->getSecurity()->getMessages();
+          if($messages)
+          {
+            $this->addMessage($messages, 'error');
+          }
         }
         
 }

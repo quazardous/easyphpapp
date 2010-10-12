@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  securityapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091009
+ * @version     0.5.0-20101012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -29,6 +29,8 @@ $app->setModuleClassPrefix('Module');
 
 require_once 'Ea/Security.php';
 $security=Ea_Security::singleton();
+
+$app->showVersion();
 
 // initialize security layer and specify 'my-security' (Module_MySecurity) as security module.
 $app->initSecurity($security, 'my-security');
