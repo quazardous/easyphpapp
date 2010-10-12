@@ -432,6 +432,14 @@ abstract class Ea_Module_Abstract
 	 */
 	public function addMessage($content, $type=Ea_Layout_Messages::notice, $id='default')
 	{
+		if(is_array($content))
+		{
+			foreach($content as $contentItem)
+			{
+				$this->addMessage($contentItem, $type, $id);
+			}
+			return;
+		}
 		array_push($this->getMessagesRegister($id), (object)array(
 				'content'=>$content,
 				'type'=>$type,

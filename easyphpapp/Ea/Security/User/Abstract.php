@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.6-20090210
+ * @version     0.5.0-20101012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -129,31 +129,39 @@ abstract class Ea_Security_User_Abstract
 	}
 	
 	/**
-	 * Keep track of specific authenticate() message.
+	 * Keep track of specific authenticate() messages.
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_authMessage=null;
+	protected $_authMessages=array();
 
 	/**
 	 * Get message.
 	 * 
 	 * @return string
 	 */
-	public function getAuthMessage()
+	public function getAuthMessages()
 	{
-		return $this->_authMessage;
+		return $this->_authMessages;
 	}
 
 	/**
-	 * Enter description here...
+	 * Set specific message.
 	 * 
 	 * @param string $message
-	 * @return unknown_type
 	 */
-	public function setAuthMessage($message)
+	public function addAuthMessage($message)
 	{
-		$this->_authMessage=$message;
+		$this->_authMessages[]=$message;
+	}
+
+	/**
+	 * Reset specific message.
+	 * 
+	 */
+	public function resetAuthMessages()
+	{
+		$this->_authMessages[]=$message;
 	}
 	
 }

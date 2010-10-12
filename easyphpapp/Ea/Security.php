@@ -177,14 +177,26 @@ class Ea_Security
 	 */
 	public function getCode()
 	{
+		if(!$this->_result) return false;
 		switch($this->_result->getCode())
 		{
         	case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND: return self::authCode_IDENTITY_NOT_FOUND; break;
         	case Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS: return self::authCode_IDENTITY_AMBIGUOUS; break;
         	case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID: return self::authCode_CREDENTIAL_INVALID; break;
         	case Zend_Auth_Result::FAILURE_UNCATEGORIZED: return self::authCode_UNCATEGORIZED; break;
-        	default: self::authCode_FAILURE;
+        	default: return self::authCode_FAILURE;
 		}
+	}
+	
+	/**
+	 * Return array of messages.
+	 * 
+	 * @return boolean|array
+	 */
+	public function getMessages()
+	{
+		if(!$this->_result) return false;
+		return $this->_result->getMessages();
 	}
 	
 	/**
