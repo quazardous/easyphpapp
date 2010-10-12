@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6.20101007
+ * @version     0.5.0.20101012
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -74,6 +74,6 @@ class Ea_Security_Adapter implements Zend_Auth_Adapter_Interface
         		default: $code=Zend_Auth_Result::FAILURE;
         	}
         }
-        return new Zend_Auth_Result($code, array('login'=>$this->_user->getLogin(), 'roles'=>$this->_user->getRoles(), 'attributes'=>$this->_user->getAttributes()), (array)$this->_user->getAuthMessage());
+        return new Zend_Auth_Result($code, array('login'=>$this->_user->getLogin(), 'roles'=>$this->_user->getRoles(), 'attributes'=>$this->_user->getAttributes()), (array)$this->_user->getAuthMessages());
     }	
 }
