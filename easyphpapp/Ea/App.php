@@ -1532,19 +1532,16 @@ class Ea_App
 	 */
 	public function getDefaultPage($module=null)
 	{
-		if($this->_defaultPage)
-		{
-			if($module)
-			{
-				$this->_defaultPage->setModule($module);
-			}
-		}
-		else
+		if(!$this->_defaultPage)
 		{
 			$c=$this->getDefaultPageClass();
 			require_once 'Zend/Loader.php';
 			Zend_Loader::loadClass($c);
-			$this->_defaultPage=new $c($module);
+			$this->_defaultPage=new $c;
+		}
+		if($this->_defaultPage&&$module)
+		{
+			$this->_defaultPage->setModule($module);
 		}
 		return $this->_defaultPage;
 	}

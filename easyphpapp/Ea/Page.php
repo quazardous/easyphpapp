@@ -174,40 +174,47 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 			if(array_key_exists('title', $config)) $this->setTitle($config['title']);
 		}
 		
-		require_once 'Ea/Layout/Container.php';
-		$this->_top=new Ea_Layout_Container('body', $this);
-
-		/*
-		 * Can be usefull to make difference between top layout and main layout (where to add new content)
-		 */
-		$this->_main=$this->_top;
-		
-		if($js=$this->getApp()->getJQuery())
-		{
-			$this->addScript($js);
-		}
-		
-		if($ui=$this->getApp()->getJQueryUi())
-		{
-			foreach($ui->js as $js)	$this->addScript($js);
-			if($ui->css)
-			{
-				foreach($ui->css as $css) $this->addStyle($css);
-			}
-		}
-		
 		parent::__construct();
 	} 
 	
 	/**
-	 * Set the module.
+	 * Set the module. This will attach the page to the app !!!
 	 * @see $_module
 	 * 
 	 * @param Ea_Module_Abstract $module
 	 */
 	public function setModule(Ea_Module_Abstract $module)
 	{
-		$this->_module=$module;
+		if(!$this->_module)
+		{
+			$this->_module=$module;
+			//first time : attach to app
+    		/*
+    		 * Can be usefull to make difference between top layout and main layout (where to add new content)
+    		 */
+			require_once 'Ea/Layout/Container.php';
+			$this->_top=new Ea_Layout_Container('body', $this);
+
+			$this->_main=$this->_top;
+    		
+    		if($js=$this->getApp()->getJQuery())
+    		{
+    			$this->addScript($js);
+    		}
+    		
+    		if($ui=$this->getApp()->getJQueryUi())
+    		{
+    			foreach($ui->js as $js)	$this->addScript($js);
+    			if($ui->css)
+    			{
+    				foreach($ui->css as $css) $this->addStyle($css);
+    			}
+    		}
+		}
+		else
+		{
+			$this->_module=$module;
+		}
 	}
 
 	/**
