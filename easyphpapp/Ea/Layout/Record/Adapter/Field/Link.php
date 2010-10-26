@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      berlioz [$Author$]
- * @version     0.4.6-20101007 [$Id$]
+ * @version     0.5.0-20101026 [$Id$]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -79,7 +79,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 		foreach($fields as $param=>$column)
 		{
 			if(!is_array($column)) $column=array('column'=>$column);
-			if(is_string($param)) $column['column']=$param;
+			if(is_string($param)&&!isset($column['column'])) $column['column']=$param;
 			if(!is_string($param)) $param=$column['column'];
 			$this->_params[$param]=$column;
 			if(isset($column['type'])&&$column['type']=='linktype')
