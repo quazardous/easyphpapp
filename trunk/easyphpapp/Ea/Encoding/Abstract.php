@@ -18,7 +18,7 @@ require_once 'Ea/Encoding/Interface.php';
  * Basic abstract class that need to deal with encoding.
  *
  */
-class Ea_Encoding_Abstract implements Ea_Encoding_Interface
+abstract class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 {
 
 	static protected $_defaultInternalEncoding=null;
@@ -41,6 +41,18 @@ class Ea_Encoding_Abstract implements Ea_Encoding_Interface
 	static public function getDefaultInternalEncoding()
 	{
 		return self::$_defaultInternalEncoding;
+	}
+	
+	public function __construct()
+	{
+		if(!$this->_internalEncoding)
+		{
+			$this->_internalEncoding=self::$_defaultInternalEncoding;
+		}
+		if(!$this->_targetEncoding)
+		{
+			$this->_targetEncoding=self::$_defaultTargetEncoding;
+		}		
 	}
 	
 	protected $_internalEncoding=null;

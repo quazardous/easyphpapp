@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20101007
+ * @version     0.5.0-20101027
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -71,34 +71,6 @@ abstract class Ea_Module_Abstract
 	public function getName()
 	{
 		return $this->_name;
-	}
-	
-	/**
-	 * If no page instance given, the module will instanciate a page object using this class name.
-	 * 
-	 * @var string
-	 */
-	protected $_pageClass='Ea_Page';
-
-	/**
-	 * Set the page class name.
-	 * @see $_pageClass
-	 * 
-	 * @param string $class
-	 */
-	public function setPageClass($class)
-	{
-		$this->_pageClass=$class;
-	}
-	
-	/**
-	 * Get the page class name.
-	 * 
-	 * @return string
-	 */
-	public function getPageClass()
-	{
-		return $this->_pageClass;
 	}
 	
 	/**
@@ -216,18 +188,15 @@ abstract class Ea_Module_Abstract
 	{
 		if(!$this->_page)
 		{
-			$c=$this->getPageClass();
-			require_once 'Zend/Loader.php';
-			Zend_Loader::loadClass($c);
-			$this->setPage(new $c($this));
+			$this->setPage($this->getApp()->getDefaultPage($this));
 		}
 		return $this->_page;
 	}
 	
 	/**
-	 * @param Ea_Page $page
+	 * @param Ea_Page_Interface $page
 	 */
-	public function setPage(Ea_Page $page)
+	public function setPage(Ea_Page_Interface $page)
 	{
 		$this->_page=$page;
 	}

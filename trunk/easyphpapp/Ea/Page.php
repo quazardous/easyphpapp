@@ -196,6 +196,7 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 			}
 		}
 		
+		parent::__construct();
 	} 
 	
 	/**

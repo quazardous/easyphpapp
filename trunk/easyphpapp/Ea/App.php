@@ -1491,4 +1491,58 @@ class Ea_App
 	{
 		return $this->_jQueryUi;
 	}
+
+	/**
+	 * If no page instance given, the module will instanciate a page object using this class name.
+	 * 
+	 * @var string
+	 */
+	protected $_defaultPageClass='Ea_Page';
+
+	/**
+	 * Set the page class name.
+	 * @see $_defaultPageClass
+	 * 
+	 * @param string $class
+	 */
+	public function setDefaultPageClass($class)
+	{
+		$this->_defaultPageClass=$class;
+	}
+	
+	/**
+	 * Get the page class name.
+	 * 
+	 * @return string
+	 */
+	public function getDefaultPageClass()
+	{
+		return $this->_defaultPageClass;
+	}
+	
+	/**
+	 * Default page.
+	 * @var Ea_Page
+	 */
+	protected $_defaultPage=null;
+	
+	/**
+	 * Get the default page.
+	 * @param Ea_Module_Abstract $module
+	 */
+	public function getDefaultPage($module=null)
+	{
+		if($this->_defaultPage)
+		{
+			$this->_defaultPage->setModule($module);
+		}
+		else
+		{
+			$c=$this->getDefaultPageClass();
+			require_once 'Zend/Loader.php';
+			Zend_Loader::loadClass($c);
+			$this->_defaultPage=new $c($module);
+		}
+		return $this->_defaultPage;
+	}
 }
