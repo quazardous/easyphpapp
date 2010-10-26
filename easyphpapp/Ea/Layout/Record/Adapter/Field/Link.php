@@ -140,18 +140,21 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 		}
 		else
 		{
-			$urllist=array();
+			$urllist=false;
 			if(!($this->_url_or_route instanceof Ea_Route))
 			{
 				$urllist=parse_url($this->_url_or_route);
 			}
-			if($urllist&&isset($urllist['query']))
+			if(!$urllist)
+			{
+				$urllist=array();
+			}
+			if(isset($urllist['query']))
 			{
 				parse_str($urllist['query'], $arr);
 			}
 			else
 			{
-				$urllist=array();
 				$arr=array();
 			}
 			$urllistdefault=array();
@@ -175,7 +178,7 @@ class Ea_Layout_Record_Adapter_Field_Link extends Ea_Layout_Record_Adapter_Field
 			if(!$urllist['query']) unset($urllist['query']);
 			$urllist=array_merge($urllist, $urllistdefault);
 			
-			$route=(isset($urllist["scheme"])?$urllist["scheme"]."://":"http://").
+			$route=(isset($urllist["scheme"])?$urllist["scheme"]."://":"").
 	           (isset($urllist["user"])?$urllist["user"].":":"").
 	           (isset($urllist["pass"])?$urllist["pass"]."@":"").
 	           (isset($urllist["host"])?$urllist["host"]:"").
