@@ -7,7 +7,7 @@
  * @package     Tools
  * @subpackage  Xml
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.3-20091224
+ * @version     0.5.0-20101025
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -106,7 +106,7 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	public static function utf8_encode($string, $encoding=null)
 	{
 		if($string===null) return $string;
-		if(!$encoding) $encoding=self::getDefaultInternalEncoding();
+		if(!$encoding) $encoding=$this->getInternalEncoding();
 		if(strtoupper($encoding)=='UTF-8') return $string;
 		if($encoding) return mb_convert_encoding($string, 'UTF-8', $encoding);
 		return mb_convert_encoding($string, 'UTF-8');
@@ -122,7 +122,7 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	public static function utf8_unencode($string, $encoding=null)
 	{
 		if($string===null) return $string;
-		if(!$encoding) $encoding=self::getDefaultInternalEncoding();
+		if(!$encoding) $encoding=$this->getInternalEncoding();
 		if(!$encoding) return $string;
 		if(strtoupper($encoding)=='UTF-8') return $string;
 		return mb_convert_encoding($string, $encoding, 'UTF-8');
