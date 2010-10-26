@@ -185,6 +185,10 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
 	 */
 	public function setModule(Ea_Module_Abstract $module)
 	{
+		require_once 'Ea/Layout/Container.php';
+		$this->_top=new Ea_Layout_Container('body', $this);
+		$this->_main=$this->_top;
+		
 		if(!$this->_module)
 		{
 			$this->_module=$module;
@@ -192,10 +196,6 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
     		/*
     		 * Can be usefull to make difference between top layout and main layout (where to add new content)
     		 */
-			require_once 'Ea/Layout/Container.php';
-			$this->_top=new Ea_Layout_Container('body', $this);
-
-			$this->_main=$this->_top;
     		
     		if($js=$this->getApp()->getJQuery())
     		{
