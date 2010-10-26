@@ -1534,7 +1534,10 @@ class Ea_App
 	{
 		if($this->_defaultPage)
 		{
-			$this->_defaultPage->setModule($module);
+			if($module)
+			{
+				$this->_defaultPage->setModule($module);
+			}
 		}
 		else
 		{
