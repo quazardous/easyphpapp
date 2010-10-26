@@ -28,6 +28,8 @@ $app=Ea_App::singleton('basicapp');
 // you are responsible to configure your include path so that it can be aware of that directory
 $app->setModuleClassPrefix('Module');
 
+$app->getDefaultPage();
+
 // show a simple box with version info
 $app->showVersion();
 
