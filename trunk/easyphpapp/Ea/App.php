@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20101007
+ * @version     0.5.2-20110627
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -1364,6 +1364,7 @@ class Ea_App
 	public function showVersion($show=true)
 	{
 		$this->_showVersion=$show;
+		$this->applyDefaultStyle();
 	}
 	
 	public function isShowVersion()
