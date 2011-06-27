@@ -13,4 +13,4 @@
  */
 
 // current version
-define('EA_VERSION', '0.5.1-pink');
+define('EA_VERSION', '0.5.2-pink');
