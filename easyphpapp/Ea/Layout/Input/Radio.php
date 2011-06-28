@@ -6,8 +6,8 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      berlioz [$Author$]
- * @version     0.4.6-20101007 [$Id$]
+ * @author      berlioz
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -20,6 +20,7 @@ require_once 'Ea/Layout/Input/Abstract.php';
 class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 {
 	protected $_type='radio';
+	protected $_labelBefore = false;
 
 	/**
 	 * Ea_Layout_Input_Abstract constructor.
@@ -40,18 +41,6 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 		$this->setLabel($label);
 	}
 
-	/**
-	 * Label of the input.
-	 * 
-	 * @var string|Ea_Layout_Abstract
-	 */
-	protected $_label=null;
-	
-	public function setLabel($label)
-	{
-		$this->_label=$label;
-	}	
-	
 	/*public function setAttributeId($value)
 	{
 		parent::setAttributeId($value);
@@ -212,16 +201,5 @@ class Ea_Layout_Input_Radio extends Ea_Layout_Input_Abstract
 		$this->_setAttribute('value', $this->getRadioValue());
 		return $render;
 	}
-	
-	protected function render()
-	{
-		parent::render();
-		// TODO : think about it vs add()
-		if($this->_label)
-		{
-			require_once 'Ea/Layout/Label.php';
-			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
-			$label->display();
-		}
-	}
+
 }
