@@ -145,6 +145,7 @@ class Ea_Layout_Input_Date extends Ea_Layout_Input_Abstract
 	public function __construct($id=null, $value=null, $format=null, $formFormat=null, $config=null)
 	{
 		parent::__construct($id, $value, $config);
+	  $this->addAttribute('class', 'date');
 		if($format) $this->setFormat($format, $formFormat);
 	}
 	
