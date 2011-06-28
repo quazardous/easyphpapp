@@ -94,7 +94,7 @@ abstract class Ea_Model_Data_Abstract extends Ea_Model_Abstract
 	protected $_defaultDateDbformat='%Y-%m-%d';
 	protected $_defaultDatetimeDbformat='%Y-%m-%d %H:%M:%S';
 	
-	// TODO : qu'est Áa fout l‡ ?
+	// TODO : qu'est √ßa fout l√† ?
 	protected function initOracleDbDateFormat()
 	{
 		$query='SELECT value FROM V$NLS_Parameters WHERE parameter =\'NLS_DATE_FORMAT\'';
