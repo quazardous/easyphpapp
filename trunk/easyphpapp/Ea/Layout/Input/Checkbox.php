@@ -6,8 +6,8 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      berlioz [$Author$]
- * @version     0.4.6-20101007 [$Id$]
+ * @author      berlioz
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -20,6 +20,7 @@ require_once 'Ea/Layout/Input/Abstract.php';
 class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 {
 	protected $_type='checkbox';
+	protected $_labelBefore = false;
 	
 	/**
 	 * Ea_Layout_Input_Abstract constructor.
@@ -37,18 +38,6 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 		if($checked!==null)$this->setChecked($checked);
 		$this->setLabel($label);
 		$this->protectAttribute('checked', 'setChecked', 'isChecked');
-	}
-	
-	/**
-	 * Label of the input.
-	 * 
-	 * @var string|Ea_Layout_Abstract
-	 */
-	protected $_label=null;
-	
-	public function setLabel($label)
-	{
-		$this->_label=$label;
 	}
 	
 	/**
@@ -116,28 +105,16 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
      * 
      * @param boolean $remember
      */
-    public function rememberValue($defaultValue=false)
-    {
-    	parent::rememberValue($defaultValue);
-    	$input=$this->getForm()->getInputFromSession($this->getId());
-    	if($input) $this->setChecked($input->isChecked());
-    }
+  public function rememberValue($defaultValue=false)
+  {
+  	parent::rememberValue($defaultValue);
+  	$input=$this->getForm()->getInputFromSession($this->getId());
+  	if($input) $this->setChecked($input->isChecked());
+  }
 	
 	public function __sleep()
-    {
-        return array_merge(parent::__sleep(), array('_checked'));
-    }
-    
-	protected function render()
-	{
-		parent::render();
-		// TODO : think about it vs add()
-		if($this->_label)
-		{
-			require_once 'Ea/Layout/Label.php';
-			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
-			$label->display();
-		}
-	}
+  {
+      return array_merge(parent::__sleep(), array('_checked'));
+  }
     
 }

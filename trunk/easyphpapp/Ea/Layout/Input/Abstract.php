@@ -6,8 +6,8 @@
  * @category    EasyPhpApp
  * @package     Layout
  * @subpackage  Form
- * @author      berlioz [$Author$]
- * @version     0.4.6-20101007 [$Id$]
+ * @author      berlioz
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -95,6 +95,21 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	{
 		return $this->_disabled;
 	}
+
+	/**
+	 * Label of the input.
+	 * 
+	 * @var string|Ea_Layout_Abstract
+	 */
+	protected $_label=null;
+	
+	protected $_labelBefore = true;
+	
+	public function setLabel($label, $before=null)
+	{
+		$this->_label=$label;
+		if ($before !== null) $this->_labelBefore = $before;
+	}	
 	
 	/**
 	 * Ea_Layout_Input_Abstract constructor.
@@ -374,41 +389,58 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
         return array('_id', '_value');
     }
 	    
-    /**
-     * Set remember Value.
-     * 
-     * @param string $defaultValue
-     * 
-     * @param boolean $remember
-     */
-    public function rememberValue($defaultValue=false)
-    {
-    	if($this->getForm())
-    	{
-    		$this->getForm()->assertStore();
-    	}
-    	if($this->_value===null)
-    	{
-    		$this->setValue($this->getForm()->getValueFromSession($this->getId()));
-    	}
-    	if($defaultValue!==false)
-    	{
-    		$this->setDefaultValue($defaultValue);
-    	}
-    }
-    
-    /**
-     * For now, set value if no current value.
-     * 
-     * @param string $value
-     * 
-     * @return unknown_type
-     */
-    public function setDefaultValue($value)
-    {
-    	if($this->_value===null)
-    	{
-    		$this->setValue($value);
-    	}
-    }
+  /**
+   * Set remember Value.
+   * 
+   * @param string $defaultValue
+   * 
+   * @param boolean $remember
+   */
+  public function rememberValue($defaultValue=false)
+  {
+  	if($this->getForm())
+  	{
+  		$this->getForm()->assertStore();
+  	}
+  	if($this->_value===null)
+  	{
+  		$this->setValue($this->getForm()->getValueFromSession($this->getId()));
+  	}
+  	if($defaultValue!==false)
+  	{
+  		$this->setDefaultValue($defaultValue);
+  	}
+  }
+  
+  /**
+   * For now, set value if no current value.
+   * 
+   * @param string $value
+   * 
+   * @return unknown_type
+   */
+  public function setDefaultValue($value)
+  {
+  	if($this->_value===null)
+  	{
+  		$this->setValue($value);
+  	}
+  }
+   
+  protected function render() {
+  		// TODO : think about it vs add()
+		if($this->_label&&$this->_labelBefore)
+		{
+			require_once 'Ea/Layout/Label.php';
+			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
+			$label->display();
+		}
+		parent::render();
+    if($this->_label&&!$this->_labelBefore)
+		{
+			require_once 'Ea/Layout/Label.php';
+			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
+			$label->display();
+		}		
+  }
 }

@@ -7,7 +7,7 @@
  * @package     Page
  * @subpackage  Page
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.0-20101011
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -199,7 +199,7 @@ class Ea_Page extends Ea_Encoding_Abstract implements Ea_Page_Interface
     		
     		if($js=$this->getApp()->getJQuery())
     		{
-    			$this->addScript($js);
+    			if ($js!==true) $this->addScript($js);
     		}
     		
     		if($ui=$this->getApp()->getJQueryUi())

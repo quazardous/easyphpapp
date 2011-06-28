@@ -1441,9 +1441,9 @@ class Ea_App
 	/**
 	 * Set jQuery support.
 	 * 
-	 * @param string $js path for the jquery file.
+	 * @param string $js true or path for the jquery file.
 	 */
-	public function jQuery($js='jquery.js')
+	public function jQuery($js=true)
 	{
 		$this->_jQuery=$js;
 	}
