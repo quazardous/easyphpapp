@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20101007
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -436,17 +436,21 @@ class Ea_Security
 	public function addResource($resourceIds, $parents=null)
 	{
 		$this->initAcl();
-		if(!is_array($resourceIds))
-		{
-			$resourceIds=array($resourceIds);
-		}
-		if($parents!==null)
-		{
+		if ($parents!==null) {
 			if(!is_array($parents)) $parents=array($patents);
 			foreach($parents as $parent)
 			{
 				$this->addResource($parent);
 			}
+		}
+		elseif ($resourceIds != '*') {
+		  // if no parent it mean it s part of 'all'
+		  $parents = '*';
+		  $this->addResource($parents);
+		}
+		if(!is_array($resourceIds))
+		{
+			$resourceIds=array($resourceIds);
 		}
 		$ret=0;
 		foreach($resourceIds as $resourceId)
@@ -455,7 +459,7 @@ class Ea_Security
 			{
 				require_once 'Zend/Acl/Resource.php';
 				$this->_resources[$resourceId]=new Zend_Acl_Resource($resourceId);
-				$this->_acl->add($this->_resources[$resourceId], $parents);
+				$this->_acl->addResource($this->_resources[$resourceId], $parents);
 				$ret++;
 			}
 		}
@@ -467,10 +471,10 @@ class Ea_Security
 	 * @see Zend_Acl::allow()
 	 * 
 	 * @param string|array(string) $roleIds
-	 * @param string|array(string) $resourceIds
+	 * @param string|array(string) $resourceIds by default allow on all (*)
 	 * @param string|array(string) $privilegeIds
 	 */
-	public function allow($roleIds, $resourceIds=null, $privilegeIds=null)
+	public function allow($roleIds, $resourceIds='*', $privilegeIds=null)
 	{
 		$this->initAcl();
 		$this->addRole($roleIds);
@@ -502,8 +506,7 @@ class Ea_Security
 	 * @param string $privilegeId
 	 * @return numeric
 	 */
-	public function isAllowed($resourceId = null, $privilegeId = null)
-    {
+	public function isAllowed($resourceId = null, $privilegeId = null) {
     	// if no rules always allowed...
 		if(!$this->_acl) return true;
 		
@@ -511,10 +514,12 @@ class Ea_Security
 		if($this->isConnectedUser())
 		{
 			$roles=$this->getConnectedUserRoles();
+			// if connected you are 'connected'
+			$roles='connected';
 		}
 		else
 		{
-			// if not connected you are anonymous
+			// if not connected you are 'anonymous'
 			$roles='anonymous';
 		}
 

@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.6-20101007
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -61,7 +61,11 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_dataModel;
 	}
 	
-	protected $_recordAdapterPrefix='Ea_Model_Layout_Record_Adapter';
+	/**
+	 * FIFO for class prefix.
+	 * @var array
+	 */
+	protected $_recordAdapterPrefix=array('Ea_Model_Layout_Record_Adapter');
 	protected $_defaultRecordAdapterName = 'String';
 	protected $_defaultRecordAdapterNameByType=array(
 		'string' => 'String',
@@ -109,9 +113,25 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_defaultRecordAdapterName;
 	}
 	
+	/**
+	 * Return a valid adapter class for the given name.
+	 * @param string $name
+	 * @return string|boolean
+	 */
 	protected function getAdapterClassFromName($name)
 	{
-		return $this->_recordAdapterPrefix.'_'.ucfirst($name);
+	  require_once 'Zend/Loader.php';
+	  foreach ($this->_recordAdapterPrefix as $prefix) {
+	    try {
+	      $class = $prefix.'_'.ucfirst($name);
+	      Zend_Loader::loadClass($class);
+	    }
+	    catch (Zend_Exception $e) {
+	      //nothing
+	    }
+	    if (class_exists($class, false)) return $class;
+	  }
+		return false;
 	}
 	
 	/**
@@ -208,7 +228,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	/**
 	 * Return an instance of Ea_Layout_Record_Adapter_Interface for the column.
 	 * 
-	 * @param $name column
+	 * @param string $column
 	 * @return Ea_Layout_Record_Adapter_Interface
 	 */
 	public function getColumnAdapter($column)
@@ -224,6 +244,10 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 				$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column));
 			}
 			$class=$this->getAdapterClassFromName($name);
+		}
+		if (!$class) {
+		  require_once 'Ea/Model/Layout/Exception.php';
+			throw new Ea_Model_Layout_Exception("No adapter class for $column");
 		}
 		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);

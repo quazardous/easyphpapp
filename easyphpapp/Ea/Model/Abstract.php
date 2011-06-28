@@ -7,7 +7,7 @@
  * @package     Model
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091123
+ * @version     0.5.2-20110628
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -98,6 +98,19 @@ abstract class Ea_Model_Abstract
 		$this->_columns=array();
 	} 
 	
+	/**
+	 * Remove given columns
+	 * @param array|string $columns
+	 */
+	public function delColumn($columns) {
+	  if($columns=='*') $columns=$this->getColumns();
+		else if(!is_array($columns)) $columns=array($columns);
+		foreach($columns as $name)
+		{
+			if (array_key_exists($name, $this->_metadata)) unset($this->_metadata[$name]);
+		}
+	}
+	
 	public function getOrderedColumns()
 	{
 		if(!$this->_ordered)
@@ -117,8 +130,9 @@ abstract class Ea_Model_Abstract
 		return $this->_columns;
 	}
 
-	protected $_defaultDateDbformat=null;
-	protected $_defaultDatetimeDbformat=null;
+	// set db format in abstract is dirty but...
+	protected $_defaultDateDbformat='%Y-%m-%d';
+	protected $_defaultDatetimeDbformat='%Y-%m-%d %H:%M:%S';
 
 	public function setDefaultDateDbformat($format)
 	{

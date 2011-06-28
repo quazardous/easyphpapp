@@ -220,6 +220,13 @@ abstract class Ea_Module_Abstract
 		$this->setRegister($name, $value);
 	}
 	
+	public function __call($name ,array $arguments)
+	{
+	  if ($this->getApp()) {
+		  return call_user_func_array( array($this->getApp(), $name), $arguments);
+	  }
+	}
+	
 	/**
 	 * @param $name
 	 * @return mixed
