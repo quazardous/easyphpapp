@@ -184,17 +184,43 @@ abstract class Ea_Model_Abstract
 	 */
 	public function setColumnMetaPart($columns, $param, $part, $value)
 	{
+	  $this->setColumnMetaPath($columns, array($param, $part), $value);
+	}
+	
+	/**
+	 * Set part of meta data from path.
+	 * 
+	 * @param string|array(string) $name column or list of columns, '*' for all columns
+	 * @param $param
+	 * @param $value
+	 */
+	public function setColumnMetaPath($columns, $path, $value)
+	{
 		if(!is_array($this->_metadata)) $this->_metadata=array();
 		if($columns=='*') $columns=$this->getColumns();
 		else if(!is_array($columns)) $columns=array($columns);
+		if (is_string($path)) $path = explode('/', $path);
+		$l=count($path);
 		foreach($columns as $name)
 		{
-			if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
-			if(!array_key_exists($param, $this->_metadata[$name])) $this->_metadata[$name][$param]=array();
-			if($value===null) unset($this->_metadata[$name][$param][$part]);
-			else $this->_metadata[$name][$param][$part]=$value;
+		  if(!array_key_exists($name, $this->_metadata)) $this->_metadata[$name]=array();
+		  unset($ref);
+		  $ref = &$this->_metadata[$name];
+		  
+		  $i=1;
+		  foreach ($path as $p) {
+		    if ($i==$l) {
+		      if ($value===null) unset($ref[$p]);
+		      else $ref[$p] = $value;
+		    }
+		    else {
+		      if(!array_key_exists($p, $ref)) $ref[$p]=array();
+		      $ref = &$ref[$p];
+		    }
+		    $i++;
+		  }
 		}
-	}
+	}	
 	
 	/**
 	 * Load model definition from xml file.

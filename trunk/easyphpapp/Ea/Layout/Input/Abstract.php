@@ -141,6 +141,13 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 		$this->protectAttribute('name');
 		$this->protectAttribute('id', 'setAttributeId', 'getAttributeId');
 		$this->protectAttribute('disabled', 'setDisabled', 'isDisabled');
+	  if(is_array($config))
+		{
+		  if(array_key_exists('attributes', $config))
+			{
+				$this->setAttributes($config['attributes']);
+			}
+		}
 	}
 
 	public function setAttributeId($value)
