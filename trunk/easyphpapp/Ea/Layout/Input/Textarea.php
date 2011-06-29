@@ -37,6 +37,14 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 		$this->setId($id);
 		$this->setValue($value);
 		$this->noRenderAttribute('value', true);
+		if ($cols==null) {
+		  if (isset($config['cols'])) $cols = $config['cols'];
+		  elseif (isset($config['attributes']['cols'])) $cols = $config['attributes']['cols'];
+		}
+		if ($rows==null) {
+		  if (isset($config['rows'])) $rows = $config['rows'];
+		  elseif (isset($config['attributes']['rows'])) $rows = $config['attributes']['rows'];
+		}
 		if($rows) $this->setAttribute('rows', $rows);
 		if($cols) $this->setAttribute('cols', $cols);
 	}

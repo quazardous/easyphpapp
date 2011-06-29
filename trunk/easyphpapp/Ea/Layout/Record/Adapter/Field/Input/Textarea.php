@@ -24,7 +24,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Textarea extends Ea_Layout_Record_Ada
 	
 	public function __construct($field, $rows=null, $cols=null, $baseId=null, $indexColumn=null, $config=null)
 	{
-		parent::__construct($field, $baseId, $indexColumn, $config);
+	  parent::__construct($field, $baseId, $indexColumn, $config);
 		$this->_rows=$rows;
 		$this->_cols=$cols;
 	}
