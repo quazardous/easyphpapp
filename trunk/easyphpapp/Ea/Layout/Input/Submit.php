@@ -102,7 +102,7 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 	protected function preRender()
 	{
 		$render=parent::preRender();
-		$this->addAttribute('onclick', "return confirm('".addcslashes($this->_confirm, "'")."')");
+		if ($this->_confirm) $this->addAttribute('onclick', "return confirm('".addcslashes($this->_confirm, "'")."')");
 		return $render;
 	}	
 }
