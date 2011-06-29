@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.3.8-20091002
+ * @version     0.5.2-20110629
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -83,6 +83,26 @@ class Ea_Layout_Input_Submit extends Ea_Layout_Input_Abstract
 				$module=false;
 			}
 			$this->addSubmitCallback($callback, $module);
+			$this->protectAttribute('confirm');
 		}
 	}
+	
+	protected $_confirm = null;
+	/**
+	 * Add a confirm popup.
+	 * @param string $confirm
+	 */
+	public function setConfirm($confirm) {
+	  $this->_confirm = $confirm;
+	}
+	public function getConfirm() {
+	  return $this->_confirm;
+	}
+	
+	protected function preRender()
+	{
+		$render=parent::preRender();
+		$this->addAttribute('onclick', "return confirm('".addcslashes($this->_confirm, "'")."')");
+		return $render;
+	}	
 }
