@@ -56,12 +56,13 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	protected $_defaultRecordAdapterName = 'Input_Default';
 	protected $_defaultRecordAdapterNameByType=array(
-		'string' 	=> 'Input_String',
-		'text'   	=> 'Input_Text',
-		'enum'   	=> 'Input_Enum',
-		'boolean'   => 'Input_Boolean',
-		'date'   	=> 'Input_Date',
-		'datetime'  => 'Input_Date',
+		'string'   => 'Input_String',
+		'text'   	 => 'Input_Text',
+	  'number'   => 'Input_Number',
+		'enum'     => 'Input_Enum',
+		'boolean'  => 'Input_Boolean',
+		'date'   	 => 'Input_Date',
+		'datetime' => 'Input_Date',
 	);
 	
 	/**
