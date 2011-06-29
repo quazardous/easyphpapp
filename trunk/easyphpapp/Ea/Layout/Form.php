@@ -371,7 +371,7 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 				{
 					$func=array($this->getPage()->getModule(), $callback['callback']);
 				}
-				call_user_func($func, $this, $id);
+				call_user_func($func, $this, $triggeringId);
 				$n++;
 			}
 		}
