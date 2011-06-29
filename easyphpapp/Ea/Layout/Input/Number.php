@@ -49,13 +49,14 @@ class Ea_Layout_Input_Number extends Ea_Layout_Input_Abstract
 	}
 	
 	/**
-	 * Date input constructor.
+	 * Number input constructor.
 	 * 
 	 * @param string $id
 	 * @param string $value
-	 * @param string $format internal date format
-	 * @param unknown_type $formFormat form date format
-	 * @param unknown_type $config
+	 * @param string $formFormat form number format
+	 * @param string $decPoint decimal point
+	 * @param string $thousandSep thousand separator
+	 * @param array $config
 	 */
 	public function __construct($id=null, $value=null, $formFormat=null, $decPoint=null, $thousandSep=null, $config=null)
 	{

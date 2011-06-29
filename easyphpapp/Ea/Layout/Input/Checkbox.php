@@ -35,7 +35,9 @@ class Ea_Layout_Input_Checkbox extends Ea_Layout_Input_Abstract
 	public function __construct($id=null, $label=null, $checked=null, $value='X', $config=null)
 	{
 		parent::__construct($id, $value, $config);
-		if($checked!==null)$this->setChecked($checked);
+		if($checked!==null) {
+		  $this->setChecked($checked);
+		}
 		$this->setLabel($label);
 		$this->protectAttribute('checked', 'setChecked', 'isChecked');
 	}

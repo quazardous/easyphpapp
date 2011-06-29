@@ -39,7 +39,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Date extends Ea_Layout_Record_Adapter
 	 * 
 	 * @param $field of record
 	 * @param string $format internal date format
-	 * @param unknown_type $formFormat form date format
+	 * @param string $formFormat form date format
 	 * @param $baseId base to construct input name/id.
 	 * @param $indexColumn if given, name of the column usable as index to construct the input name.
 	 * @param $config

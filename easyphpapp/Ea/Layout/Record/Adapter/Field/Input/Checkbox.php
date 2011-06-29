@@ -26,7 +26,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Checkbox extends Ea_Layout_Record_Ada
 	public function __construct($field, $label=null, $value='X', $baseId=null, $indexColumn=null, $config=null)
 	{
 		parent::__construct($field, $baseId, $indexColumn, $config);
-		$this->_value=$value;
+		$this->_value=$value?$value:'X';
 		$this->_label=$label;
 	}
 	
