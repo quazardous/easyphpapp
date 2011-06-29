@@ -18,7 +18,7 @@ require_once 'Ea/Layout/Single.php';
  * Img element layout class.
  * 
  */
-class Ea_Layout_Br extends Ea_Layout_Single
+class Ea_Layout_Img extends Ea_Layout_Single
 {
 	protected $_tag='img';
 
