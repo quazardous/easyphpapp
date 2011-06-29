@@ -333,7 +333,10 @@ abstract class Ea_Layout_Element_Abstract extends Ea_Layout_Abstract
 	{
 		if(is_array($value))
 		{
-			$value=trim(implode(' ', $value));
+		  switch ($name) {
+		    case 'onclick' : $value=trim(implode('; ', $value)); break;
+		    default: $value=trim(implode(' ', $value));
+		  }
 		}
 		echo ' '.$name.'="'.$this->escape($value).'"';
 	}

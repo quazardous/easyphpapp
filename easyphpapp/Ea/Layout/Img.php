@@ -86,10 +86,21 @@ class Ea_Layout_Img extends Ea_Layout_Single
 	  if ($alt!==null) $this->setAlt($alt);
 	  if ($title!==null) $this->setTitle($title);
 		parent::__construct(null, $config);
-		$this->protectAttribute('img');
+		$this->protectAttribute('src');
 		$this->protectAttribute('alt');
 		$this->protectAttribute('title');
 		$this->protectAttribute('width');
 		$this->protectAttribute('height');
+	}
+
+	protected function preRender()
+	{
+		$render=parent::preRender();
+		$this->_setAttribute('src', $this->_src);
+		$this->_setAttribute('alt', $this->_alt);
+		$this->_setAttribute('title', $this->_title);
+		$this->_setAttribute('width', $this->_width);
+		$this->_setAttribute('height', $this->_height);
+		return $render;
 	}
 }
