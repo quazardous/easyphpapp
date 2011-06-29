@@ -39,6 +39,6 @@ class Ea_Layout_Record_Adapter_Field_Input_Checkbox extends Ea_Layout_Record_Ada
 	public function getContent($record, $i)
 	{
 		require_once 'Ea/Layout/Input/Checkbox.php';
-		return new Ea_Layout_Input_Checkbox($this->getId($record, $i), $this->_label, $this->getRawValue($record)==$this->_value, $this->_value, $this->_config);
+		return new Ea_Layout_Input_Checkbox($this->getId($record, $i), $this->_label, $this->getRawValue($record)!=null, $this->_value, $this->_config);
 	}
 }
