@@ -80,9 +80,11 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		switch($this->getColumnType($column))
 		{
 			case 'date': case 'datetime':
-				if($this->_dataModel)
-				{
-					$value=$this->_dataModel->filterRecordValue($column, $value, $data);
+				if($this->_dataModel)	{
+					$value = $this->_dataModel->filterRecordValue($column, $value, $data);
+				}
+				else {
+				  $value = parent::filterRecordValue($column, $value, $data);
 				}
 				return $value;
 			default: return parent::filterRecordValue($column, $value, $data);
