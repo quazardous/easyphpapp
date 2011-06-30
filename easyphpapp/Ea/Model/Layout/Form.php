@@ -64,6 +64,22 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 		'date'   	 => 'Input_Date',
 		'datetime' => 'Input_Date',
 	);
+
+	protected $_defaultRecordAdapterReadonlyName = 'String';
+	protected $_defaultRecordAdapterReadonlyNameByType=array(
+		'string' => 'String',
+		'enum' => 'Enum',
+	  'boolean' => 'Boolean',
+	);	
+
+	protected function getDefaultRecordAdapterNameByType($type, $column)
+	{
+	  if ($this->getColumnAdapterReadonly($column)) {
+	    if(array_key_exists($type, $this->_defaultRecordAdapterReadonlyNameByType)) return $this->_defaultRecordAdapterReadonlyNameByType[$type];
+		  return $this->_defaultRecordAdapterReadonlyName;
+	  }
+		return parent::getDefaultRecordAdapterNameByType($type, $column);
+	}	
 	
 	/**
 	 * Apply special filter on record values.

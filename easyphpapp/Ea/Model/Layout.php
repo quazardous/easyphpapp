@@ -70,11 +70,16 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	protected $_defaultRecordAdapterNameByType=array(
 		'string' => 'String',
 		'enum' => 'Enum',
+	  'boolean' => 'Boolean',
 	);
 
 	protected $_defaultDateFormat='%Y-%m-%d';
 	protected $_defaultDatetimeFormat='%Y-%m-%d %H:%M:%S';
 
+	public function addRecordAdapterPrefix($prefix) {
+	  array_unshift($this->_recordAdapterPrefix, $prefix);
+	}
+	
 	public function setDefaultDateFormat($format)
 	{
 		$this->_defaultDateFormat=$format;
@@ -107,7 +112,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		return $this->_defaultDatetimeDbformat;
 	}
 	
-	protected function getDefaultRecordAdapterNameByType($type)
+	protected function getDefaultRecordAdapterNameByType($type, $column)
 	{
 		if(array_key_exists($type, $this->_defaultRecordAdapterNameByType)) return $this->_defaultRecordAdapterNameByType[$type];
 		return $this->_defaultRecordAdapterName;
@@ -116,12 +121,15 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 	/**
 	 * Return a valid adapter class for the given name.
 	 * @param string $name
+	 * @param string $column
 	 * @return string|boolean
 	 */
-	protected function getAdapterClassFromName($name)
+	protected function getAdapterClassFromName($name, $column)
 	{
 	  require_once 'Zend/Loader.php';
-	  foreach ($this->_recordAdapterPrefix as $prefix) {
+	  $prefixes = $this->_recordAdapterPrefix;
+	  if ($prefix = $this->getColumnAdapterPrefix($column)) array_unshift($prefixes, $prefix);
+	  foreach ($prefixes as $prefix) {
 	    try {
 	      $class = $prefix.'_'.ucfirst($name);
 	      Zend_Loader::loadClass($class);
@@ -241,9 +249,9 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 			$name=$this->getColumnAdapterName($column);
 			if(!$name)
 			{
-				$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column));
+				$name=$this->getDefaultRecordAdapterNameByType($this->getColumnType($column), $column);
 			}
-			$class=$this->getAdapterClassFromName($name);
+			$class=$this->getAdapterClassFromName($name, $column);
 		}
 		if (!$class) {
 		  require_once 'Ea/Model/Layout/Exception.php';
@@ -282,7 +290,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		if($this->_dataModel) return $this->_dataModel->getColumnLabel($column);
 		return $column;
 	}
-	
+		
 	/**
 	 * Apply special filter on record values.
 	 * 
@@ -303,7 +311,7 @@ class Ea_Model_Layout extends Ea_Model_Abstract
 		{
 			case 'date': case 'datetime':
 				//TODO : format data vs layout....
-				if(!$value)return $value;
+				if ($this->emptyDbDate($value)) return null;
 				$dbformat=$this->getColumnDateDbformat($column);
 				$format=$this->getColumnDateFormat($column);
 				if(!$format)
