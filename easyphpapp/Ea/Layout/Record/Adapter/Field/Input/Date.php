@@ -48,7 +48,7 @@ class Ea_Layout_Record_Adapter_Field_Input_Date extends Ea_Layout_Record_Adapter
 	{
 		parent::__construct($field, $baseId, $indexColumn, $config);
 		$this->_format=$format;
-		$this->_formatFormat=$formFormat;
+		$this->_formFormat=$formFormat;
 	}
 	
 	/**
@@ -62,9 +62,9 @@ class Ea_Layout_Record_Adapter_Field_Input_Date extends Ea_Layout_Record_Adapter
 		if(defined('EA_RICH')&&EA_RICH)
 		{
 			require_once 'Ea/Layout/Input/DatePicker.php';
-			return new Ea_Layout_Input_DatePicker($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
+			return new Ea_Layout_Input_DatePicker($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formFormat, $this->_config);
 		}
 		require_once 'Ea/Layout/Input/Date.php';
-		return new Ea_Layout_Input_Date($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formatFormat, $this->_config);
+		return new Ea_Layout_Input_Date($this->getId($record, $i), $this->getRawValue($record), $this->_format, $this->_formFormat, $this->_config);
 	}
 }

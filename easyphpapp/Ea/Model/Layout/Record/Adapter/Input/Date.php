@@ -34,6 +34,6 @@ class Ea_Model_Layout_Record_Adapter_Input_Date extends Ea_Layout_Record_Adapter
 			throw new Ea_Model_Layout_Exception('Must be an Ea_Model_Layout_Form');
 		}
 		parent::__construct($column, $model->getColumnDateDbFormat($column), $model->getColumnDateFormat($column), $model->getBaseId(), $model->getRecordIndexColumn(), $model->getColumnAdapterConfig($column));
-		$this->_filter=array($model, 'filterRecordValue');
+		//$this->_filter=array($model, 'filterRecordValue'); no filter format is handle by input
 	}	
 }

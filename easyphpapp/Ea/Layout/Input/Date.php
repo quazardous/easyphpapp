@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.1-20091130
+ * @version     0.5.2-20110630
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -144,9 +144,9 @@ class Ea_Layout_Input_Date extends Ea_Layout_Input_Abstract
 	 */
 	public function __construct($id=null, $value=null, $format=null, $formFormat=null, $config=null)
 	{
+	  if($format) $this->setFormat($format, $formFormat);
 		parent::__construct($id, $value, $config);
 	  $this->addAttribute('class', 'date');
-		if($format) $this->setFormat($format, $formFormat);
 	}
 	
 	/**
