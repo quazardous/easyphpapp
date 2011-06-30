@@ -154,6 +154,13 @@ abstract class Ea_Model_Abstract
 		return $this->_defaultDatetimeDbformat;
 	}
 	
+	public function emptyDbDate($value) {
+	  if (!$value) return true;
+		if ($value=='0000-00-00') return true;
+		if ($value=='0000-00-00 00:00:00') return true;
+		return false;
+	}
+	
 	/**
 	 * Set meta data.
 	 * 
