@@ -484,6 +484,19 @@ abstract class Ea_Model_Abstract
 			}
 			return $arr;
 		}
+		elseif ($xml_value->list) {
+		  $sep = ",' ";
+		  if ($xml_value->list['sep']) $sep = $xml_value->list['sep']->toString();
+		  $trim = substr($sep, 1);
+		  $sep = $sep[0];
+		  $arr = array();
+		  foreach (preg_split("#(?<!\\\)[{$sep}]#", $xml_value->list->toString()) as $item) {
+		    if ($trim) $item=trim($item, $trim);
+		    else $item=trim($item);
+		    $arr[$item] = $item;
+		  }
+		  return $arr;
+		}
 		return $xml_value->toString();
 	}
 }
