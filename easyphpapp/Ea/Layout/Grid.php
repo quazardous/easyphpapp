@@ -84,7 +84,8 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	
 	public function applyModel(Ea_Model_Layout $model)
 	{
-		//, $headerConfig=null, $recordConfig=null, $headerClass='Ea_Layout_Table_Header', $recordClass='Ea_Layout_Table_Cell'
+	  require_once 'Ea/Model/Layout/Record/Container/Alter/Default.php';
+	  $this->addRecordContainerAlter(new Ea_Model_Layout_Record_Container_Alter_Default($model));
 		foreach($model->getOrderedColumns() as $column)
 		{
 			if($model->getColumnDisplay($column))
@@ -92,8 +93,7 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 				$this->addColumn(
 					$model->getColumnAdapter($column),
 					$model->getColumnHeader($column),
-					$column);/*,
-					$headerConfig, $recordConfig, $headerClass, $recordClass);*/
+					$column);
 			}
 		}
 	} 
@@ -348,26 +348,61 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 		}
 		$this->_columns[$idCol]['header']['content']=$content;
 	}
+
+	
+	/**
+	 * Callback called to modify the cell depending on record.
+	 * 
+	 * @var array(Ea_Layout_Record_Container_Alter_Interface)
+	 */
+	protected $_recordContainerAlters=array();		
+	
+	/**
+	 * Add record config modifier
+	 * 
+	 * @param Ea_Layout_Record_Container_Alter_Interface $modifier
+	 */
+	public function addRecordContainerAlter(Ea_Layout_Record_Container_Alter_Interface $alter)
+	{
+		$this->_recordContainerAlters[]=$alter;	
+	}		
+
+	public function getRecordContainerAlters()
+	{
+		return $this->_recordContainerAlters;
+	}
 		
 	/**
-	 * Callback called to modify the row config depending on record.
-	 * $config=callback($record, $i, $config)
+	 * Callback called to alter the row container depending on record.
 	 * 
 	 * @var array(Ea_Layout_Record_Config_Modifier_Interface)
+	 * @deprecated
 	 */
-	protected $_recordConfigRowModifiers=array();
-	
+	protected $_recordConfigRowModifiers=array();	
+
+	/**
+	 * @deprecated
+	 */
 	public function getRecordConfigRowModifiers()
 	{
 		return $this->_recordConfigRowModifiers;
 	}
 	
 	// TODO => adapter populate
+	/**
+	 * Add record config modifier
+	 * 
+	 * @param Ea_Layout_Record_Config_Modifier_Interface $modifier
+	 * @deprecated
+	 */
 	public function addRecordConfigRowModifier($modifier)
 	{
 		$this->_recordConfigRowModifiers[]=$modifier;	
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function getRecordConfigCellModifiers()
 	{
 		return $this->_recordConfigCellModifiers;
@@ -375,12 +410,18 @@ class Ea_Layout_Grid extends Ea_Layout_Table
 	
 	/**
 	 * Callback called to modify the cell config depending on record.
-	 * $config=callback($record, $i, $column, $config)
 	 * 
 	 * @var array(Ea_Layout_Record_Config_Modifier_Interface)
+	 * @deprecated
 	 */
 	protected $_recordConfigCellModifiers=array();
 	
+	/**
+	 * Add record config modifier
+	 * 
+	 * @param Ea_Layout_Record_Config_Modifier_Interface $modifier
+	 * @deprecated
+	 */
 	public function addRecordConfigCellModifier($modifier)
 	{
 		$this->_recordConfigCellModifiers[]=$modifier;	

@@ -16,6 +16,8 @@
  * Interface to modify config of cell or row depending on record.
  * @see Ea_Layout_Grid::addRecordConfigRowModifier()
  * @see Ea_Layout_Grid::addRecordConfigCellModifier()
+ * @deprecated
+ * @see Ea_Layout_Record_Container_Alter_Interface
  */
 interface Ea_Layout_Record_Config_Modifier_Interface
 {
@@ -27,6 +29,7 @@ interface Ea_Layout_Record_Config_Modifier_Interface
 	 * @param $i
 	 * @param $column
 	 * @return array modified config
+	 * @deprecated
 	 */
 	public function modify($config, $record, $i, $column=null);
 }

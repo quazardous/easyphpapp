@@ -15,7 +15,7 @@
 require_once 'Ea/Layout/Record/Config/Modifier/Interface.php';
 
 /**
- * Little modifier to add alterative classes to rows.
+ * Little modifier to add column classes to rows.
  *
  */
 class Ea_Layout_Record_Config_Modifier_Column implements Ea_Layout_Record_Config_Modifier_Interface
