@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      berlioz [$Author$]
- * @version     0.4.6-20101007 [$Id]
+ * @version     0.5.2-20110701 [$Id]
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -26,30 +26,41 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 	 * 
 	 * @var Ea_Layout_Grid
 	 */
-	protected $_table=null;
+	protected $_grid=null;
 
 	/**
 	 * Return table..
 	 * 
 	 * @return Ea_Layout_Grid
+	 * @deprecated
 	 */
 	public function getTable()
 	{
-		return $this->_table;
+		return $this->_grid;
 	}
+
+	/**
+	 * Return grid..
+	 * 
+	 * @return Ea_Layout_Grid
+	 */
+	public function getGrid()
+	{
+		return $this->_grid;
+	}	
 	
 	/**
-	 * Acknowledge the table.
+	 * Acknowledge the grid.
 	 * 
 	 * @param Ea_Layout_Grid $table
 	 */
-	public function acknowledge(Ea_Layout_Grid $table)
+	public function acknowledge(Ea_Layout_Grid $grid)
 	{
-		$this->_table=$table;
-		$this->_table->assertRow($this->_strictTable);
+		$this->_grid=$grid;
+		$this->_grid->assertRow($this->_strictTable);
 		if($this->_tableTag)
 		{
-			$this->_table->setTag($this->_tableTag);
+			$this->_grid->setTag($this->_tableTag);
 		}
 	}
 	
@@ -133,7 +144,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 	public function getRecordRow($record, $i)
 	{
 		$config=$this->_recordRowConfig;
-		foreach($this->getTable()->getRecordConfigRowModifiers() as $modifier)
+		foreach($this->getGrid()->getRecordConfigRowModifiers() as $modifier)
 		{
 			//FIXME modifiers like that sucks => put it in adapter
 			$config=$modifier->modify($config, $record, $i);
@@ -143,7 +154,12 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 		Zend_Loader::loadClass($class);
 		$row=new $class($config);
 		
-		foreach($this->getTable()->getListColumns() as $idCol)
+	  foreach($this->getGrid()->getRecordContainerAlters() as $alter)
+		{
+			$alter->alter($row, $record, $i, 'vertical');
+		}
+		
+		foreach($this->getGrid()->getListColumns() as $idCol)
 		{
 			$row->add($this->getRecordCell($idCol, $record, $i, 'vertical'));
 		}
@@ -163,13 +179,23 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($this->_headerRowConfig);
-		foreach($this->getTable()->getListColumns() as $idCol)
+	  foreach($this->getGrid()->getRecordContainerAlters() as $alter)
 		{
-			$row->addCell(
-				$this->getTable()->getColumnHeader($idCol),
+			$alter->alter($row, null, null, 'vertical', null, true);
+		}
+		
+		foreach($this->getGrid()->getListColumns() as $idCol)
+		{
+			$cell = $row->addCell(
+				$this->getGrid()->getColumnHeader($idCol),
 				$this->_headerCellConfig, 
 				true, 
 				$this->_headerCellClass);
+		  
+  		foreach($this->getGrid()->getRecordContainerAlters() as $alter)
+  		{
+  			$alter->alter($cell, null, null, 'vertical', $idCol, true);
+  		}
 		}
 		return $row;
 	}
@@ -186,14 +212,22 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$row=new $class($this->_headerRowConfig);
-		
-		if($this->getTable()->isDisplayheader())
+	  foreach($this->getGrid()->getRecordContainerAlters() as $alter)
 		{
-			$row->addCell(
-				$this->getTable()->getColumnHeader($idCol), 
+			$alter->alter($row, null, null, 'horizontal', $idCol, null);
+		}
+		
+		if($this->getGrid()->isDisplayheader())
+		{
+			$cell = $row->addCell(
+				$this->getGrid()->getColumnHeader($idCol), 
 				$this->_headerCellConfig, 
 				true, 
 				$this->_headerCellClass);
+			foreach($this->getGrid()->getRecordContainerAlters() as $alter)
+  		{
+  			$alter->alter($cell, null, null, 'horizontal', $idCol, true);
+  		}				
 		}
 		
 		foreach($records as $i => $record)
@@ -215,7 +249,7 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 	 */
 	public function getRecordCell($idCol, $record, $i, $spread)
 	{
-		$adapter=$this->getTable()->getRecordAdapter($i);
+		$adapter=$this->getGrid()->getRecordAdapter($i);
 		if($adapter&&$adapter!==$this)
 		{
 			// be carefull not to provoque recursion here
@@ -225,18 +259,23 @@ class Ea_Layout_Grid_Populate_Adapter_Default implements Ea_Layout_Grid_Populate
 		require_once 'Zend/Loader.php';
 		Zend_Loader::loadClass($class);
 		$config=$this->_recordCellConfig;
-		foreach($this->getTable()->getRecordConfigCellModifiers() as $modifier)
+		foreach($this->getGrid()->getRecordConfigCellModifiers() as $modifier)
 		{
 			$config=$modifier->modify($config, $record, $i, $idCol);
 		}
 		$cell = new $class($config);
+	  foreach($this->getGrid()->getRecordContainerAlters() as $alter)
+		{
+			$alter->alter($cell, $record, $i, $spread, $idCol);
+		}
+		
 		if($this->_rawRecordValues)
 		{
-			$content=$this->getTable()->getColumnAdapter($idCol)->getRawValue($record);
+			$content=$this->getGrid()->getColumnAdapter($idCol)->getRawValue($record);
 		}
 		else
 		{
-			$content=$this->getTable()->getColumnAdapter($idCol)->getContent($record, $i);
+			$content=$this->getGrid()->getColumnAdapter($idCol)->getContent($record, $i);
 		}
 		$cell->add($content);
 		return $cell;

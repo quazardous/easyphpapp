@@ -36,6 +36,10 @@ abstract class Ea_Model_Abstract
 	 */
 	protected $_metadata=array();
 	
+	public function isColumn($column) {
+	  return array_key_exists($column, $this->_metadata);
+	}
+	
 	public function	getMetaData($column, $param=null, $part=null)
 	{
 		if(!is_array($this->_metadata)) return null;
