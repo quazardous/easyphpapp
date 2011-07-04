@@ -43,10 +43,11 @@ class Ea_Model_Layout_Form extends Ea_Model_Layout
 	
 	protected $_baseId=null;
 	
-	public function setBaseId($baseId)
+	public function setBaseId($baseId, $column=null)
 	{
 		require_once 'Ea/Layout/Input/Abstract.php';
 		$this->_baseId=Ea_Layout_Input_Abstract::get_id_from_name($baseId);
+		if ($column!==null) $this->setRecordIndexColumn($column);
 	}
 	
 	public function getBaseId()
