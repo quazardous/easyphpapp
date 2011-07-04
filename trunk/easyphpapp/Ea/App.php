@@ -198,7 +198,7 @@ class Ea_App
 	 *
 	 * @return Ea_App
 	 */
-	public function getSingleton()
+	public static function getSingleton()
 	{
 		return self::$_singleton;
 	}
