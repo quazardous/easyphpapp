@@ -275,8 +275,9 @@ abstract class Ea_Batch_Abstract
 	    }
 	    else {
 	      $found = false;
-  	    if (preg_match('/^--([a-z][a-z0-9_]*)[=](.*)$/i', $argv[$i], $matches)) {
+  	    if (preg_match('/^(--[a-z][a-z0-9_]*)[=](.*)$/i', $argv[$i], $matches)) {
   	      if (array_key_exists($matches[1], $revopts)) {
+  	        $name = $revopts[$matches[1]];
   	        $found = true;
   	        if (isset($this->_params[$name]['boolean'])&&$this->_params[$name]['boolean']) {
   	          $this->setParam($name, strtolower($matches[2])=='true'||strtolower($matches[2])==1);
