@@ -23,6 +23,7 @@ class Ea_Batch_Exception extends Exception
 	const invalid_param           = 0;
 	const stop                    = 1;
 	const unable_to_open_log_file = 2;
+	const invalid_param_value     = 3;
 	
 	protected $_exitCode;
 	

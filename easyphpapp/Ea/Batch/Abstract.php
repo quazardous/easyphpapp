@@ -153,13 +153,32 @@ abstract class Ea_Batch_Abstract
 	{
 		if(array_key_exists($name, $this->_params))
 		{
-			$this->_params[$name]['value']=$value;
+		  if ($this->validateParam($name, $value)) {
+			  $this->_params[$name]['value']=$value;
+		  }
+		  else {
+		    require_once 'Ea/Batch/Exception.php';
+		    throw new Ea_Batch_Exception("{$name} : invalid param value", Ea_Batch_Exception::invalid_param_value);
+		  }
 		}
 		else
 		{
 		    require_once 'Ea/Batch/Exception.php';
 		    throw new Ea_Batch_Exception("{$name} : invalid param", Ea_Batch_Exception::invalid_param); 
 		}
+	}
+	
+	/**
+	 * Allow batch to valide the param value.
+	 * @param string $name
+	 * @param mixed $value
+	 * @return boolean
+	 */
+	protected function validateParam($name, &$value) {
+	  if (isset($this->_params[$name]['optional'])&&$this->_params[$name]['optional']==false) {
+	    if ($value===null) return false; 
+	  }
+	  return true;
 	}
 	
 	public function __construct($logfile=null)
@@ -228,6 +247,57 @@ abstract class Ea_Batch_Abstract
 		}
 	}
 	
+	public function setParamsFromArgv($argv) {
+	  $revopts=array();
+	  foreach($this->_params as $name => $value)
+	  {
+	    if(isset($value['shortop']))
+	    {
+	      $revopts['-' . $value['shortop']]=$name;
+	    }
+	    if(isset($value['longop']))
+	    {
+	      $revopts['--' . $value['longop']]=$name;
+	    }
+	  }
+	  
+	  $left = array();
+	  for ($i=0; $i<count($argv); $i++) {
+	    if (array_key_exists($argv[$i], $revopts)) {
+	      $name = $revopts[$argv[$i]];
+	      if (isset($this->_params[$name]['boolean'])&&$this->_params[$name]['boolean']) {
+	        $this->setParam($name, true);
+	      }
+	      else {
+	        $i++;
+	        $this->setParam($name, $argv[$i]);
+	      }
+	    }
+	    else {
+	      $found = false;
+  	    if (preg_match('/^--([a-z][a-z0-9_])[=](.*)$/i', $argv[$i], $matches)) {
+  	      if (array_key_exists($matches[1], $revopts)) {
+  	        $found = true;
+  	        if (isset($this->_params[$name]['boolean'])&&$this->_params[$name]['boolean']) {
+  	          $this->setParam($name, strtolower($matches[2])=='true'||strtolower($matches[2])==1);
+  	        }
+  	        else {
+  	          $this->setParam($name, $matches[2]);
+  	        }
+  	      }
+  	    }
+  	    if (!$found) {
+	        $left[] = $argv[$i];
+  	    }
+	    }
+	  }
+	  return $left;
+	}
+	
+	/**
+	 * @deprecated
+	 * @see setParamsFromArgv()
+	 */
 	public function setParamsFromGetopt()
 	{
 		$shortops='';
