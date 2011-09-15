@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Application
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.2-20110627
+ * @version     0.5.2-20110915
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -1545,5 +1545,67 @@ class Ea_App
 			$this->_defaultPage->setModule($module);
 		}
 		return $this->_defaultPage;
+	}
+	
+	/**
+	* Set a one page load persistent message (ie. from form).
+	*
+	* @param string|Ea_Layout_Abstract $content
+	* @param string $type success|notice|warning|error
+	* @param string $id the messages zone
+	* @see Ea_Layout_Messages
+	*/
+	public function addMessage($content, $type=Ea_Layout_Messages::notice, $id='default')
+	{
+	  if(is_array($content)&&!is_object($content))
+	  {
+	    foreach($content as $contentItem)
+	    {
+	      $this->addMessage($contentItem, $type, $id);
+	    }
+	    return;
+	  }
+	  array_push($this->getMessagesRegister($id), (object)array(
+					'content'=>$content,
+					'type'=>$type,
+	  ));
+	
+	}
+	
+	protected function &getMessagesRegister($id='default')
+	{
+	  if(!$this->getRegister('_messages'))
+	  {
+	    $this->setRegister('_messages', array(), true);
+	  }
+	  $all=&$this->getRegister('_messages');
+	  if(!isset($all[$id])) $all[$id]=array();
+	  return $all[$id];
+	}
+	
+	protected function resetMessagesRegister($id='default')
+	{
+	  if(!$this->getRegister('_messages'))
+	  {
+	    return;
+	  }
+	  $all=&$this->getRegister('_messages');
+	  unset($all[$id]);
+	}
+	
+	/**
+	 * Get persistent messages.
+	 *
+	 * @param string $id the messages zone
+	 * @return array
+	 */
+	public function getMessages($id='default')
+	{
+	  return $this->getMessagesRegister($id);
+	}
+	
+	public function resetMessages($id='default')
+	{
+	  $this->resetMessagesRegister($id);
 	}
 }

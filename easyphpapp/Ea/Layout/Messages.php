@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.0-20101012
+ * @version     0.5.2-20110915
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -23,7 +23,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 {
 	protected $_tag='div';
 	
-	const succes='succes';
+	const success='success';
 	const notice='notice';
 	const warning='warning';
 	const error='error';

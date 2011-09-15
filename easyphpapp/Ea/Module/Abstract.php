@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Module
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.0-20101027
+ * @version     0.5.2-20110915
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -389,7 +389,7 @@ abstract class Ea_Module_Abstract
 	protected $_managedMessages=array();
 	
 	/**
-	 * Register a form to manage.
+	 * Register a messages zone to manage.
 	 * 
 	 * @param Ea_Layout_Messages $layout
 	 */
@@ -408,40 +408,7 @@ abstract class Ea_Module_Abstract
 	 */
 	public function addMessage($content, $type=Ea_Layout_Messages::notice, $id='default')
 	{
-		if(is_array($content)&&!is_object($content))
-		{
-			foreach($content as $contentItem)
-			{
-				$this->addMessage($contentItem, $type, $id);
-			}
-			return;
-		}
-		array_push($this->getMessagesRegister($id), (object)array(
-				'content'=>$content,
-				'type'=>$type,
-			));
-
-	}
-	
-	protected function &getMessagesRegister($id='default')
-	{
-		if(!$this->getRegister('_messages'))
-		{
-			$this->setRegister('_messages', array(), true);
-		}
-		$all=&$this->getRegister('_messages');
-		if(!isset($all[$id])) $all[$id]=array();
-		return $all[$id];
-	}
-	
-	protected function resetMessagesRegister($id='default')
-	{
-		if(!$this->getRegister('_messages'))
-		{
-			return;
-		}
-		$all=&$this->getRegister('_messages');
-		unset($all[$id]);
+		$this->getApp()->addMessage($content, $type, $id);
 	}
 
 	/**
@@ -452,12 +419,12 @@ abstract class Ea_Module_Abstract
 	 */
 	public function getMessages($id='default')
 	{
-		return $this->getMessagesRegister($id);
+		return $this->getApp()->getMessages($id);
 	}
 	
 	public function resetMessages($id='default')
 	{
-		$this->resetMessagesRegister($id);
+		$this->getApp()->resetMessages($id);
 	}
 	
 	/**
