@@ -500,7 +500,7 @@ window.onload=function(){ea.onload();};
 	margin: 1px;
 }
 
-.messages .succes
+.messages .success
 {
 	background-color: #efe;
 	color: #070;

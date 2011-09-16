@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.2-20110915
+ * @version     0.5.2-20110916
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -32,7 +32,7 @@ class Ea_Layout_Messages extends Ea_Layout_Container
 	 * Link layout constructor.
 	 * 
 	 * @param string $message
-	 * @param string $type succes|notice|warning|error
+	 * @param string $type success|notice|warning|error
 	 * @param array(string=>mixed) $config associative array of parameters
 	 * 
 	 * - 'callbacks' : an array of "on add layout" callbacks

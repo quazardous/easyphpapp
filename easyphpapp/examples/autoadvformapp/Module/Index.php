@@ -182,7 +182,7 @@ class Module_Index extends Ea_Module_Abstract
 	public function onSubmitIndexSend(Ea_Layout_Form $form, $id)
 	{
 		$_SESSION['submit']=$id;
-		$this->addMessage('onSubmitIndexSend()', 'succes');
+		$this->addMessage('onSubmitIndexSend()', 'success');
 	}
 
 	public function onSubmitIndex(Ea_Layout_Form $form, $id)
