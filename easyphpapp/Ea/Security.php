@@ -7,7 +7,7 @@
  * @package     Application
  * @subpackage  Security
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.5.2-20110628
+ * @version     0.5.2-20110920
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -238,7 +238,7 @@ class Ea_Security
 		$this->init();
 		$identity=$this->_auth->getIdentity();
 		if(!$identity) return array();
-		return $identity['roles'];
+		return (array)$identity['roles'];
 	}
 	
 	public function getConnectedUserRoles()
@@ -510,22 +510,19 @@ class Ea_Security
     	// if no rules always allowed...
 		if(!$this->_acl) return true;
 		
-		$roles=null;
+		$roles=array();
 		if($this->isConnectedUser())
 		{
 			$roles=$this->getConnectedUserRoles();
 			// if connected you are 'connected'
-			$roles='connected';
+			$roles[]='connected';
 		}
 		else
 		{
 			// if not connected you are 'anonymous'
-			$roles='anonymous';
+			$roles[]='anonymous';
 		}
 
-		if($roles===null) $roles=array();
-		if(!is_array($roles)) $roles=array($roles);
-		
 		// always add meta role public
 		if(!in_array('public', $roles))
 		{
@@ -537,6 +534,7 @@ class Ea_Security
 		// allowed if one of the user's role is allowed
 		foreach($roles as $roleId)
 		{
+		  //echo "teste $roleId contre $resourceId : "; echo $this->_acl->isAllowed($roleId, $resourceId, $privilegeId); echo "\n"; 
 			$this->addRole($roleId);
 			$this->addResource($resourceId);
 			$allowed=$allowed||$this->_acl->isAllowed($roleId, $resourceId, $privilegeId);
