@@ -170,7 +170,7 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	 * @param path string
 	 * @return array an array of SimpleXMLElement objects or false in
 	 */
-	public function xpath(string $path)
+	public function xpath($path)
 	{
 		return parent::xpath($this->utf8Encode($path));
 	}
@@ -265,9 +265,9 @@ class Ea_Xml_Element extends SimpleXMLIterator implements Ea_Encoding_Interface
 	 * Adds an attribute to the SimpleXML element
 	 * @return void 
 	 */
-	public function addAttribute($name, $value, $namespace=null)
+	public function addAttribute($name, $value = null, $namespace = null)
 	{
-		parent::addAttribute($this->utf8Encode($name), $this->utf8Encode($value), $this->utf8Encode($namespace));
+		return parent::addAttribute($this->utf8Encode($name), $this->utf8Encode($value), $this->utf8Encode($namespace));
 	}
 	
 	/**
