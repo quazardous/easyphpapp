@@ -21,6 +21,13 @@ require_once 'Ea/Layout/Element/Abstract.php';
  */
 class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 {
+  
+  /**
+   * Default tag is div.
+   * @var string
+   */
+  protected $_tag='div';
+  
 	/**
 	 * Container layout constructor.
 	 * 
