@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     0.4.2-20091218
+ * @version     0.5.3-20111114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -22,7 +22,16 @@ class Ea_Layout_Label extends Ea_Layout_Container
 {
 	protected $_tag='label';
 	
+	/**
+	 * The id of the input or the input itself.
+	 * @var Ea_Layout_Input_Abstract|string
+	 */
 	protected $_for=null;
+
+	/**
+	 * Set the id of the input or the input itself.
+	 * @param Ea_Layout_Input_Abstract|string $for
+	 */
 	public function setFor($for)
 	{
 		$this->_for=$for;
@@ -50,7 +59,13 @@ class Ea_Layout_Label extends Ea_Layout_Container
 	protected function preRender()
 	{
 		$render=parent::preRender();
-		$this->_setAttribute('for', $this->_for);
+		if ($this->_for instanceof Ea_Layout_Input_Abstract) {
+		  $id = $this->_for->getAttributeId();
+		}
+		else {
+		  $id = $this->_for;
+		}
+		$this->_setAttribute('for', $id);
 		return $render;
 	}
 	

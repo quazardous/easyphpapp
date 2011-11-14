@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Form
  * @author      berlioz
- * @version     0.5.2-20110630
+ * @version     0.5.3-20111114
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -99,16 +99,36 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
 	/**
 	 * Label of the input.
 	 * 
-	 * @var string|Ea_Layout_Abstract
+	 * @var string|Ea_Layout_Abstract|Ea_Layout_Label
 	 */
 	protected $_label=null;
 	
-	protected $_labelBefore = true;
+	/**
+	 * Can be before or after.
+	 * @var string
+	 */
+	protected $_labelPosition = null;
 	
-	public function setLabel($label, $before=null)
+	/**
+	 * Set the label for this input. By default string label will be displayed at render time.
+	 * @param string|Ea_Layout_Label $label
+	 * @param false|null|string $position
+	 *   - false : do not auto dsiplay label
+	 *   - 'before' display before
+	 *   - 'after' display after
+	 */
+	public function setLabel($label, $position=null)
 	{
 		$this->_label=$label;
-		if ($before !== null) $this->_labelBefore = $before;
+		require_once 'Ea/Layout/Label.php';
+		if ($label instanceof Ea_Layout_Label) {
+		  $label->setFor($this);
+		}
+		if ($position ===null && ! $label instanceof Ea_Layout_Label) {
+		  // by default string label will be auto display
+		  $position = 'before';
+		}
+		if ($position !== null) $this->_labelBefore = $position;
 	}	
 	
 	/**
@@ -433,21 +453,31 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
   		$this->setValue($value);
   	}
   }
-   
+  
+  /**
+   * Display the label
+   * @param boolean $display
+   */
+  protected function displayLabel($display) {
+    if ($this->_label&&$display) {
+      require_once 'Ea/Layout/Label.php';
+      $label = $this->_label;
+      if ($label instanceof Ea_Layout_label) {
+        $label->setFor($this->_getAttribute('id'));
+      }
+      else {
+        $label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
+      }
+      $label->display();
+    }
+  }
+  
   protected function render() {
   		// TODO : think about it vs add()
-		if($this->_label&&$this->_labelBefore)
-		{
-			require_once 'Ea/Layout/Label.php';
-			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
-			$label->display();
-		}
+  		
+    $this->displayLabel($this->_labelPosition == 'before');
 		parent::render();
-    if($this->_label&&!$this->_labelBefore)
-		{
-			require_once 'Ea/Layout/Label.php';
-			$label=new Ea_Layout_label($this->_label, $this->_getAttribute('id'));
-			$label->display();
-		}		
+		$this->displayLabel($this->_labelPosition == 'after');
+
   }
 }
