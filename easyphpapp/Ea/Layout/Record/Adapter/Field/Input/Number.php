@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      berlioz
- * @version     0.5.2-20101007
+ * @version     $Id:$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
