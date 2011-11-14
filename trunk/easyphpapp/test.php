@@ -6,9 +6,6 @@
  * $Date$
  * $HeadURL$
  * 
- * $LastChangesBy:$
- * $LastChangesRevision:$
- * $LastChangesDate:$
  * */
 
 /*
