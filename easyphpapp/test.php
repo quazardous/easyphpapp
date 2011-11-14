@@ -1,8 +1,12 @@
 <?php
 /*
- * $Id:$
- * $Author:$
- * $Revision:$
- * $Date:$
- * $HeadURL:$
+ * $Id$
+ * $Author$
+ * $Revision$
+ * $Date$
+ * $HeadURL$
+ * */
+
+/*
+ * important
  * */
