@@ -51,6 +51,7 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 	
 	protected function render()
 	{
+	  $this->displayLabel($this->_labelPosition == 'before');
 		echo '<';
 		echo $this->_tag;
 		$this->renderAttributes();
@@ -61,5 +62,6 @@ class Ea_Layout_Input_Textarea extends Ea_Layout_Input_Abstract
 		echo '</';
 		echo $this->_tag;
 		echo '>';
+		$this->displayLabel($this->_labelPosition == 'after');
 	}
 }
