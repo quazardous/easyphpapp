@@ -5,6 +5,10 @@
  * $Revision$
  * $Date$
  * $HeadURL$
+ * 
+ * $LastChangesBy:$
+ * $LastChangesRevision:$
+ * $LastChangesDate:$
  * */
 
 /*
