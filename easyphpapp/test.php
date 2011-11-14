@@ -1,4 +1,8 @@
 <?php
 /*
- * $Id:$
+ * $Id$
+ * $Author:$
+ * $Revision:$
+ * $Date:$
+ * $HeadURL:$
  * */
