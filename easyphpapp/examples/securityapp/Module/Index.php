@@ -7,7 +7,7 @@
  * @package     examples
  * @subpackage  securityapp
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  * @filesource
@@ -27,6 +27,7 @@ class Module_Index extends Ea_Module_Abstract
 
 	public function init()
 	{
+	    parent::init();
 		require_once 'Ea/Layout/Messages.php';
 		$this->add(new Ea_Layout_Messages());		
 	}
