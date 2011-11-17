@@ -1,0 +1,3 @@
+Encoding support
+
+All outputs go through an encoding interface.

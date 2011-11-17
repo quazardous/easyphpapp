@@ -1,0 +1,3 @@
+Form with submit callback
+
+A form object can register submit callbacks. The callback is called with the id of the triggering button. This example does not use persistent input objects.

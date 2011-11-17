@@ -1,0 +1,3 @@
+The security system
+
+Security is based on ACL. The controler engine is aware of security and can challenge user for security access.

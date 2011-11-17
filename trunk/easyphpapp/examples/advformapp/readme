@@ -1,0 +1,3 @@
+Advanced form
+
+An advanced form object that can handle inputs as full objects. This is done by using session persistent objects. Input objects hide all the dirty stuff arround rerivieving datas from $_POST.
