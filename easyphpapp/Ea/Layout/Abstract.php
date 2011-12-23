@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -247,7 +247,7 @@ abstract class Ea_Layout_Abstract
      * 
      * @param Ea_Layout_Container $parent
      */
-    protected function beforeAdd(Ea_Layout_Container $parent)
+    public function beforeAdded(Ea_Layout_Container $parent)
     {
     	
     }
@@ -257,7 +257,7 @@ abstract class Ea_Layout_Abstract
      * 
      * @param Ea_Layout_Container $parent
      */
-    protected function afterAdd(Ea_Layout_Container $parent)
+    public function afterAdded(Ea_Layout_Container $parent)
     {
     	
     }

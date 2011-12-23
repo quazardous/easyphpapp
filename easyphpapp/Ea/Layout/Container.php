@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Base
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -90,9 +90,7 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 		{
 			foreach($content as $item)
 			{
-				$this->beforeAdd($this);
-				$this->add($item, $append);
-				$this->afterAdd($this);
+				$this->_add($item, $append);
 			}
 			return;
 		}
@@ -101,10 +99,30 @@ class Ea_Layout_Container extends Ea_Layout_Element_Abstract
 			require_once 'Ea/Layout/Text.php';
 			$content=new Ea_Layout_Text($content, null, null);
 		}
+		$this->_beforeAdd($content);
+		$content->beforeAdded($this);
 		$content->setParent($this);
 		$this->execCallbacksOn($content);
 		if($append) array_push($this->_subLayouts, $content);
 		else array_unshift($this->_subLayouts, $content);
+		$content->afterAdded($this);
+		$this->_afterAdd($content);
+	}
+	
+	/**
+	 * Before add function.
+	 * @param Ea_Layout_Abstract $layout
+	 */
+	protected function _beforeAdd(Ea_Layout_Abstract $layout) {
+	  
+	}
+	
+	/**
+	 * After add function.
+	 * @param Ea_Layout_Abstract $layout
+	 */
+	protected function _afterAdd(Ea_Layout_Abstract $layout) {
+	   
 	}
 	
 	/**

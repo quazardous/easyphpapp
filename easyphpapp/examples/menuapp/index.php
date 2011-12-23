@@ -19,7 +19,7 @@ require '../conf/config.php';
 require_once 'Ea/App.php';
 
 // instance of application with application Name
-$app=Ea_App::singleton('basicapp');
+$app=Ea_App::singleton('menuapp');
 // on 2nd parameter you can specify a version
 
 // the appname and the version can be retrieve from a APPNAME and a VERSION file or constant.

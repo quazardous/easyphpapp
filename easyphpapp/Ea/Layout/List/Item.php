@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  List
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -22,6 +22,15 @@ require_once 'Ea/Layout/Container.php';
 class Ea_Layout_List_Item extends Ea_Layout_Container
 {
 	protected $_tag='li';
+	
+	protected $_hasChildren = false;
+	
+	public function hasChildren($children = null) {
+	  if ($children !== null) {
+	    $this->_hasChildren = $children;
+	  }
+	  return $this->_hasChildren;
+	}
 	
 	/**
 	 * Table cell layout constructor.
