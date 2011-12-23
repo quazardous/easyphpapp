@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  List
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -23,6 +23,17 @@ class Ea_Layout_List extends Ea_Layout_Container
 {
 	protected $_tag='ul';
 
+	protected $_itemClass = 'Ea_Layout_List_Item';
+	
+	protected $_rootList = true;
+	
+	public function rootList($root = null) {
+	  if ($root !== null) {
+	    $this->_rootList = $root;
+	  }
+	  return $this->_rootList;
+	}
+	
 	/**
 	 * List layout constructor.
 	 * 
@@ -34,31 +45,13 @@ class Ea_Layout_List extends Ea_Layout_Container
 		parent::__construct(null, $config);
 	}
 	
-	/**
-	 * Add an item to the list.
-	 * 
-	 * @param mixed $content
-	 * @param boolean $append
-	 * @return Ea_Layout_List_Item
-	 */
-	public function add($content, $append=true)
-	{
-		if(is_array($content)&&(!is_object($content)))
-		{
-			foreach($content as $item)
-			{
-				$this->add($item, $append);
-			}
-			return;
-		}
-		if(!($content instanceof Ea_Layout_List_Item))
+	protected function _beforeAdd(Ea_Layout_Abstract $layout) {
+		if(!($layout instanceof Ea_Layout_List_Item))
 		{
 			require_once 'Ea/Layout/List/Exception.php';
 			throw new Ea_Layout_List_Exception("not an instance of Ea_Layout_List_Item");
 		}
-		parent::add($content, $append);
 	}
-	
 	
 	/**
 	 * Shortcut method to add an item with content.
@@ -70,8 +63,9 @@ class Ea_Layout_List extends Ea_Layout_Container
 	 * 
 	 * @return Ea_Layout_List_Item the new list item
 	 */
-	public function addItem($content=null, $config=null, $append=true, $class='Ea_Layout_List_Item')
+	public function addItem($content=null, $config=null, $append=true, $class=null)
 	{
+	  if (!$class) $class = $this->_itemClass;
 		Zend_Loader::loadClass($class);
 		$item=new $class($config);
 		if(!$item instanceof Ea_Layout_List_Item)
@@ -94,12 +88,20 @@ class Ea_Layout_List extends Ea_Layout_Container
 	*
 	* @return Ea_Layout_List_Item the new list item
 	*/
-	public function addItems(array $contents, $config=null, $append=true, $class='Ea_Layout_List_Item')
+	public function addItems(array $contents, $config=null, $append=true, $class=null)
 	{
 	  $items = array();
 	  foreach ($contents as $key => $content) {
 	    $items[$key] = $this->addItem($content, $config, $append, $class);
 	  }
 	  return $items;
+	}
+	
+	public function afterAdded(Ea_Layout_Container $parent) {
+  	parent::afterAdded($parent);
+  	if ($parent instanceof Ea_Layout_List_Item) {
+  	  $this->rootList(false);
+  	  $parent->hasChildren(true);
+  	}
 	}
 }

@@ -7,7 +7,7 @@
  * @package     Layout
  * @subpackage  Table
  * @author      David Berlioz <berlioz@nicematin.fr>
- * @version     $Id:$
+ * @version     $Id$
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
@@ -33,30 +33,15 @@ class Ea_Layout_Table_Row extends Ea_Layout_Container
 	{
 		parent::__construct(null, $config);
 	}
-	
-	/**
-	 * Add content to row.
-	 * Accept only cells.
-	 *
-	 */
-	public function add($content, $append=true)
-	{
-		if(is_array($content)&&(!is_object($content)))
-		{
-			foreach($content as $item)
-			{
-				$this->add($item, $append);
-			}
-			return;
-		}
-		if(!($content instanceof Ea_Layout_Table_Cell))
+
+	protected function _beforeAdd(Ea_Layout_Abstract $layout) {
+	  if(!($layout instanceof Ea_Layout_Table_Cell))
 		{
 			require_once 'Ea/Layout/Table/Exception.php';
 			throw new Ea_Layout_Table_Exception("not an instance of Ea_Layout_Table_Cell");
 		}
-		parent::add($content, $append);
-	}
-
+	}	
+	
 	/**
 	 * Shortcut method to add a cell with content.
 	 * 
