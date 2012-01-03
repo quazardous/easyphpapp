@@ -33,10 +33,14 @@ class Ea_Layout_Menu extends Ea_Layout_List
 		return $render;
 	}
 
+	/**
+	 * @return Ea_Layout_Menu_Item
+	 */
 	public function addItem($content=null, $config=null, $append=true, $class=null) {
 	  require_once 'Ea/Layout/Link.php';
 	  if (!($content instanceof Ea_Layout_Link)) {
 	    $content = new Ea_Layout_Link('#', $content);
+	    $content->addAttribute('class', 'no-link');
 	  }
 	  return parent::addItem($content, $config, $append, $class);
 	}

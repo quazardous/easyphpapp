@@ -31,10 +31,12 @@ class Module_Index extends Ea_Module_Abstract
 		$div->addAttribute('class', 'menu-container');
 		
 		$this->getPage()->addStyle('css/memu-0.1.css');
+		$this->getPage()->addStyle('famfamfam/css-sprite.css');
 		require_once 'Ea/Layout/Menu.php';
 		$div->add($menu = new Ea_Layout_Menu);
 		
 		$item = $menu->addItem('Test 1');
+		$item->setIcon('cd');
 		$menu->addItem('Test 2');
 		$menu->addItem('Test 3');
 		
@@ -46,12 +48,14 @@ class Module_Index extends Ea_Module_Abstract
 		
 		$item->add($sub2 = new Ea_Layout_Menu);
 		
-		$sub2->additem('Test 1.1.1');
+		require_once 'Ea/Layout/Link.php';
+		$sub2->additem(new Ea_Layout_Link('http://www.google.fr', 'Test 1.1.2'));
 		$sub2->additem('Test 1.1.2');
 		$sub2->additem('Test 1.1.3');
 		
 		$this->add($div = new Ea_Layout_Container);
 		$div->addAttribute('class', 'main-container');
+		$this->getPage()->addStyle('css/styles.css');
 		
 		$this->getPage()->setMainLayout($div);
 		

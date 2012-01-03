@@ -98,7 +98,8 @@ class Ea_Layout_List extends Ea_Layout_Container
 	}
 	
 	public function afterAdded(Ea_Layout_Container $parent) {
-  	parent::afterAdded($parent);
+	  parent::afterAdded($parent);
+  	
   	if ($parent instanceof Ea_Layout_List_Item) {
   	  $this->rootList(false);
   	  $parent->hasChildren(true);

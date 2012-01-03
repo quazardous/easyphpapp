@@ -19,7 +19,22 @@ require_once 'Ea/Layout/List/Item.php';
  * @see Ea_Layout_Menu
  */
 class Ea_Layout_Menu_Item extends Ea_Layout_List_Item
-{	
+{
+  /**
+   * Sprite icon (famfamfam like)
+   * @var string
+   */
+  protected $_icon = null;
+  
+  public function setIcon($icon) {
+    $this->_icon = $icon;
+  }
+  
+  /**
+   * @var Ea_Layout_Link
+   */
+  protected $_link = null;
+  
 	protected function preRender()
 	{
 		$render=parent::preRender();
@@ -29,6 +44,23 @@ class Ea_Layout_Menu_Item extends Ea_Layout_List_Item
 		elseif ($this->hasChildren()) {
 		  $this->addAttribute('class', 'has-children');
 		}
+		
+		if ($this->_icon) {
+		  $this->_link->add($div=new Ea_Layout_Container, false);
+		  $div->addAttribute('class', 'memu-icon');
+		  $div->addAttribute('class', 'sprite-' . $this->_icon);
+		}
+		
 		return $render;
 	}
+	
+	public function add($content, $append=true) {
+	  require_once 'Ea/Layout/Link.php';
+	  if ($content instanceof Ea_Layout_Link && !$this->_link) {
+	    $this->_link = $content;
+	  }
+	  parent::add($content, $append);
+	}
+	
 }
+
