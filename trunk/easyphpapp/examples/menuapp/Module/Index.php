@@ -16,8 +16,8 @@
 require_once 'Ea/Module/Abstract.php';
 
 /**
- * My basic module.
- *
+ * My basic module with a nice menu.
+ * http://http://codebrewery.blogspot.com/2011/01/memu-simple-css-javascript-jquery-menu.html
  */
 class Module_Index extends Ea_Module_Abstract
 {
