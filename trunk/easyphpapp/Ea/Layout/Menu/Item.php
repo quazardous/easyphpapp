@@ -30,6 +30,21 @@ class Ea_Layout_Menu_Item extends Ea_Layout_List_Item
     $this->_icon = $icon;
   }
   
+  protected $_current = false;
+  
+  /**
+   * Set as current item.
+   * @param boolean $current
+   */
+  public function setCurrent($current = true) {
+    $this->_current = $current;
+    if (($menu = $this->getParent()) instanceof Ea_Layout_Menu) {
+      if ((!$menu->rootList()) && ($item = $menu->getParent()) instanceof Ea_Layout_Menu_Item) {
+        $item->setCurrent($current);
+      }
+    }
+  }
+  
   /**
    * @var Ea_Layout_Link
    */
@@ -43,6 +58,10 @@ class Ea_Layout_Menu_Item extends Ea_Layout_List_Item
 		}
 		elseif ($this->hasChildren()) {
 		  $this->addAttribute('class', 'has-children');
+		}
+		
+		if ($this->_current) {
+		  $this->addAttribute('class', 'memu-current');
 		}
 		
 		if ($this->_icon) {

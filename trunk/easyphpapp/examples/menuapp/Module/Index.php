@@ -50,7 +50,7 @@ class Module_Index extends Ea_Module_Abstract
 		
 		require_once 'Ea/Layout/Link.php';
 		$sub2->additem(new Ea_Layout_Link('http://www.google.fr', 'Test 1.1.2'));
-		$sub2->additem('Test 1.1.2');
+		$sub2->additem('Test 1.1.2')->setCurrent();
 		$sub2->additem('Test 1.1.3');
 		
 		$this->add($div = new Ea_Layout_Container);
