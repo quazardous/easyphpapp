@@ -1,6 +1,10 @@
 *** XXX ***
 - Todo : Add PDF support from TCPDF
 
+*** 0.5.4 ***
+- add Google Search Parser Service
+- add nice CSS menu
+
 *** 0.5.1 - 0.5.2 ***
 - bug fix
 
