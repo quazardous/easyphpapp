@@ -23,10 +23,10 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 	
 	protected $_targetEncoding='UTF-8';
 
-	public function __construct($language = null, $baseUri = null)
+	public function __construct($country = null, $baseUri = null)
 	{
 	  if ($baseUri) $this->setBaseUri($baseUri);
-		$this->setLanguage($language);
+		$this->setCountry($country);
 	}
 	
 	protected $_baseUri='http://www.google.com/search';
@@ -38,11 +38,11 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 	/**
 	 * @var string
 	 */
-	protected $_language=null;
+	protected $_country=null;
 	
-	public function setLanguage($language)
+	public function setCountry($country)
 	{
-		$this->_language=$language;
+		$this->_country=$country;
 	}
 	
 	/**
@@ -58,9 +58,9 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 			'num' => $num,
 		);
 	  
-	  if ($this->_language) {
+	  if ($this->_country) {
 	    // not sur of this
-	    $params['gl'] = $this->_language;
+	    $params['gl'] = $this->_country;
 	  }
 	  
 	  if ($start) {
@@ -92,7 +92,7 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 		      
 		      $i++;
 		      $results[] = array(
-		        'title' => $title,
+		        'title' => $a->textContent,
 		        'link' => $href,
 		        'pos' => $i,
 		      );
