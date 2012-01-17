@@ -56,6 +56,7 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 	  $params = array(
 			'q' => $q,
 			'num' => $num,
+			'pws' => 0,
 		);
 	  
 	  if ($this->_country) {
@@ -85,10 +86,13 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 		    foreach ($la as $a) {
 		      $title = strtolower(trim($a->textContent));
 		      $href = $a->getAttribute('href');
+		      $class = $a->getAttribute('class');
 		      if (!$title) continue;
-		      if ($title == 'cached' || $title == 'similar') continue;
+		      if ($title == 'cached' || $title == 'similar' || $title == 'translate this page') continue;
 		      
 		      if (!preg_match(',^(https?|ftp)://,i', $href)) continue;
+		      
+		      if ($class!='l') continue;
 		      
 		      $i++;
 		      $results[] = array(
