@@ -57,6 +57,9 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 			'q' => $q,
 			'num' => $num,
 			'pws' => 0,
+			'hl' => 'en',
+			'ie' => 'utf8',
+			'oe' => 'utf8',
 		);
 	  
 	  if ($this->_country) {
@@ -104,7 +107,6 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 		    
 		  }
 		}
-		
 		return $results;
 	}
 	
