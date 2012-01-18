@@ -73,9 +73,8 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 	  
 		$ret=$this->request($this->_baseUri, $params);
 		if(!$ret) return false;
-		$doc = new DOMDocument();
-		@$doc->loadHTML($this->getHttpResponseBody());
-		
+		$doc = new DOMDocument('1.0', 'UTF-8');
+		@$doc->loadHTML('<?xml encoding="UTF-8">' .$this->getHttpResponseBody());
 		$res = $doc->getElementById('ires');
 		$xpath = new DOMXpath($doc);
 		$elements = $xpath->query("./ol/li", $res);
