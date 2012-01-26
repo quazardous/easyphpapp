@@ -65,6 +65,7 @@ class Ea_Service_GSearch_Parser extends Ea_Service_Abstract
 	  if ($this->_country) {
 	    // not sur of this
 	    $params['gl'] = $this->_country;
+	    $params['hl'] = $this->_country;
 	  }
 	  
 	  if ($start) {
