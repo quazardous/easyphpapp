@@ -335,9 +335,11 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			$triggeringId=$this->_submittingInputId;
 		}
 		require_once 'Ea/Layout/Input/Abstract.php';
+
+		
 		$triggeringId = Ea_Layout_Input_Abstract::get_name_from_id($triggeringId);
 		$n=0;
-
+		
 		foreach($this->_submitCallbacks as $id => $callbacks)
 		{
 			
@@ -354,13 +356,18 @@ class Ea_Layout_Form extends Ea_Layout_Input_Array
 			else //simple POST way
 			{
 				if($triggeringId)
-				{					
+				{
+				  // we know the triggering button
 					if($triggeringId==$id) $do=true; 
 				}
 				else
 				{
+				  // we dont know the triggering button, so guess it from POST behaviour (if it exists, it was clicked...) 
 					// cast is important because with auto managed form all inputs are added to form
-					if((string)$this[$id]) $do=true;
+					if((string)$this[$id]) {
+					  $do=true;
+					  $triggeringId=$id;
+					}
 				}
 			}
 			if(!$do) continue;
