@@ -297,7 +297,7 @@ class Ea_Security
 		$this->init();
 		$identity=$this->_auth->getIdentity();
 		if(!$identity) return false;
-		return array_key_exists($role, $identity['roles']);
+		return in_array($role, $identity['roles']);
 	}
 	
 	public function connectedUserHasRole($role)
