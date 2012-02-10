@@ -30,6 +30,7 @@ class Module_Index extends Ea_Module_Abstract
 	    parent::init();
 		// set the page title
 		$this->getPage()->setTitle('Autocomplete');
+		$this->getPage()->addStyle('css/common.css');
 	}
 	
 	public function actionIndex()
@@ -80,6 +81,7 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionJson()
 	{
+	  sleep(1); // just to show the loading gif...
 	  $term = $this->getRawParam('term');
 	  $ret = array();
 	  foreach (preg_grep("/$term/i", array(
