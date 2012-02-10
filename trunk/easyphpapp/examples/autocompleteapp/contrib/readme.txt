@@ -1,0 +1,1 @@
+place the jquery-ui dir/files here and modify index.php with the good versions and path.

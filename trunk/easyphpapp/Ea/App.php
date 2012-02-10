@@ -653,7 +653,7 @@ class Ea_App
 		$obj->manageForms($this->isManageForms());
 		
 		$obj->init();
-		$obj->$actionMethod();
+		$output = $obj->$actionMethod();
 		$obj->complete();
 		
 		if($obj->isManageForms())
@@ -664,7 +664,31 @@ class Ea_App
 
 		$this->executeCallbacks();
 		$this->applyRequestedRedirect();
-		if($render&&$this->_renderModule) $obj->render();
+		
+		// actions can return direct output
+		if ($output) {
+		  if (!isset($output['content'])) {
+		    $output['content'] = $output;
+		  }
+		  if ($output['content'] instanceof Ea_Xml_Element) {
+		    header("Content-type: application/xml");
+		    print $output['content']->toString();
+		  }
+		  elseif($output['content'] instanceof DOMDocument) {
+		    header("Content-type: application/xml");
+		    print $output['content']->saveXML();
+		  }
+		  elseif(is_array($output['content'])) {
+		    header('Content-type: application/json');
+        print json_encode($output['content']);
+		  }
+		  else {
+		    if (isset($output['content-type'])) header('Content-type: ' . $output['content-type']);
+		    print $output['content'];
+		  }
+		}
+		// default is to render layouts
+		elseif($render&&$this->_renderModule) $obj->render();
 		$this->_runningModule=null;
 		$this->_runningAction=null;
 	}

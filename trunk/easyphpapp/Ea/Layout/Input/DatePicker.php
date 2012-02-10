@@ -12,20 +12,20 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Input/JQueryUi/DatePicker.php';
+require_once 'Ea/Layout/Input/Text.php';
 
 /**
  * Date with DatePicker input layout class.
  */
-class Ea_Layout_Input_DatePicker extends Ea_Layout_Input_JQueryUi_DatePicker
+class Ea_Layout_Input_DatePicker extends Ea_Layout_Input_Date
 {
-	protected function render()
-	{
-		parent::render();
-		$id=$this->getAttributeId();
-		$script="$('#{$id}').datepicker();";
-		require_once 'Ea/Layout/Script.php';
-		$script=new Ea_Layout_Script($script, true);
-		$script->display();
-	}
+  protected function render()
+  {
+    parent::render();
+    $id=$this->getAttributeId();
+    $script="$('#{$id}').datepicker();";
+    require_once 'Ea/Layout/Script.php';
+    $script=new Ea_Layout_Script($script, true);
+    $script->display();
+  }
 }
