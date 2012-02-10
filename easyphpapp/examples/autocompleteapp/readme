@@ -1,0 +1,3 @@
+Autocomplete support with and without AJAX
+
+Add text input with autocomplete behaviour (from jQuery UI). Demonstrate AJAX support for modules.

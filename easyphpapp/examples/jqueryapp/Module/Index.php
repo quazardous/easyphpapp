@@ -35,8 +35,6 @@ class Module_Index extends Ea_Module_Abstract
 	
 	public function actionIndex()
 	{
-		// add the text 'Hello World' to the page
-		
 		
 		$this->add($tabs=new Ea_Layout_Tabs('tabs'));
 		
