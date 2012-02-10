@@ -666,7 +666,7 @@ class Ea_App
 		$this->applyRequestedRedirect();
 		
 		// actions can return direct output
-		if ($output) {
+		if ($output!==null) {
 		  if (!isset($output['content'])) {
 		    $output['content'] = $output;
 		  }
