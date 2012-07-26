@@ -12,7 +12,7 @@
  * @copyright   David Berlioz <berlioz@nicematin.fr>
  */
 
-require_once 'Ea/Layout/Input/Text.php';
+require_once 'Ea/Layout/Input/Date.php';
 
 /**
  * Date with DatePicker input layout class.
