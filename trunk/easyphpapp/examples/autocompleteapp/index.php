@@ -36,7 +36,7 @@ $app->showVersion();
 $app->applyDefaultStyle();
 
 // set jQuery
-$app->jQuery('contrib/jquery-ui/js/jquery-1.4.2.min.js');
+$app->jQuery('contrib/jquery-ui/js/jquery-1.8.2.min.js');
 
 // set jQuery UI
 $app->jQueryUi(

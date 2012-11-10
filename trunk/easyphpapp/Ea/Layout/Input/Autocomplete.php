@@ -71,10 +71,19 @@ class Ea_Layout_Input_Autocomplete extends Ea_Layout_Input_Text
         
         if (is_array($this->_autocomplete[$param])) {
           $items = array();
-          foreach ($this->_autocomplete[$param] as $item) {
-            $items[] = '"' . addcslashes($item, '"') . '"';
+          if (array_values($this->_autocomplete[$param]) !== $this->_autocomplete[$param]) {
+          	foreach ($this->_autocomplete[$param] as $key => $item) {
+          	  if (!is_string($key)) $key = $item;
+          	  $items[] = '{ value: "' . addcslashes($key, '"') . '", label: "' . addcslashes($item, '"') . '" }';
+          	}
+          	return  $param . ': ' . '[' . implode(', ', $items) . ']';
           }
-          return  $param . ': ' . '[' . implode(', ', $items) . ']';
+          else {
+            foreach ($this->_autocomplete[$param] as $item) {
+              $items[] = '"' . addcslashes($item, '"') . '"';
+            }
+            return  $param . ': ' . '[' . implode(', ', $items) . ']';
+          }
         }
         if (is_string($this->_autocomplete[$param])) return $param . ': ' . '"' . addcslashes($this->_autocomplete[$param], '"') . '"';
         return $param . ': ' . '"' . $this->_autocomplete[$param] . '"';

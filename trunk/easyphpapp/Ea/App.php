@@ -678,9 +678,9 @@ class Ea_App
 		    header("Content-type: application/xml");
 		    print $output['content']->saveXML();
 		  }
-		  elseif(is_array($output['content'])) {
+		  elseif(is_array($output['content'])||is_object($output['content'])) {
 		    header('Content-type: application/json');
-        print json_encode($output['content']);
+            print json_encode($output['content']);
 		  }
 		  else {
 		    if (isset($output['content-type'])) header('Content-type: ' . $output['content-type']);

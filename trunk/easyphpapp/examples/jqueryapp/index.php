@@ -36,13 +36,11 @@ $app->showVersion();
 $app->applyDefaultStyle();
 
 // set jQuery
-$app->jQuery('jquery-ui/jquery-XXX.js');
+$app->jQuery('contrib/jquery-ui/js/jquery-1.8.2.js');
 
 // set jQuery UI
 $app->jQueryUi(
 		array(
-			'contrib/jquery-ui/js/jquery-1.4.2.min.js',
-			//'contrib/jquery-ui/js/jquery-ui-1.8.5.custom.min.js',
 			'contrib/jquery-ui/development-bundle/ui/jquery.ui.core.js',
 			'contrib/jquery-ui/development-bundle/ui/jquery.ui.widget.js',
 			'contrib/jquery-ui/development-bundle/ui/jquery.ui.tabs.js',
