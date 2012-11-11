@@ -469,7 +469,7 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 	
 	protected function preRender()
 	{
-		$render=parent::preRender();
+		if(!parent::preRender()) return false;
 		$this->_setAttribute('id', $this->getId());
 		$width=$this->getWidth();
 		if($width==intval($width)) $width.='px';
@@ -477,7 +477,10 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		if($height==intval($height)) $height.='px';
 		$this->addAttribute('style', 'width: '.$width.';');
 		$this->addAttribute('style', 'height: '.$height.';');
-		return $render;
+		if ($this->_initScript) $this->addScript($this->_initScript);
+		$this->addScript($this->getGMapScript());
+		if ($this->_postInitScript) $this->addScript($this->_postInitScript);
+		return true;
 	}	
 	
 	public function add($content, $append=true)
@@ -497,10 +500,9 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		}
 	}
 	
-	protected function render()
+	protected function getGMapScript()
 	{
-		parent::render();
-		$script=$this->_initScript;
+		$script='';
 		$script.='var gmap;';
 		$script.='var '.$this->getJSVar().'=gmap=new google.maps.Map(document.getElementById("'.$this->getId().'"), 
 {
@@ -548,12 +550,10 @@ class Ea_Layout_GMap extends Ea_Layout_Container
 		{
 			$script.=$marker->getJS();
 		}
-		
-		$script.=$this->_postInitScript;
-		// TODO : think about it vs add()
+
 		require_once 'Ea/Layout/Script.php';
 		$script=new Ea_Layout_Script($script, true);
-		$script->display();
+		return $script;
 	}
 	
 	protected $_markers=array();

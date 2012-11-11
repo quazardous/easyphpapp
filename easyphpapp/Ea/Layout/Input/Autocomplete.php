@@ -38,9 +38,10 @@ class Ea_Layout_Input_Autocomplete extends Ea_Layout_Input_Text
     $this->_autocomplete = $options;
   }
   
-  protected function render()
-  {
-    parent::render();
+  public function preRender() {
+    if (!parent::preRender()) {
+      return false;
+    }
     $id=$this->getAttributeId();
     $pValues = array();
     $script = '';
@@ -50,9 +51,8 @@ class Ea_Layout_Input_Autocomplete extends Ea_Layout_Input_Text
       }
     }
     $script.="$('#{$id}').autocomplete({" . implode(', ', $pValues)." });";
-    require_once 'Ea/Layout/Script.php';
-    $script=new Ea_Layout_Script($script, true);
-    $script->display();
+    $this->addScript($script);
+    return true;
   }
   
   protected function getAutocompleteParam($param) {

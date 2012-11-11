@@ -221,7 +221,13 @@ abstract class Ea_Layout_Abstract
     	if($this->preRender())
     	{
     		ob_start();
+    		foreach($this->_layouts['before'] as $layout) {
+    		  $layout->display();
+    		}
     		$this->render();
+    		foreach($this->_layouts['after'] as $layout) {
+    		  $layout->display();
+    		}
     		$content=ob_get_clean();
     		$this->postRender();
     		return $content;
@@ -237,7 +243,13 @@ abstract class Ea_Layout_Abstract
     {
     	if($this->preRender())
     	{
+    	    foreach($this->_layouts['before'] as $layout) {
+    	      $layout->display();
+    	    }
     		$this->render();
+    		foreach($this->_layouts['after'] as $layout) {
+    		  $layout->display();
+    		}
     		$this->postRender();
     		return true;
     	}
@@ -264,4 +276,56 @@ abstract class Ea_Layout_Abstract
     	
     }
     
+    /**
+     * Add layout to render before.
+     * 
+     * @param Ea_Layout_Abstract|string $content
+     * @param string $append
+     */
+    public function addLayoutBefore($content, $append = true) {
+      $this->addLayout($content, 'before', $append);
+    }
+    
+    /**
+     * Add layout to render after.
+     *
+     * @param Ea_Layout_Abstract|string $content
+     * @param string $append
+     */
+    public function addLayoutAfter($content, $append = true) {
+      $this->addLayout($content, 'after', $append);
+    }
+    
+    protected $_layouts = array('before' => array(), 'after' => array());
+    
+    public function addLayout($content, $position = 'after', $append = true) {
+      if(! ($content instanceof Ea_Layout_Abstract)) {
+        require_once 'Ea/Layout/Text.php';
+        $content = new Ea_Layout_Text($content);
+      }
+      if (!isset($this->_layouts[$position])) {
+        $this->_layouts[$position] = array();
+      }
+      if ($append) {
+        $this->_layouts[$position][] = $content;
+      }
+      else {
+        array_unshift($this->_layouts[$position], $content);
+      }
+    }
+   
+    /**
+     * Add script to the layout.
+     * 
+     * @param Ea_Layout_Script|string $script
+     * @param string $position
+     * @param string $append
+     */
+    public function addScript($script, $position = 'after', $append = true) {
+      require_once 'Ea/Layout/Script.php';
+      if (! ($script instanceof Ea_Layout_Script)) {
+        $script = new Ea_Layout_Script($script);
+      }
+      $this->addLayout($script, $position, $append);
+    }
 }

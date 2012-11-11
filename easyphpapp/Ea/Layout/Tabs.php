@@ -66,18 +66,14 @@ class Ea_Layout_Tabs extends Ea_Layout_JQueryUi_Abstract
 	
 	protected function preRender()
 	{
-		$render=parent::preRender();
-		$this->_setAttribute('id', $this->getId());
-		return $render;
-	}
-	
-	protected function render()
-	{
-		parent::render();
+		if (!parent::preRender()) return false;;
 		$id=$this->getId();
+		$this->_setAttribute('id', $id);
 		$script="$('#{$id}').tabs();";
 		require_once 'Ea/Layout/Script.php';
 		$script=new Ea_Layout_Script($script, true);
-		$script->display();
+		$this->addScript($script);
+		return true;
 	}
+
 }

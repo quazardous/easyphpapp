@@ -19,13 +19,16 @@ require_once 'Ea/Layout/Input/Date.php';
  */
 class Ea_Layout_Input_DatePicker extends Ea_Layout_Input_Date
 {
-  protected function render()
+ 
+  protected function preRender()
   {
-    parent::render();
+    if(!parent::preRender()) return false;
     $id=$this->getAttributeId();
     $script="$('#{$id}').datepicker();";
     require_once 'Ea/Layout/Script.php';
     $script=new Ea_Layout_Script($script, true);
-    $script->display();
+    $this->addScript($script);
+    return true;
   }
+  
 }
