@@ -476,8 +476,8 @@ abstract class Ea_Layout_Input_Abstract extends Ea_Layout_Single
   		// TODO : think about it vs add()
   		
     $this->displayLabel($this->_labelPosition == 'before');
-		parent::render();
-		$this->displayLabel($this->_labelPosition == 'after');
+	parent::render();
+	$this->displayLabel($this->_labelPosition == 'after');
 
   }
 }
