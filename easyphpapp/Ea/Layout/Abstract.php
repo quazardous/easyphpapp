@@ -188,9 +188,11 @@ abstract class Ea_Layout_Abstract
 	 * 
 	 * It's highly recommended that abstract implements only render stuff.
 	 * Special stuff like validaion shoud be put in preRender().
-	 * So it's highly recommended that render() call preRender().
+	 * render() must not call preRender() or postRenrer() it's done in display().
 	 * 
 	 * @see preRender()
+	 * @see postRender()
+	 * @see display()
 	 * 
 	 */
 	abstract protected function render();
@@ -228,7 +230,7 @@ abstract class Ea_Layout_Abstract
     }
     
     /**
-     * Render and dispaly content.
+     * Render and display content.
      * 
      */
     public function display()
