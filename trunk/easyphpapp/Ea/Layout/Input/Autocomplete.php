@@ -51,6 +51,8 @@ class Ea_Layout_Input_Autocomplete extends Ea_Layout_Input_Text
       }
     }
     $script.="$('#{$id}').autocomplete({" . implode(', ', $pValues)." });";
+    require_once 'Ea/Layout/Script.php';
+    $script=new Ea_Layout_Script($script, true);
     $this->addScript($script);
     return true;
   }
